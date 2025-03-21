@@ -1,6 +1,19 @@
 // const { SlashCommandBuilder } = require('discord.js');
 // const fs = require('fs');
 
+module.exports.getInventory = (qgame, pov) => {
+	const inv = [];
+	Object.keys(qgame).forEach(element => {
+		const obj = qgame[element];
+		if (typeof obj.type != 'undefined' && obj.type == 'object') {
+			if (obj.parent == pov.name) {
+				inv.push(obj.name);
+			}
+		}
+	});
+	return inv;
+};
+
 module.exports.getInventoryAsString = (qgame, pov) => {
 	const inv = [];
 	Object.keys(qgame).forEach(element => {

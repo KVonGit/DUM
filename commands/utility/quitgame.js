@@ -18,7 +18,11 @@ module.exports = {
 			const povName = interaction.user.username;
 			if (qgame.players.indexOf(povName) > -1) {
 				qgame.players.splice(qgame.players.indexOf(povName));
-				// get inventory and drop it in the location of the player?
+				// get inventory and drop it in the location of the player
+				const items = core.getInventory(qgame, pov);
+				for (const i in items) {
+					items[i].parent = pov.parent;
+				}
 				delete qgame[povName];
 				await interaction.reply(`${povName} has left the game!`);
 				await interaction.followUp({ content: '...and so ends the adventure. :grin:', flags: 64 });
