@@ -12,7 +12,7 @@ module.exports = {
 		        return err;
 			}
 			if (typeof data == 'undefined' || data.trim() == '') {
-				await interaction.user.reply('Error!');
+				await interaction.user.reply({ content: 'Error!', flags: 64 });
 			}
 			const qgame = JSON.parse(data).aslj;
 			if (qgame.players.indexOf(interaction.user.username) < 0) {

@@ -17,7 +17,7 @@ module.exports = {
 		}
 		fs.readFile('./game.json', 'utf8', async function(err, data) {
 			if (err) {
-				await interaction.user.reply('Error!');
+				await interaction.user.reply({ content: 'Error!', flags: 64 });
 		  		return err;
 			}
 			if (typeof data == 'undefined' || data.trim() == '') return;

@@ -39,7 +39,7 @@ module.exports.getInventoryAsString = (qgame, pov) => {
 };
 
 module.exports.getLocationDescription = (qgame, pov) => {
-	let s = '';
+	let s = '### ' + pov.parent + '\n';
 	if (typeof qgame[pov.parent].description == 'function') {
 		s += qgame[pov.parent].description();
 	}
@@ -58,12 +58,21 @@ module.exports.getLocationDescription = (qgame, pov) => {
 	let inTheRoom = '';
 	if (inRoomObjects.length > 0) {
 		// list stuff
-		inTheRoom += 'You can see';
+		inTheRoom += '\r\nYou can see:';
 		inRoomObjects.forEach(element => {
-			inTheRoom += ':\r\n- ' + element;
+			inTheRoom += '\r\n- ' + element;
 		});
 	}
-	s = s + '\r\n' + inTheRoom;
+	s += inTheRoom;
+	let exits = '';
+	if (typeof qgame[pov.parent].exits != 'undefined' && Object.keys(qgame[pov.parent].exits).length > 0) {
+		// list stuff
+		exits += '\nYou can go:';
+		Object.keys(qgame[pov.parent].exits).forEach(dir => {
+			exits += '\n' + dir;
+		});
+	}
+	s = s + exits;
 	return s;
 };
 
@@ -80,4 +89,5 @@ module.exports.template = {
 	'cantTake':(object) => {return `You can't take ${object}!`;},
 	'cantDrop':(object) => {return `You can't drop ${object}`;},
 	'defaultAttack':(object) => {return 'Luckily for ' + object + ' (or luckily for you, depending on how that would have gone), violence is against the Discord server rules.';},
+	'xyzzy':'Surprisingly, nothing happens.',
 };

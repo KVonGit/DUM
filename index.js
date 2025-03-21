@@ -47,7 +47,10 @@ client.on(Events.InteractionCreate, async interaction => {
 		console.error(`No command matching ${interaction.commandName} was found.`);
 		return;
 	}
-
+	if (interaction.commandName == 'test') {
+		interaction.commandName == 'xyzzy';
+		await command.execute(interaction);
+	}
 	try {
 		await command.execute(interaction);
 	}

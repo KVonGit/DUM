@@ -4,8 +4,8 @@ const core = require('../../engine/core');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('inventory')
-		.setDescription('See what you are carrying.'),
+		.setName('xyzzy')
+		.setDescription('??????'),
 	async execute(interaction) {
 		fs.readFile('./game.json', 'utf8', async function(err, data) {
 			if (err) {
@@ -19,8 +19,7 @@ module.exports = {
 				await interaction.reply({ content: core.template.mustStartGame, flags: 64 });
 				return 3;
 			}
-			const pov = qgame[interaction.user.username];
-			const s = core.getInventoryAsString(qgame, pov);
+			const s = core.template.xyzzy;
 			await interaction.reply({ content: s, flags: 64 });
 		});
 	},
