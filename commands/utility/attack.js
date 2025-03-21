@@ -39,7 +39,8 @@ module.exports = {
 			}
 			// TODO - Check scope!
 			if (typeof qgame[objname].attack == 'string') {
-				await interaction.reply({ content: qgame[objname].attack, flags: 64 });
+				await interaction.reply(`${povName} has attacked ${object}!`);
+				await interaction.followUp({ content: qgame[objname].attack, flags: 64 });
 			}
 			else if (typeof qgame[objname].attack == 'function') {
 				await interaction.reply({ content: qgame[objname].attack(), flags: 64 });
