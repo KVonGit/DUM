@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const fs = require('fs');
+const core = require('../../engine/core');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -15,35 +16,11 @@ module.exports = {
 			}
 			const qgame = JSON.parse(data).aslj;
 			if (qgame.players.indexOf(interaction.user.username) < 0) {
-				await interaction.reply({ content: 'You must /START before you can play.', flags: 64 });
+				await interaction.reply({ content: core.template.mustStartGame, flags: 64 });
 				return 3;
 			}
 			const pov = qgame[interaction.user.username];
-			let s = '';
-			if (typeof qgame[pov.parent].description == 'function') {
-				s += qgame[pov.parent].description();
-			}
-			else {
-				s += qgame[pov.parent].description;
-			}
-			const inRoomObjects = [];
-			Object.keys(qgame).forEach(element => {
-				const obj = qgame[element];
-				if (typeof obj.type != 'undefined' && obj.type == 'object') {
-					if (obj.parent == pov.parent) {
-						inRoomObjects.push(obj.name);
-					}
-				}
-			});
-			let inTheRoom = '';
-			if (inRoomObjects.length > 0) {
-				// list stuff
-				inTheRoom += 'You can see';
-				inRoomObjects.forEach(element => {
-					inTheRoom += ':\r\n- ' + element;
-				});
-			}
-			s = s + '\r\n' + inTheRoom;
+			const s = core.getLocationDescription(qgame, pov);
 			await interaction.reply({ content: s, flags: 64 });
 		});
 	},

@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const fs = require('fs');
+const core = require('../../engine/core');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -23,13 +24,14 @@ module.exports = {
 			const qgame = JSON.parse(data).aslj;
 			const povName = interaction.user.username;
 			if (qgame.players.indexOf(povName) < 0) {
-				await interaction.reply({ content: 'You must /START before you can play.', flags: 64 });
+				await interaction.reply({ content: core.template.mustStartGame, flags: 64 });
 				return 3;
 			}
 			if (typeof qgame[object] == 'undefined') {
 				await interaction.reply({ content: 'No such object ("' + object + '")!', flags: 64 });
 				return;
 			}
+			// TODO - Check scope!
 			if (typeof qgame[object].look == 'string') {
 				await interaction.reply({ content: qgame[object].look, flags: 64 });
 			}
@@ -37,7 +39,7 @@ module.exports = {
 				await interaction.reply({ content: qgame[object].look(), flags: 64 });
 			}
 			else {
-				const s = qgame.template.defaultLook || 'Nothing out of the ordinary.';
+				const s = core.template.defaultLook;
 				await interaction.reply({ content: s, flags: 64 });
 			}
 		});

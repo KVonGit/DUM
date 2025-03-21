@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const fs = require('fs');
+const core = require('../../engine/core');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -37,13 +38,7 @@ module.exports = {
 				if (typeof qgame.startScript != 'undefined') {
 					qgame.startScript();
 				}
-				// ???
-				if (typeof qgame[pov.parent].description == 'function') {
-					s += qgame[pov.parent].description();
-				}
-				else {
-					s += qgame[pov.parent].description || 'Error finding room description!';
-				}
+				s += core.getLocationDescription(qgame, pov);
 				await interaction.reply(`${povName} has joined the game!`);
 				await interaction.followUp({ content: s, flags: 64 });
 				fs.writeFile('./game.json', '{"aslj":' + JSON.stringify(qgame) + '}', async function(err) {

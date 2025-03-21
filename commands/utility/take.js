@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const fs = require('fs');
+const core = require('../../engine/core');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -23,7 +24,7 @@ module.exports = {
 			const qgame = JSON.parse(data).aslj;
 			const povName = interaction.user.username;
 			if (qgame.players.indexOf(povName) < 0) {
-				await interaction.reply({ content: 'You must /START before you can play.', flags: 64 });
+				await interaction.reply({ content: core.template.mustStartGame, flags: 64 });
 				return 3;
 			}
 			if (typeof qgame[object] == 'undefined') {
@@ -34,7 +35,7 @@ module.exports = {
 			const pov = qgame[povName];
 			// TODO - Check the object parent first!
 			if (obj.parent == pov.name) {
-				await interaction.reply({ content: 'You already have that!', flags: 64 });
+				await interaction.reply({ content: core.template.alreadyHave(obj.name), flags: 64 });
 				return 0;
 			}
 			else if (obj.parent != pov.parent) {
@@ -70,7 +71,7 @@ module.exports = {
 						}
 					}
 				}
-				await interaction.reply({ content: 'You can\'t see that!', flags: 64 });
+				await interaction.reply({ content: core.template.cantSee(obj.name), flags: 64 });
 				return 0;
 			}
 			let qtook = false;
@@ -91,7 +92,7 @@ module.exports = {
 				}
 				else {
 					// can't get it!
-					await interaction.reply({ content: 'You can\'t take ' + object + '!', flags: 64 });
+					await interaction.reply({ content: core.template.cantTake(obj.name), flags: 64 });
 				}
 				break;
 			case 'function':
@@ -103,7 +104,7 @@ module.exports = {
 				// tell everybody!
 				await interaction.reply(`${pov.name} took ${object}.`);
 				// need to return something if take is a function, to know if it printed something!
-				await interaction.followUp({ content: 'Taken.', flags: 64 });
+				await interaction.followUp({ content: core.template.taken, flags: 64 });
 				fs.writeFile('./game.json', '{"aslj":' + JSON.stringify(qgame) + '}', async function(err) {
 					if (err) {
 						console.log(err);
