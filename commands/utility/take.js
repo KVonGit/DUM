@@ -24,6 +24,8 @@ module.exports = {
 			const qgame = JSON.parse(data).aslj;
 			const povName = interaction.user.username;
 			if (qgame.players.indexOf(povName) < 0) {
+				// console.log(povName + 'TRIED TO TAKE WITHOUT JOINING THE GAME FIRST');
+				// console.log(JSON.stringify(qgame.players));
 				await interaction.reply({ content: core.template.mustStartGame, flags: 64 });
 				return 3;
 			}
@@ -65,7 +67,7 @@ module.exports = {
 						}
 						else {
 							// probably another player
-							const s = `${qgame[obj.parent].parent} probably wouldn't like that.`;
+							const s = `${obj.parent} probably wouldn't like that.`;
 							await interaction.reply({ content: s, flags: 64 });
 							return 0;
 						}

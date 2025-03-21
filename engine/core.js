@@ -79,4 +79,5 @@ module.exports.template = {
 	'alreadyHave':(object) => {return `You already have ${object}!`;},
 	'cantTake':(object) => {return `You can't take ${object}!`;},
 	'cantDrop':(object) => {return `You can't drop ${object}`;},
+	'defaultAttack':(object) => {return 'Luckily for ' + object + ' (or luckily for you, depending on how that would have gone), violence is against the Discord server rules.';},
 };

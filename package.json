@@ -6,9 +6,9 @@
     "@eslint/js": "^9.22.0",
     "eslint": "^9.22.0"
   },
-  "name": "questjs4d",
+  "name": "dum",
   "version": "0.0.1",
-  "description": "Work in progress",
+  "description": "Work in progress multi-player text adventure",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
