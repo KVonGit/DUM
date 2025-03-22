@@ -18,7 +18,7 @@ module.exports = {
 		const pov = qgame[interaction.user.username];
 		const obj = qgame[object];
 		// TODO - Check the object parent first!
-		if (obj.parent == pov.name) {
+		if (obj.parent == pov.userName) {
 			await interaction.reply({ content: core.template.alreadyHave(obj.name), flags: 64 });
 			return 0;
 		}
@@ -59,35 +59,43 @@ module.exports = {
 			return 0;
 		}
 		let qtook = false;
-		switch (typeof obj.take) {
-		case 'undefined':
-			// definitely not
-			await interaction.reply({ content: object + ' has no take property!', flags: 64 });
-			break;
-		case 'string':
-			// nope
-			await interaction.reply({ content: obj.take, flags: 64 });
-			break;
-		case 'boolean':
-			if (obj.take) {
-				// get it!
-				qtook = true;
+		if (typeof obj.takescript != 'undefined') {
+			eval(obj.takescript);
+			if (qtook) {
 				obj.parent = pov.name;
-			}
-			else {
+			};
+		}
+		if (!qtook) {
+			switch (typeof obj.take) {
+			case 'undefined':
+			// definitely not
+				await interaction.reply({ content: object + ' has no take property!', flags: 64 });
+				break;
+			case 'string':
+			// nope
+				await interaction.reply({ content: obj.take, flags: 64 });
+				break;
+			case 'boolean':
+				if (obj.take) {
+				// get it!
+					qtook = true;
+					obj.parent = pov.name;
+				}
+				else {
 				// can't get it!
-				await interaction.reply({ content: core.template.cantTake(obj.name), flags: 64 });
-			}
-			break;
-		case 'function':
+					await interaction.reply({ content: core.template.cantTake(obj.name), flags: 64 });
+				}
+				break;
+			case 'function':
 			// call function
-			qtook = obj.take();
-			break;
+				qtook = obj.take();
+				break;
+			}
 		}
 		if (qtook) {
 			// tell everybody!
-			await interaction.reply(`${pov.name} took ${object}.`);
-			// need to return something if take is a function, to know if it printed something!
+			await interaction.reply(`${pov.alias} took ${object}.`);
+			// TODO - need to return something if take is a function, to know if it printed something!
 			await interaction.followUp({ content: core.template.taken, flags: 64 });
 			try {
 				await core.saveGame('./game.json', qgame);

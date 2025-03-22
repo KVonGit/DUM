@@ -4,15 +4,16 @@
         "game": {
             "name": "DUM",
             "author": "KV",
-            "version": "0.0 alpha",
+            "version": "0.1 alpha",
             "year": 2025,
             "copyright": "© 2025 KV",
+            "description": "A DUM Lounge server test game.",
             "pov": "objects.player",
-            "startingParent": "Discord"
+            "startingParent": "Lounge"
         },
         "player": {
             "name": "player",
-            "parent": "Discord",
+            "parent": "Lounge",
             "look": "You are not injured.",
             "types": [
                 "pov",
@@ -22,7 +23,7 @@
         "bait": {
             "name": "bait",
             "type": "object",
-            "take": true,
+            "takescript": "console.log(\"BAIT TAKEN\"); qtook = true;",
             "parent": "kv_online"
         },
         "hammer": {
@@ -37,25 +38,30 @@
             "drop": "It might come in handy sometime. You are not allowed to drop it.",
             "type": "object"
         },
-        "Discord": {
-            "name": "Discord",
-            "description": "Nothing fancy, just a normal Discord server.",
+        "objects": [
+            "bait",
+            "hammer",
+            "hundred dollar bill"
+        ],
+        "Lounge": {
+            "name": "Lounge",
+            "description": "Nothing fancy, just a janky lounge in a DUM server.",
             "type": "location",
             "exits": {
-                "east": "Darkness"
+                "east": "Kitchen"
             }
         },
-        "Darkness": {
-            "name": "Darkness",
-            "description": "It is pitch dark. You can only make out the faint light from the exit to the west.",
+        "Kitchen": {
+            "name": "Kitchen",
+            "description": "The kitchen hasn't been built yet. It is only whitespace. Please move along.",
             "type": "location",
             "exits": {
-                "west": "Discord"
+                "west": "Lounge"
             }
         },
         "locations": [
-            "Discord",
-            "Darkness"
+            "Lounge",
+            "Kitchen"
         ],
         "players": [
             "pertex1",
@@ -68,15 +74,14 @@
             "userName": "pertex1",
             "alias": "Pertex",
             "dateJoined": 1742575169757,
-            "parent": "Discord"
+            "parent": "Lounge"
         },
         "kv_online": {
             "name": "kv_online",
-            "userName": "kv_online",
             "alias": "KV",
-            "dateJoined": 1742588418099,
-            "parent": "Discord",
-            "attack": "You attack KV!"
+            "userName": "kv_online",
+            "dateJoined": 1742612185066,
+            "parent": "Lounge"
         }
     }
 }

@@ -8,9 +8,10 @@ module.exports = {
 	async execute(interaction) {
 		const qgame = await core.loadGame('./game.json', interaction);
 		const povName = interaction.user.username;
-		const alias = interaction.member.nickname || interaction.user.username;
+		const alias = interaction.member?.displayName || interaction.user.displayName || interaction.user.username;
 		let pov = {};
 		let s = '';
+
 		if (qgame.players.indexOf(povName) < 0) {
 			qgame[povName] = {
 				'name': povName,
@@ -20,27 +21,32 @@ module.exports = {
 			};
 			qgame.players.push(povName);
 			pov = qgame[povName];
-			if (typeof pov.parent == 'undefined') pov.parent = qgame.game.startingParent || 'Discord';
-			if (typeof qgame.joinScript != 'undefined') {
+
+			if (typeof pov.parent === 'undefined') {
+				pov.parent = qgame.game.startingParent || 'Discord';
+			}
+
+			if (typeof qgame.joinScript !== 'undefined') {
 				s += qgame.joinScript(povName) || '';
 			}
 			else {
-				// default welcome message
-				s += 'Welcome, ' + alias + '!\r\n\r\n';
+				s += `Welcome, ${alias}!\r\n\r\n`;
 			}
 
-			if (typeof qgame.startScript != 'undefined') {
+			if (typeof qgame.startScript !== 'undefined') {
 				qgame.startScript();
 			}
+
 			s += core.getLocationDescription(qgame, pov);
-			await interaction.reply(`${alias} has joined the game!`);
+			await interaction.reply({ content: `${alias} has joined the game!` });
 			await interaction.followUp({ content: s, flags: 64 });
+
 			try {
 				await core.saveGame('./game.json', qgame);
 			}
 			catch (err) {
 				console.error('Error saving game data:', err);
-				await interaction.followUp({ content: 'Failed to save game data.', flags: 64 });
+				await interaction.reply({ content: 'Failed to save game data.', flags: 64 });
 			}
 		}
 		else {

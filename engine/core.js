@@ -2,11 +2,11 @@
 const fs = require('fs');
 
 module.exports.privateReply = async (interaction, s) => {
-	await interaction.reply({ content: s, ephemeral: true });
+	await interaction.reply({ content: s, flags: 64 });
 };
 
 module.exports.publicReply = async (interaction, s) => {
-	await interaction.reply({ content: s, ephemeral: false });
+	await interaction.reply(s);
 };
 
 module.exports.loadGame = async (filePath, interaction) => {
@@ -117,6 +117,49 @@ module.exports.getLocationDescription = (qgame, pov) => {
 	}
 	s = s + exits;
 	return s;
+};
+
+
+module.exports.getObject = (qgame, objName) => {
+	// Search for objects with type "object"
+	if (qgame.objects) {
+		for (const key of qgame.objects) {
+			console.log('key:', key);
+			const obj = qgame[key];
+			console.log('obj:', obj);
+			objName = objName.toLowerCase().trim();
+			if (obj.name.toLowerCase() === objName || (typeof obj.alias != 'undefined' && obj.alias.toLowerCase() === objName)) {
+				return obj;
+			}
+			if (typeof obj.alt != 'undefined') {
+				for (const alt of obj.alt) {
+					if (alt.toLowerCase() === objName) {
+						return obj;
+					}
+				}
+			}
+		}
+	}
+
+	// Search for players by name or alias
+	if (qgame.players) {
+		for (const playerName of qgame.players) {
+			const player = qgame[playerName];
+			if (player.name.toLowerCase() === objName || player.alias.toLowerCase() === objName) {
+				return player;
+			}
+			if (player.alt) {
+				for (const alt of player.alt) {
+					if (alt.toLowerCase() === objName) {
+						return player;
+					}
+				}
+			}
+		}
+	}
+
+	// If not found, return undefined
+	return undefined;
 };
 
 module.exports.template = {

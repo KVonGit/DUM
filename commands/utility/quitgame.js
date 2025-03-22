@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { getInventory, template } = require('../../engine/core');
+const core = require('../../engine/core');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -13,7 +13,7 @@ module.exports = {
 			qgame.players.splice(qgame.players.indexOf(povName), 1);
 			console.log(JSON.stringify(qgame.players));
 			// get inventory and drop it in the location of the player
-			const items = getInventory(qgame, pov);
+			const items = core.getInventory(qgame, pov);
 			for (const i in items) {
 				qgame[items[i]].parent = pov.parent;
 			}
