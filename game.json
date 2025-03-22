@@ -79,7 +79,7 @@
                 "alias": "KV",
                 "userName": "kv_online",
                 "dateJoined": 1742612185066,
-                "loc": "Kitchen",
+                "loc": "Lounge",
                 "attack": {
                     "type": "string",
                     "attr": "You attack KV!"

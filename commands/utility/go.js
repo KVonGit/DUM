@@ -10,7 +10,7 @@ module.exports = {
 				.setDescription('The direction (or location to which) you wish to go')),
 	async execute(interaction) {
 		const exitName = interaction.options.getString('direction');
-		console.log('exitName:', exitName);
+		// console.log('exitName:', exitName);
 		if (typeof exitName == 'undefined') {
 			await interaction.reply({ content:'\'' + exitName + '\' not defined.', flags:64 });
 			return;

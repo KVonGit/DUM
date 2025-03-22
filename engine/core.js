@@ -16,6 +16,7 @@ module.exports.template = {
 	'cantDrop':(object) => {return `You can't drop ${object}`;},
 	'defaultAttack':(object) => {return 'Luckily for ' + object + ' (or luckily for you, depending on how that would have gone), violence is against the Discord server rules.';},
 	'xyzzy':'Surprisingly, nothing happens.',
+	'defaultSpeakTo':(object) => {return 'You speak to ' + object + '.';},
 };
 
 // TODO: if an external template file is provided, load it here
