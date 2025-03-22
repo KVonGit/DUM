@@ -1,5 +1,25 @@
+/* eslint-disable no-useless-escape */
 // const { SlashCommandBuilder } = require('discord.js');
 const fs = require('fs');
+
+module.exports.template = {
+	'mustStartGame':'You must `/startgame` before you can play.',
+	'alreadyPlaying':'You are already playing the game.',
+	'notPlaying':'You are not playing the game.',
+	'defaultLook':'Nothing out of the ordinary.',
+	'taken':'Taken.',
+	'cantGo':(exit) => {return `You can't go ${exit}!`;},
+	'cantSee':(object) => {return `You can't see anything called '${object}' here!`;},
+	'dontHave':(object) => {return `You don't have ${object}!`;},
+	'alreadyHave':(object) => {return `You already have ${object}!`;},
+	'cantTake':(object) => {return `You can't take ${object}!`;},
+	'cantDrop':(object) => {return `You can't drop ${object}`;},
+	'defaultAttack':(object) => {return 'Luckily for ' + object + ' (or luckily for you, depending on how that would have gone), violence is against the Discord server rules.';},
+	'xyzzy':'Surprisingly, nothing happens.',
+};
+
+// TODO: if an external template file is provided, load it here
+// const template = require('./template.json');
 
 module.exports.privateReply = async (interaction, s) => {
 	await interaction.reply({ content: s, flags: 64 });
@@ -7,6 +27,18 @@ module.exports.privateReply = async (interaction, s) => {
 
 module.exports.publicReply = async (interaction, s) => {
 	await interaction.reply(s);
+};
+
+module.exports.privateFollowUp = async (interaction, s) => {
+	await interaction.followUp({ content: s, flags: 64 });
+};
+
+module.exports.publicFollowUp = async (interaction, s) => {
+	await interaction.followUp(s);
+};
+
+module.exports.privateMessage = async (interaction, s) => {
+	await interaction.user.send(s);
 };
 
 module.exports.loadGame = async (filePath, interaction) => {
@@ -46,32 +78,27 @@ module.exports.saveGame = async (filePath, qgame) => {
 
 module.exports.getInventory = (qgame, pov) => {
 	const inv = [];
-	Object.keys(qgame).forEach(element => {
+	for (const element in qgame.objects) {
 		const obj = qgame[element];
-		if (typeof obj.type != 'undefined' && obj.type == 'object') {
-			if (obj.parent == pov.name) {
-				inv.push(obj.name);
-			}
+		if (obj.loc == pov.name) {
+			inv.push(obj.name);
 		}
-	});
+	}
 	return inv;
 };
 
 module.exports.getInventoryAsString = (qgame, pov) => {
 	const inv = [];
-	Object.keys(qgame).forEach(element => {
-		const obj = qgame[element];
-		if (typeof obj.type != 'undefined' && obj.type == 'object') {
-			if (obj.parent == pov.name) {
-				inv.push(obj.name);
-			}
+	for (const obj in qgame.objects) {
+		if (obj.loc == pov.name) {
+			inv.push(obj.name);
 		}
-	});
+	}
 	let s = 'You are carrying';
 	if (inv.length > 0) {
 		// list stuff
 		inv.forEach(element => {
-			s += ':\r\n- ' + element;
+			s += ':\r\n\- ' + element;
 		});
 	}
 	else {
@@ -82,37 +109,47 @@ module.exports.getInventoryAsString = (qgame, pov) => {
 };
 
 module.exports.getLocationDescription = (qgame, pov) => {
-	let s = '### ' + pov.parent + '\n';
-	if (typeof qgame[pov.parent].description == 'function') {
-		s += qgame[pov.parent].description();
+	const room = qgame.locations[pov.loc];
+	if (typeof room == 'undefined') {
+		return 'Location not found!';
+	}
+	let s = '### ' + room.name + '\n';
+	if (typeof room.description == 'function') {
+		s += room.description();
 	}
 	else {
-		s += qgame[pov.parent].description;
+		s += room.description;
 	}
 	const inRoomObjects = [];
-	Object.keys(qgame).forEach(element => {
-		const obj = qgame[element];
-		if (typeof obj.type != 'undefined' && obj.type == 'object') {
-			if (obj.parent == pov.parent) {
-				inRoomObjects.push(obj.name);
-			}
+	Object.keys(qgame.objects).forEach(obj => {
+		// console.log('obj:', obj);
+		obj = qgame.objects[obj];
+		if (obj.loc == pov.loc) {
+			inRoomObjects.push(obj.alias || obj.name);
+		}
+	});
+	Object.keys(qgame.players).forEach(obj => {
+		// console.log('obj:', obj);
+		obj = qgame.players[obj];
+		if (obj.loc == pov.loc && obj.name != pov.name) {
+			inRoomObjects.push('@' + obj.alias || obj.name);
 		}
 	});
 	let inTheRoom = '';
 	if (inRoomObjects.length > 0) {
 		// list stuff
-		inTheRoom += '\r\nYou can see:';
+		inTheRoom += '\r\nYou can **see**:';
 		inRoomObjects.forEach(element => {
-			inTheRoom += '\r\n- ' + element;
+			inTheRoom += '\r\n\- ' + element;
 		});
 	}
 	s += inTheRoom;
 	let exits = '';
-	if (typeof qgame[pov.parent].exits != 'undefined' && Object.keys(qgame[pov.parent].exits).length > 0) {
+	if (typeof room.exits != 'undefined' && Object.keys(room.exits).length > 0) {
 		// list stuff
-		exits += '\nYou can go:';
-		Object.keys(qgame[pov.parent].exits).forEach(dir => {
-			exits += '\n' + dir;
+		exits += '\nYou can **go**:';
+		Object.keys(room.exits).forEach(dir => {
+			exits += '\n\- ' + dir;
 		});
 	}
 	s = s + exits;
@@ -121,38 +158,33 @@ module.exports.getLocationDescription = (qgame, pov) => {
 
 
 module.exports.getObject = (qgame, objName) => {
-	// Search for objects with type "object"
-	if (qgame.objects) {
-		for (const key of qgame.objects) {
-			// console.log('key:', key);
-			const obj = qgame[key];
-			// console.log('obj:', obj);
-			objName = objName.toLowerCase().trim();
-			if (obj.name.toLowerCase() === objName || (typeof obj.alias != 'undefined' && obj.alias.toLowerCase() === objName)) {
-				return obj;
-			}
-			if (typeof obj.alt != 'undefined') {
-				for (const alt of obj.alt) {
-					if (alt.toLowerCase() === objName) {
-						return obj;
-					}
+	for (const key of Object.keys(qgame.objects)) {
+		// console.log('key:', key);
+		const obj = qgame.objects[key];
+		// console.log('obj:', obj);
+		objName = objName.toLowerCase().trim();
+		if (obj.name.toLowerCase() === objName || (typeof obj.alias != 'undefined' && obj.alias.toLowerCase() === objName)) {
+			return obj;
+		}
+		if (typeof obj.alt != 'undefined') {
+			for (const alt of obj.alt) {
+				if (alt.toLowerCase() === objName) {
+					return obj;
 				}
 			}
 		}
 	}
-
 	// Search for players by name or alias
-	if (qgame.players) {
-		for (const playerName of qgame.players) {
-			const player = qgame[playerName];
-			if (player.name.toLowerCase() === objName || player.alias.toLowerCase() === objName) {
-				return player;
-			}
-			if (player.alt) {
-				for (const alt of player.alt) {
-					if (alt.toLowerCase() === objName) {
-						return player;
-					}
+
+	for (const playerName of Object.keys(qgame.players)) {
+		const player = qgame.players[playerName];
+		if (player.name.toLowerCase() === objName || player.alias.toLowerCase() === objName) {
+			return player;
+		}
+		if (player.alt) {
+			for (const alt of player.alt) {
+				if (alt.toLowerCase() === objName) {
+					return player;
 				}
 			}
 		}
@@ -162,18 +194,16 @@ module.exports.getObject = (qgame, objName) => {
 	return undefined;
 };
 
-module.exports.template = {
-	'mustStartGame':'You must `/startgame` before you can play.',
-	'alreadyPlaying':'You are already playing the game.',
-	'notPlaying':'You are not playing the game.',
-	'defaultLook':'Nothing out of the ordinary.',
-	'taken':'Taken.',
-	'cantGo':(exit) => {return `You can't go ${exit}!`;},
-	'cantSee':(object) => {return `You can't see anything called '${object}' here!`;},
-	'dontHave':(object) => {return `You don't have ${object}!`;},
-	'alreadyHave':(object) => {return `You already have ${object}!`;},
-	'cantTake':(object) => {return `You can't take ${object}!`;},
-	'cantDrop':(object) => {return `You can't drop ${object}`;},
-	'defaultAttack':(object) => {return 'Luckily for ' + object + ' (or luckily for you, depending on how that would have gone), violence is against the Discord server rules.';},
-	'xyzzy':'Surprisingly, nothing happens.',
+module.exports.allObjects = (qgame) => {
+	return Object.keys(qgame.objects);
+};
+
+module.exports.allPlayers = (qgame) => {
+	return Object.keys(qgame.players);
+};
+
+module.exports.evalThis = (obj, scriptAttr) => {
+	if (typeof obj[scriptAttr] === 'string') {
+		eval(`(${obj[scriptAttr]})`).call(obj);
+	}
 };

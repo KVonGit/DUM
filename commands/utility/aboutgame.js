@@ -7,7 +7,7 @@ module.exports = {
 		.setDescription('Get information about the game.'),
 	async execute(interaction) {
 		const qgame = await core.loadGame('./game.json', interaction);
-		if (qgame.players.indexOf(interaction.user.username) < 0) {
+		if (Object.keys(qgame.players).indexOf(interaction.user.username) < 0) {
 			await interaction.reply({ content: core.template.mustStartGame, flags: 64 });
 			return 3;
 		}

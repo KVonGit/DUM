@@ -9,83 +9,84 @@
             "copyright": "© 2025 KV",
             "description": "A DUM server test game.",
             "pov": "objects.player",
-            "startingParent": "Lounge"
+            "startingLocation": "Lounge"
         },
-        "player": {
-            "name": "player",
-            "parent": "Lounge",
-            "look": "You are not injured.",
-            "types": [
-                "pov",
-                "defaultPlayer"
-            ]
-        },
-        "newspaper": {
-            "name": "newspaper",
-            "type": "object",
-            "takescript": "console.log(\"BAIT TAKEN\"); qtook = true;",
-            "parent": "Lounge"
-        },
-        "hammer": {
-            "name": "hammer",
-            "parent": "pertex1",
-            "type": "object"
-        },
-        "hundred dollar bill": {
-            "name": "hundred dollar bill",
-            "look": "It's a hundred bucks!",
-            "parent": "pertex1",
-            "drop": "It might come in handy sometime. You are not allowed to drop it.",
-            "type": "object"
-        },
-        "objects": [
-            "newspaper",
-            "hammer",
-            "hundred dollar bill"
-        ],
-        "Lounge": {
-            "name": "Lounge",
-            "description": "Nothing fancy, just a janky lounge in a DUM server.",
-            "type": "location",
-            "exits": {
-                "east": "Kitchen"
+        "objects": {
+            "newspaper": {
+                "name": "newspaper",
+                "inherit": [
+                    "container"
+                ],
+                "take": {
+                    "type": "script",
+                    "attr": "obj.loc = pov.name; console.log(obj.name + \" TAKEN\");"
+                },
+                "look": "It's yesterday's newspaper.",
+                "loc": "Lounge"
+            },
+            "hammer": {
+                "name": "hammer",
+                "loc": "pertex1",
+                "look": "It's a mini war hammer."
+            },
+            "hundred dollar bill": {
+                "name": "hundred dollar bill",
+                "look": "It's a hundred bucks!",
+                "loc": "Kitchen",
+                "drop": {
+                    "type": "string",
+                    "attr": "It might come in handy sometime. You are not allowed to drop it."
+                }
             }
         },
-        "Kitchen": {
-            "name": "Kitchen",
-            "description": "The kitchen hasn't been built yet. It is only whitespace. Please move along.",
-            "type": "location",
-            "exits": {
-                "west": "Lounge"
+        "locations": {
+            "Lounge": {
+                "name": "Lounge",
+                "description": "Nothing fancy, just a janky lounge in a DUM server.",
+                "exits": {
+                    "east": {
+                        "to": "Kitchen"
+                    }
+                }
+            },
+            "Kitchen": {
+                "name": "Kitchen",
+                "description": "The kitchen hasn't been built yet. It is only whitespace. Please move along.",
+                "exits": {
+                    "west": {
+                        "to": "Lounge"
+                    }
+                }
             }
         },
-        "locations": [
-            "Lounge",
-            "Kitchen"
-        ],
-        "players": [
-            "pertex1",
-            "kv_online"
-        ],
-        "timers": [],
-        "turnScripts": [],
-        "pertex1": {
-            "name": "pertex1",
-            "userName": "pertex1",
-            "alias": "Pertex",
-            "alt":[
-                "Oblomov"
-            ],
-            "dateJoined": 1742575169757,
-            "parent": "Lounge",
-            "take": "He only lets Mrs. Pertex do that!"
+        "players": {
+            "pertex1": {
+                "name": "pertex1",
+                "userName": "pertex1",
+                "alias": "Pertex",
+                "alt": [
+                    "Oblomov"
+                ],
+                "dateJoined": 1742575169757,
+                "loc": "Lounge",
+                "take": {
+                    "type": "string",
+                    "attr": "He only lets Mrs. Pertex do that!"
+                }
+            },
+            "kv_online": {
+                "name": "kv_online",
+                "alias": "KV",
+                "userName": "kv_online",
+                "dateJoined": 1742612185066,
+                "loc": "Kitchen",
+                "attack": {
+                    "type": "string",
+                    "attr": "You attack KV!"
+                }
+            }
         },
-        "kv_online": {
-            "name": "kv_online",
-            "alias": "KV",
-            "userName": "kv_online",
-            "dateJoined": 1742612185066,
-            "parent": "Lounge"
-        }
+        "timers": {},
+        "turnScripts": {}
     }
 }

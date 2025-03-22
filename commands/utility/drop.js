@@ -16,52 +16,63 @@ module.exports = {
 		}
 		const qgame = await core.loadGame('./game.json', interaction);
 		const povName = interaction.user.username;
-		if (qgame.players.indexOf(povName) < 0) {
+		if (core.allPlayers(qgame).indexOf(povName) < 0) {
 			await interaction.reply({ content: core.template.mustStartGame, flags: 64 });
 			return 3;
 		}
-		if (typeof qgame[object] == 'undefined') {
+		if (typeof core.getObject(qgame, object) == 'undefined') {
 			await interaction.reply({ content: 'No such object ("' + object + '")!', flags: 64 });
 			return;
 		}
-		const obj = qgame[object];
-		const pov = qgame[povName];
-		// TODO - Check the object parent first!
-		if (obj.parent != pov.name) {
+		const obj = core.getObject(qgame, object);
+		const pov = qgame.players[povName];
+		// TODO - Check the object loc first!
+		if (obj.loc != pov.name) {
 			await interaction.reply({ content: core.template.dontHave(obj.name), flags: 64 });
 			return 0;
 		}
 		let qdropped = false;
-		switch (typeof obj.drop) {
-		case 'undefined':
+		if (typeof obj.drop == 'undefined' || typeof obj.drop.type == 'undefined') {
 			// let it be dropped
 			qdropped = true;
-			obj.parent = qgame[pov.parent].name;
-			break;
-		case 'string':
+			obj.loc = qgame.locations[pov.loc].name;
+		}
+		else if (typeof obj.drop == 'string') {
 			// nope
 			await interaction.reply({ content: obj.take, flags: 64 });
-			break;
-		case 'boolean':
-			if (obj.drop) {
-				// drop it!
+		}
+		else {
+			switch (obj.drop.type) {
+			case 'undefined':
+			// let it be dropped
 				qdropped = true;
-				obj.parent = qgame[pov.parent].name;
-			}
-			else {
+				obj.loc = qgame.locations[pov.loc].name;
+				break;
+			case 'string':
+			// nope
+				await interaction.reply({ content: obj.take.attr, flags: 64 });
+				break;
+			case 'boolean':
+				if (obj.drop.attr) {
+				// drop it!
+					qdropped = true;
+					obj.loc = qgame.locations[pov.loc].name;
+				}
+				else {
 				// can't get it!
-				await interaction.reply({ content: core.template.cantDrop(obj.name), flags: 64 });
-			}
-			break;
-		case 'function':
+					await interaction.reply({ content: core.template.cantDrop(obj.name), flags: 64 });
+				}
+				break;
+			case 'script':
 			// call function
-			obj.drop({ 'this':obj, 'pov':pov });
-			qdropped = (obj.parent != pov.name);
-			break;
+				evalThis(obj, obj.drop.attr);
+				qdropped = (obj.loc != pov.name);
+				break;
+			}
 		}
 		if (qdropped) {
 			// tell everybody!
-			await interaction.reply(`${pov.name} dropped ${object}.`);
+			await interaction.reply(`${pov.alias} dropped ${object} in ${obj.loc}.`);
 			// need to return something if take is a function, to know if it printed something!
 			await interaction.followUp({ content: 'Dropped.', flags: 64 });
 			try {

@@ -12,18 +12,17 @@ module.exports = {
 		let pov = {};
 		let s = '';
 
-		if (qgame.players.indexOf(povName) < 0) {
-			qgame[povName] = {
+		if (Object.keys(qgame.players).indexOf(povName) < 0) {
+			qgame.players[povName] = {
 				'name': povName,
 				'alias': alias,
 				'userName': interaction.user.username,
 				'dateJoined': Date.now(),
 			};
-			qgame.players.push(povName);
-			pov = qgame[povName];
+			pov = qgame.players[povName];
 
-			if (typeof pov.parent === 'undefined') {
-				pov.parent = qgame.game.startingParent || 'Discord';
+			if (typeof pov.loc === 'undefined') {
+				pov.loc = qgame.game.startingLocation || 'Lounge';
 			}
 
 			if (typeof qgame.joinScript !== 'undefined') {

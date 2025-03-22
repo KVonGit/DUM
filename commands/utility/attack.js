@@ -34,26 +34,33 @@ module.exports = {
 		}
 		const qgame = await core.loadGame('./game.json', interaction);
 		const povName = interaction.user.username;
-		const objname = object;
-		if (qgame.players.indexOf(povName) < 0) {
+		if (Object.keys(qgame.players).indexOf(povName) < 0) {
 			await msg(core.template.mustStartGame, true);
 			return 3;
 		}
-		if (typeof core.getObject(qgame, objname) == 'undefined') {
-			await msg('No such object ("' + objname + '")!', true);
+		const pov = qgame.players[povName];
+		if (typeof core.getObject(qgame, object) == 'undefined') {
+			await msg('No such object ("' + object + '")!', true);
 			return;
 		}
-		const obj = core.getObject(qgame, objname);
+		const obj = core.getObject(qgame, object);
 		// TODO - Check scope!
-		if (typeof obj.attack == 'string') {
-			await msg(`${povName} has attacked ${object}!`);
-			await msg(obj.attack, true, true);
+		if (typeof obj.attack == 'undefined') {
+			await msg(core.template.defaultAttack(obj.alias || object), true);
 		}
-		else if (typeof obj.attack == 'function') {
+		else if (typeof obj.attack.type == 'undefined') {
+			await msg(core.template.defaultAttack(obj.alias || object), true);
+		}
+		else if (obj.attack.type == 'string') {
+			await msg(`${pov.alias} has attacked ${obj.alias || object}!`);
+			await msg(obj.attack.attr, true, true);
+		}
+		else if (obj.attack.type == 'script') {
+			eval (obj.attack.attr);
 			await msg(obj.attack(), true);
 		}
 		else {
-			const s = core.template.defaultAttack(objname);
+			const s = core.template.defaultAttack(obj.alias || object);
 			await msg(s, true);
 		}
 	},

@@ -9,16 +9,15 @@ module.exports = {
 		const qgame = await core.loadGame('./game.json', interaction);
 		const povName = interaction.user.username;
 		const pov = qgame[povName];
-		if (qgame.players.indexOf(povName) > -1) {
-			qgame.players.splice(qgame.players.indexOf(povName), 1);
-			console.log(JSON.stringify(qgame.players));
+		const alias = pov.alias;
+		if (Object.keys(qgame.players).indexOf(povName) > -1) {
 			// get inventory and drop it in the location of the player
 			const items = core.getInventory(qgame, pov);
 			for (const i in items) {
-				qgame[items[i]].parent = pov.parent;
+				core.getObject(items[i]).loc = pov.loc;
 			}
-			delete qgame[povName];
-			await interaction.reply(`${povName} has left the game!`);
+			delete qgame.players[povName];
+			await interaction.reply(`${alias} has left the game!`);
 			await interaction.followUp({ content: '...and so ends the adventure. :grin:', flags: 64 });
 			try {
 				await core.saveGame('./game.json', qgame);

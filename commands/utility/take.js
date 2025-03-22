@@ -9,36 +9,45 @@ module.exports = {
 			option.setName('object')
 				.setDescription('The object you wish to take')),
 	async execute(interaction) {
+		// core.privateMessage(interaction, 'PING!');
 		const object = interaction.options.getString('object');
 		if (typeof object == 'undefined') {
-			await interaction.reply({ content: '\'object\' not defined.', flags: 64 });
+			console.error('\'' + object + '\' not defined.');
+			await interaction.reply({ content: '\'' + object + '\' not defined.', flags: 64 });
 			return;
 		}
 		const qgame = await core.loadGame('./game.json', interaction);
-		const pov = qgame[interaction.user.username];
+		const pov = qgame.players[interaction.user.username];
 		const obj = core.getObject(qgame, object);
 		if (typeof obj == 'undefined') {
+			console.error('No such object ("' + object + '")!');
 			await interaction.reply({ content: 'No such object ("' + object + '")!', flags: 64 });
 			return;
 		}
-		// TODO - Check the object parent first!
-		if (obj.parent == pov.userName) {
+		console.log('obj:', obj);
+		console.log('pov:', pov);
+		// TODO - Check the object loc first!
+		if (obj.loc == pov.name) {
 			await interaction.reply({ content: core.template.alreadyHave(obj.name), flags: 64 });
 			return 0;
 		}
-		else if (obj.parent != pov.parent) {
-			if (typeof qgame[obj.parent].parent != 'undefined') {
-				if (qgame[obj.parent].parent == pov.parent) {
+		else if (obj.loc != pov.loc) {
+			// It's not in the same location as the player
+			// is it in or on something, or does a player have it?
+			const holder = qgame.locations[obj.loc] || qgame.objects[obj.loc] || qgame.players[obj.loc];
+			console.log('holder:', holder);
+			if (typeof holder.loc != 'undefined') {
+				if (holder.loc == pov.loc) {
 					// another player has it, or it's in or on something
-					if (typeof qgame[obj.parent].type != 'undefined') {
+					if (typeof holder.inherit != 'undefined') {
 						// it's a surface or container
-						if (qgame[obj.parent].type == 'surface') {
+						if (holder.type.indexOf('surface') >= 0) {
 							// able to take, just let things roll
 						}
-						else if (qgame[obj.parent].type == 'container') {
+						else if (holder.type == 'container') {
 							// is it closed?
-							if (qgame[obj.parent].closed) {
-								if (obj.parent.transparent) {
+							if (holder.closed) {
+								if (holder.transparent) {
 									// TODO - you can't it's closed
 								}
 								else {
@@ -53,7 +62,7 @@ module.exports = {
 					}
 					else {
 						// probably another player
-						const s = `${obj.parent} probably wouldn't like that.`;
+						const s = `${holder.alias} probably wouldn't like that.`;
 						await interaction.reply({ content: s, flags: 64 });
 						return 0;
 					}
@@ -62,37 +71,41 @@ module.exports = {
 			await interaction.reply({ content: core.template.cantSee(obj.name), flags: 64 });
 			return 0;
 		}
+		console.log(obj.name + ' is in the same location as the player.');
 		let qtook = false;
 		if (typeof obj.takescript != 'undefined') {
 			eval(obj.takescript);
 			if (qtook) {
-				obj.parent = pov.name;
+				obj.loc = pov.name;
 			};
 		}
 		if (!qtook) {
-			switch (typeof obj.take) {
+			switch (obj.take.type) {
 			case 'undefined':
 			// definitely not
 				await interaction.reply({ content: object + ' has no take property!', flags: 64 });
 				break;
 			case 'string':
 			// nope
-				await interaction.reply({ content: obj.take, flags: 64 });
+				await interaction.reply({ content: obj.take.attr, flags: 64 });
 				break;
 			case 'boolean':
-				if (obj.take) {
+				if (obj.take.attr) {
 				// get it!
 					qtook = true;
-					obj.parent = pov.name;
+					obj.loc = pov.name;
 				}
 				else {
 				// can't get it!
 					await interaction.reply({ content: core.template.cantTake(obj.name), flags: 64 });
 				}
 				break;
-			case 'function':
+			case 'script':
 			// call function
-				qtook = obj.take();
+				eval(obj.take.attr);
+				// console.log('qtook:', qtook);
+				qtook = (obj.loc == pov.name);
+				// console.log('qtook:', qtook);
 				break;
 			}
 		}
