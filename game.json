@@ -20,11 +20,11 @@
                 "defaultPlayer"
             ]
         },
-        "bait": {
-            "name": "bait",
+        "newspaper": {
+            "name": "newspaper",
             "type": "object",
             "takescript": "console.log(\"BAIT TAKEN\"); qtook = true;",
-            "parent": "kv_online"
+            "parent": "Lounge"
         },
         "hammer": {
             "name": "hammer",
@@ -39,7 +39,7 @@
             "type": "object"
         },
         "objects": [
-            "bait",
+            "newspaper",
             "hammer",
             "hundred dollar bill"
         ],
@@ -73,8 +73,12 @@
             "name": "pertex1",
             "userName": "pertex1",
             "alias": "Pertex",
+            "alt":[
+                "Oblomov"
+            ],
             "dateJoined": 1742575169757,
-            "parent": "Lounge"
+            "parent": "Lounge",
+            "take": "He only lets Mrs. Pertex do that!"
         },
         "kv_online": {
             "name": "kv_online",

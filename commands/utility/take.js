@@ -16,7 +16,11 @@ module.exports = {
 		}
 		const qgame = await core.loadGame('./game.json', interaction);
 		const pov = qgame[interaction.user.username];
-		const obj = qgame[object];
+		const obj = core.getObject(qgame, object);
+		if (typeof obj == 'undefined') {
+			await interaction.reply({ content: 'No such object ("' + object + '")!', flags: 64 });
+			return;
+		}
 		// TODO - Check the object parent first!
 		if (obj.parent == pov.userName) {
 			await interaction.reply({ content: core.template.alreadyHave(obj.name), flags: 64 });

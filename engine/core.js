@@ -124,9 +124,9 @@ module.exports.getObject = (qgame, objName) => {
 	// Search for objects with type "object"
 	if (qgame.objects) {
 		for (const key of qgame.objects) {
-			console.log('key:', key);
+			// console.log('key:', key);
 			const obj = qgame[key];
-			console.log('obj:', obj);
+			// console.log('obj:', obj);
 			objName = objName.toLowerCase().trim();
 			if (obj.name.toLowerCase() === objName || (typeof obj.alias != 'undefined' && obj.alias.toLowerCase() === objName)) {
 				return obj;
