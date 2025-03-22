@@ -28,12 +28,6 @@ module.exports = {
 			return;
 		}
 		// TODO - Check scope!
-		/*
-		if (typeof warned[pov.name] == 'undefined') {
-			warned[pov.name] = true;
-			await core.privateMessage(interaction, 'Hey, ' + pov.alias + '... Tell the admin to fix the `/look` command! It does not check scope, location, or anything else!');
-		}
-		*/
 		if (obj.loc != pov.loc || (typeof obj.visible != 'undefined' && obj.visible == false)) {
 			await interaction.reply({ content: core.template.cantSee(obj.alias || obj.name), flags: 64 });
 		}
@@ -50,10 +44,19 @@ module.exports = {
 		else if (typeof obj.speakto == 'string') {
 			await interaction.reply({ content:obj.speakto, flags: 64 });
 		}
-		else if (typeof obj.speakto.type !== 'undefined' && obj.speakto.type == 'script') {
-			qgame.replyString = '';
-			eval (obj.speakto.attr);
-			await interaction.reply({ content: qgame.replyString, flags: 64 });
+		else if (typeof obj.speakto.type !== 'undefined') {
+			if (typeof obj.speakto.type == 'string') {
+				await interaction.reply({ content:obj.speakto.attr, flags: 64 });
+			}
+			else if (obj.speakto.type == 'script') {
+				qgame.replyString = '';
+				eval (obj.speakto.attr);
+				await interaction.reply({ content: qgame.replyString, flags: 64 });
+			}
+			else {
+				const s = core.template.defaultSpeakTo(obj.alias || obj.name);
+				await interaction.reply({ content: s, flags: 64 });
+			}
 		}
 		else {
 			const s = core.template.defaultSpeakTo(obj.alias || obj.name);

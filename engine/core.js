@@ -8,6 +8,7 @@ module.exports.template = {
 	'notPlaying':'You are not playing the game.',
 	'defaultLook':'Nothing out of the ordinary.',
 	'taken':'Taken.',
+	'dropped':'Dropped.',
 	'cantGo':(exit) => {return `You can't go ${exit}!`;},
 	'cantSee':(object) => {return `You can't see anything called '${object}' here!`;},
 	'dontHave':(object) => {return `You don't have ${object}!`;},
@@ -17,6 +18,9 @@ module.exports.template = {
 	'defaultAttack':(object) => {return 'Luckily for ' + object + ' (or luckily for you, depending on how that would have gone), violence is against the Discord server rules.';},
 	'xyzzy':'Surprisingly, nothing happens.',
 	'defaultSpeakTo':(object) => {return 'You speak to ' + object + '.';},
+	'oops':'There is nothing to correct.',
+	'noUndo':'You can\'t use UNDO in a multiplayer game.',
+	'noSave':'You can\'t save in a multiplayer game.',
 };
 
 // TODO: if an external template file is provided, load it here

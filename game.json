@@ -14,7 +14,7 @@
         "objects": {
             "newspaper": {
                 "name": "newspaper",
-                "inherit": [
+                "inherits": [
                     "container"
                 ],
                 "take": {
@@ -22,7 +22,7 @@
                     "attr": "obj.loc = pov.name; console.log(obj.name + \" TAKEN\");"
                 },
                 "look": "It's yesterday's newspaper.",
-                "loc": "Lounge"
+                "loc": "kv_online"
             },
             "hammer": {
                 "name": "hammer",
@@ -37,6 +37,22 @@
                     "type": "string",
                     "attr": "It might come in handy sometime. You are not allowed to drop it."
                 }
+            },
+            "Bob": {
+                "name": "Bob",
+                "loc": "Lounge",
+                "look": "Bob is lying __***very***__ still.",
+                "attack": {
+                    "type": "string",
+                    "attr": "He is dead! No need to attack him, you monster! :laughing:"
+                },
+                "speakto": {
+                    "type": "string",
+                    "attr": "He's dead, Jim! :rofl:"
+                },
+                "inherits": [
+                    "npc"
+                ]
             }
         },
         "locations": {

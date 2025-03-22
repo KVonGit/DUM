@@ -24,8 +24,8 @@ module.exports = {
 			await interaction.reply({ content: 'No such object ("' + object + '")!', flags: 64 });
 			return;
 		}
-		console.log('obj:', obj);
-		console.log('pov:', pov);
+		// console.log('obj:', obj);
+		// console.log('pov:', pov);
 		// TODO - Check the object loc first!
 		if (obj.loc == pov.name) {
 			await interaction.reply({ content: core.template.alreadyHave(obj.name), flags: 64 });
@@ -71,7 +71,7 @@ module.exports = {
 			await interaction.reply({ content: core.template.cantSee(obj.name), flags: 64 });
 			return 0;
 		}
-		console.log(obj.name + ' is in the same location as the player.');
+		// console.log(obj.name + ' is in the same location as the player.');
 		let qtook = false;
 		if (typeof obj.takescript != 'undefined') {
 			eval(obj.takescript);
@@ -79,11 +79,16 @@ module.exports = {
 				obj.loc = pov.name;
 			};
 		}
+		if (typeof obj.take == 'undefined' || typeof obj.take.type == 'undefined') {
+			// definitely not
+			await interaction.reply({ content: core.template.cantTake(obj.name), flags: 64 });
+			return;
+		}
 		if (!qtook) {
 			switch (obj.take.type) {
 			case 'undefined':
 			// definitely not
-				await interaction.reply({ content: object + ' has no take property!', flags: 64 });
+				await interaction.reply({ content: core.template.cantTake(obj.name), flags: 64 });
 				break;
 			case 'string':
 			// nope
