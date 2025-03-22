@@ -37,14 +37,13 @@ module.exports = {
 			const s = core.getLocationDescription(qgame, pov);
 			await interaction.reply(`${povName} goes ${exitName}.`);
 			await interaction.followUp({ content: s, flags: 64 });
-			fs.writeFile('./game.json', '{"aslj":' + JSON.stringify(qgame) + '}', async function(err) {
-				if (err) {
-					console.log(err);
-					return err;
-				}
-				console.log('game data' + ' saved!');
-				return 0;
-			});
+			try {
+				await core.saveGame('./game.json', qgame);
+			}
+			catch (err) {
+				console.error('Error saving game data:', err);
+				await interaction.followUp({ content: 'Failed to save game data.', flags: 64 });
+			}
 		});
 	},
 };

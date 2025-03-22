@@ -1,1 +1,82 @@
-{"aslj":{"version":420,"game":{"name":"DUM","author":"KV","version":"0.0 alpha","year":2025,"copyright":"© 2025 KV","pov":"objects.player","startingParent":"Discord"},"player":{"name":"player","parent":"Discord","look":"You are not injured.","types":["pov","defaultPlayer"]},"bait":{"name":"bait","type":"object","take":true,"parent":"kv_online"},"hammer":{"name":"hammer","parent":"pertex1","type":"object"},"hundred dollar bill":{"name":"hundred dollar bill","look":"It's a hundred bucks!","parent":"pertex1","drop":"It might come in handy sometime. You are not allowed to drop it.","type":"object"},"Discord":{"name":"Discord","description":"Nothing fancy, just a normal Discord server.","exits":{"east":"Darkness"}},"Darkness":{"name":"Darkness","description":"It is pitch dark. You can only make out the faint light from the exit to the west.","exits":{"west":"Discord"}},"locations":["Discord","Darkness"],"players":["pertex1","kv_online"],"timers":[],"turnScripts":[],"pertex1":{"name":"pertex1","userName":"pertex1","dateJoined":1742575169757,"parent":"Discord"},"kv_online":{"name":"kv_online","userName":"kv_online","dateJoined":1742588418099,"parent":"Discord","attack":"You attack KV!"}}}
+{
+    "aslj": {
+        "version": 420,
+        "game": {
+            "name": "DUM",
+            "author": "KV",
+            "version": "0.0 alpha",
+            "year": 2025,
+            "copyright": "© 2025 KV",
+            "pov": "objects.player",
+            "startingParent": "Discord"
+        },
+        "player": {
+            "name": "player",
+            "parent": "Discord",
+            "look": "You are not injured.",
+            "types": [
+                "pov",
+                "defaultPlayer"
+            ]
+        },
+        "bait": {
+            "name": "bait",
+            "type": "object",
+            "take": true,
+            "parent": "kv_online"
+        },
+        "hammer": {
+            "name": "hammer",
+            "parent": "pertex1",
+            "type": "object"
+        },
+        "hundred dollar bill": {
+            "name": "hundred dollar bill",
+            "look": "It's a hundred bucks!",
+            "parent": "pertex1",
+            "drop": "It might come in handy sometime. You are not allowed to drop it.",
+            "type": "object"
+        },
+        "Discord": {
+            "name": "Discord",
+            "description": "Nothing fancy, just a normal Discord server.",
+            "type": "location",
+            "exits": {
+                "east": "Darkness"
+            }
+        },
+        "Darkness": {
+            "name": "Darkness",
+            "description": "It is pitch dark. You can only make out the faint light from the exit to the west.",
+            "type": "location",
+            "exits": {
+                "west": "Discord"
+            }
+        },
+        "locations": [
+            "Discord",
+            "Darkness"
+        ],
+        "players": [
+            "pertex1",
+            "kv_online"
+        ],
+        "timers": [],
+        "turnScripts": [],
+        "pertex1": {
+            "name": "pertex1",
+            "userName": "pertex1",
+            "alias": "Pertex",
+            "dateJoined": 1742575169757,
+            "parent": "Discord"
+        },
+        "kv_online": {
+            "name": "kv_online",
+            "userName": "kv_online",
+            "alias": "KV",
+            "dateJoined": 1742588418099,
+            "parent": "Discord",
+            "attack": "You attack KV!"
+        }
+    }
+}

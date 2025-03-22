@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require('discord.js');
-const fs = require('fs');
 const core = require('../../engine/core');
 
 module.exports = {
@@ -15,110 +14,91 @@ module.exports = {
 			await interaction.reply({ content: '\'object\' not defined.', flags: 64 });
 			return;
 		}
-		fs.readFile('./game.json', 'utf8', async function(err, data) {
-			if (err) {
-				await interaction.reply({ content: 'Error!', flags: 64 });
-		  		return err;
-			}
-			if (typeof data == 'undefined' || data.trim() == '') return;
-			const qgame = JSON.parse(data).aslj;
-			const povName = interaction.user.username;
-			if (qgame.players.indexOf(povName) < 0) {
-				// console.log(povName + 'TRIED TO TAKE WITHOUT JOINING THE GAME FIRST');
-				// console.log(JSON.stringify(qgame.players));
-				await interaction.reply({ content: core.template.mustStartGame, flags: 64 });
-				return 3;
-			}
-			if (typeof qgame[object] == 'undefined') {
-				await interaction.reply({ content: 'No such object ("' + object + '")!', flags: 64 });
-				return;
-			}
-			const obj = qgame[object];
-			const pov = qgame[povName];
-			// TODO - Check the object parent first!
-			if (obj.parent == pov.name) {
-				await interaction.reply({ content: core.template.alreadyHave(obj.name), flags: 64 });
-				return 0;
-			}
-			else if (obj.parent != pov.parent) {
-				if (typeof qgame[obj.parent].parent != 'undefined') {
-					if (qgame[obj.parent].parent == pov.parent) {
-						// another player has it, or it's in or on something
-						if (typeof qgame[obj.parent].type != 'undefined') {
-							// it's a surface or container
-							if (qgame[obj.parent].type == 'surface') {
-								// able to take, just let things roll
-							}
-							else if (qgame[obj.parent].type == 'container') {
-								// is it closed?
-								if (qgame[obj.parent].closed) {
-									if (obj.parent.transparent) {
-										// TODO - you can't it's closed
-									}
-									else {
-										// TODO - can't see that!
-									}
+		const qgame = await core.loadGame('./game.json', interaction);
+		const pov = qgame[interaction.user.username];
+		const obj = qgame[object];
+		// TODO - Check the object parent first!
+		if (obj.parent == pov.name) {
+			await interaction.reply({ content: core.template.alreadyHave(obj.name), flags: 64 });
+			return 0;
+		}
+		else if (obj.parent != pov.parent) {
+			if (typeof qgame[obj.parent].parent != 'undefined') {
+				if (qgame[obj.parent].parent == pov.parent) {
+					// another player has it, or it's in or on something
+					if (typeof qgame[obj.parent].type != 'undefined') {
+						// it's a surface or container
+						if (qgame[obj.parent].type == 'surface') {
+							// able to take, just let things roll
+						}
+						else if (qgame[obj.parent].type == 'container') {
+							// is it closed?
+							if (qgame[obj.parent].closed) {
+								if (obj.parent.transparent) {
+									// TODO - you can't it's closed
 								}
-								// if it's not closed, just let things roll
+								else {
+									// TODO - can't see that!
+								}
 							}
-							else {
-								// TODO - error!
-							}
+							// if it's not closed, just let things roll
 						}
 						else {
-							// probably another player
-							const s = `${obj.parent} probably wouldn't like that.`;
-							await interaction.reply({ content: s, flags: 64 });
-							return 0;
+							// TODO - error!
 						}
 					}
-				}
-				await interaction.reply({ content: core.template.cantSee(obj.name), flags: 64 });
-				return 0;
-			}
-			let qtook = false;
-			switch (typeof obj.take) {
-			case 'undefined':
-				// definitely not
-				await interaction.reply({ content: object + ' has no take property!', flags: 64 });
-				break;
-			case 'string':
-				// nope
-				await interaction.reply({ content: obj.take, flags: 64 });
-				break;
-			case 'boolean':
-				if (obj.take) {
-					// get it!
-					qtook = true;
-					obj.parent = pov.name;
-				}
-				else {
-					// can't get it!
-					await interaction.reply({ content: core.template.cantTake(obj.name), flags: 64 });
-				}
-				break;
-			case 'function':
-				// call function
-				qtook = obj.take();
-				break;
-			}
-			if (qtook) {
-				// tell everybody!
-				await interaction.reply(`${pov.name} took ${object}.`);
-				// need to return something if take is a function, to know if it printed something!
-				await interaction.followUp({ content: core.template.taken, flags: 64 });
-				fs.writeFile('./game.json', '{"aslj":' + JSON.stringify(qgame) + '}', async function(err) {
-					if (err) {
-						console.log(err);
-						return err;
+					else {
+						// probably another player
+						const s = `${obj.parent} probably wouldn't like that.`;
+						await interaction.reply({ content: s, flags: 64 });
+						return 0;
 					}
-					console.log('game data' + ' saved!');
-					return 0;
-				});
+				}
+			}
+			await interaction.reply({ content: core.template.cantSee(obj.name), flags: 64 });
+			return 0;
+		}
+		let qtook = false;
+		switch (typeof obj.take) {
+		case 'undefined':
+			// definitely not
+			await interaction.reply({ content: object + ' has no take property!', flags: 64 });
+			break;
+		case 'string':
+			// nope
+			await interaction.reply({ content: obj.take, flags: 64 });
+			break;
+		case 'boolean':
+			if (obj.take) {
+				// get it!
+				qtook = true;
+				obj.parent = pov.name;
 			}
 			else {
-				return 0;
+				// can't get it!
+				await interaction.reply({ content: core.template.cantTake(obj.name), flags: 64 });
 			}
-		});
+			break;
+		case 'function':
+			// call function
+			qtook = obj.take();
+			break;
+		}
+		if (qtook) {
+			// tell everybody!
+			await interaction.reply(`${pov.name} took ${object}.`);
+			// need to return something if take is a function, to know if it printed something!
+			await interaction.followUp({ content: core.template.taken, flags: 64 });
+			try {
+				await core.saveGame('./game.json', qgame);
+			}
+			catch (err) {
+				console.error('Error saving game data:', err);
+				await interaction.followUp({ content: 'Failed to save game data.', flags: 64 });
+			}
+		}
+		else {
+			return 0;
+		}
 	},
 };

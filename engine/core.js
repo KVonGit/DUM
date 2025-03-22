@@ -1,5 +1,48 @@
 // const { SlashCommandBuilder } = require('discord.js');
-// const fs = require('fs');
+const fs = require('fs');
+
+module.exports.privateReply = async (interaction, s) => {
+	await interaction.reply({ content: s, ephemeral: true });
+};
+
+module.exports.publicReply = async (interaction, s) => {
+	await interaction.reply({ content: s, ephemeral: false });
+};
+
+module.exports.loadGame = async (filePath, interaction) => {
+	return new Promise((resolve, reject) => {
+		fs.readFile(filePath, 'utf8', async function(err, data) {
+			if (err) {
+				await interaction.reply({ content: 'Error!', flags: 64 });
+				return reject(err);
+			}
+			if (typeof data === 'undefined' || data.trim() === '') {
+				return reject(new Error('Game data is empty or undefined.'));
+			}
+			try {
+				const qgame = JSON.parse(data).aslj;
+				resolve(qgame);
+			}
+			catch (parseError) {
+				await interaction.reply({ content: 'Failed to parse game data.', flags: 64 });
+				reject(parseError);
+			}
+		});
+	});
+};
+
+module.exports.saveGame = async (filePath, qgame) => {
+	return new Promise((resolve, reject) => {
+		fs.writeFile(filePath, JSON.stringify({ aslj: qgame }, null, 4), function(err) {
+			if (err) {
+				console.error('Error saving game data:', err);
+				return reject(err);
+			}
+			console.log('Game data saved!');
+			resolve();
+		});
+	});
+};
 
 module.exports.getInventory = (qgame, pov) => {
 	const inv = [];
