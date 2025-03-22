@@ -22,7 +22,66 @@
                     "attr": "obj.loc = pov.name; console.log(obj.name + \" TAKEN\");"
                 },
                 "look": "It's yesterday's newspaper.",
-                "loc": "kv_online"
+                "loc": "table"
+            },
+            "table": {
+                "name": "table",
+                "loc": "Lounge",
+                "prefix": "a",
+                "look": {
+                    "type": "script",
+                    "attr": "replyString = \"An ordinary table.\"; replyString += core.getObject(qgame, \"newspaper\").loc === \"table\" ? \" There is a newspaper on it.\" : \"\";"
+                },
+                "take": {
+                    "type": "script",
+                    "attr": "It's too heavy to take."
+                },
+                "inherits": [
+                    "container",
+                    "surface"
+                ],
+                "listChildren": true
+            },
+            "lamp": {
+                "name": "lamp",
+                "prefix": "a",
+                "alt": [
+                    "antique lamp",
+                    "old lamp",
+                    "light"
+                ],
+                "loc": "Lounge",
+                "look": "It's an old, antique lamp.",
+                "take": {
+                    "type": "string",
+                    "attr": "It is fixed in place."
+                },
+                "inherits": [
+                    "lightsource",
+                    "switchable"
+                ]
+            },
+            "box": {
+                "name": "box",
+                "loc": "table",
+                "look": "It's a small box, currently closed. (And there isn't an `/open` command yet. :man_facepalming:)",
+                "take": {
+                    "type": "string",
+                    "attr": "It's not finished yet."
+                },
+                "inherits": [
+                    "container",
+                    "closedcontainer"
+                ]
+            },
+            "defibrillator": {
+                "name": "defibrillator",
+                "loc": "box",
+                "look": "An ordinary defibrillator.",
+                "take": {
+                    "type": "string",
+                    "attr": "It's in the closed box, and you shouldn't be able to see it."
+                }
             },
             "hammer": {
                 "name": "hammer",

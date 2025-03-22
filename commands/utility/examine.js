@@ -45,9 +45,9 @@ module.exports = {
 			await interaction.reply({ content:obj.look, flags: 64 });
 		}
 		else if (typeof obj.look.type !== 'undefined' && obj.look.type == 'script') {
-			qgame.replyString = '';
+			let replyString;
 			eval (obj.look.attr);
-			await interaction.reply({ content: qgame.replyString, flags: 64 });
+			await interaction.reply({ content: replyString || core.defaultLook, flags: 64 });
 		}
 		else {
 			const s = core.template.defaultLook;

@@ -27,6 +27,8 @@ module.exports = {
 		// console.log('obj:', obj);
 		// console.log('pov:', pov);
 		// TODO - Check the object loc first!
+		let qtook = false;
+		let inScope = false;
 		if (obj.loc == pov.name) {
 			await interaction.reply({ content: core.template.alreadyHave(obj.name), flags: 64 });
 			return 0;
@@ -39,12 +41,13 @@ module.exports = {
 			if (typeof holder.loc != 'undefined') {
 				if (holder.loc == pov.loc) {
 					// another player has it, or it's in or on something
-					if (typeof holder.inherit != 'undefined') {
+					if (typeof holder.inherits != 'undefined') {
 						// it's a surface or container
-						if (holder.type.indexOf('surface') >= 0) {
+						if (holder.inherits.indexOf('surface') >= 0) {
 							// able to take, just let things roll
+							inScope = true;
 						}
-						else if (holder.type == 'container') {
+						else if (holder.inherits.indexOf('container') >= 0) {
 							// is it closed?
 							if (holder.closed) {
 								if (holder.transparent) {
@@ -60,19 +63,25 @@ module.exports = {
 							// TODO - error!
 						}
 					}
-					else {
-						// probably another player
-						const s = `${holder.alias} probably wouldn't like that.`;
+					else if (typeof holder.userName != 'undefined') {
+						// another player
+						const s = `${holder.alias || holder.name} probably wouldn't like that.`;
 						await interaction.reply({ content: s, flags: 64 });
+						return 0;
+					}
+					else {
+						await interaction.reply({ content: core.template.cantSee(obj.name), flags: 64 });
 						return 0;
 					}
 				}
 			}
-			await interaction.reply({ content: core.template.cantSee(obj.name), flags: 64 });
-			return 0;
+			else {
+				await interaction.reply({ content: core.template.cantSee(obj.name), flags: 64 });
+				return 0;
+			}
 		}
 		// console.log(obj.name + ' is in the same location as the player.');
-		let qtook = false;
+
 		if (typeof obj.takescript != 'undefined') {
 			eval(obj.takescript);
 			if (qtook) {
@@ -84,7 +93,7 @@ module.exports = {
 			await interaction.reply({ content: core.template.cantTake(obj.name), flags: 64 });
 			return;
 		}
-		if (!qtook) {
+		if (!qtook && inScope) {
 			switch (obj.take.type) {
 			case 'undefined':
 			// definitely not
