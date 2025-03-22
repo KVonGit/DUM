@@ -7,7 +7,7 @@
             "version": "0.1 alpha",
             "year": 2025,
             "copyright": "© 2025 KV",
-            "description": "A DUM Lounge server test game.",
+            "description": "A DUM server test game.",
             "pov": "objects.player",
             "startingParent": "Lounge"
         },
