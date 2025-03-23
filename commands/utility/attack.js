@@ -56,8 +56,12 @@ module.exports = {
 			await msg(obj.attack.attr, true, true);
 		}
 		else if (obj.attack.type == 'script') {
+			// eslint-disable-next-line prefer-const
+			let responded = false;
 			eval (obj.attack.attr);
-			await msg(obj.attack(), true);
+			if (!responded) {
+				await msg(core.template.defaultAttack(obj.alias || object), true);
+			}
 		}
 		else {
 			const s = core.template.defaultAttack(obj.alias || object);

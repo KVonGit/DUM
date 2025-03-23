@@ -154,7 +154,11 @@
                 "alias": "KV",
                 "userName": "kv_online",
                 "dateJoined": 1742754760816,
-                "loc": "Lounge"
+                "loc": "Lounge",
+                "attack":{
+                    "type":"script",
+                    "attr":"responded = true; if(pov.name == obj.name){ msg(`${pov.alias} has attacked ${obj.alias || object}. :rolling_eyes:`); } else { msg(`${pov.alias} has attacked ${obj.alias || object}!`); };"
+                }
             }
         },
         "timers": {},
