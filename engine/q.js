@@ -1,6 +1,6 @@
-/* eslint-disable no-useless-escape */
-// const { SlashCommandBuilder } = require('discord.js');
 const fs = require('fs');
+/* eslint-disable no-useless-escape */
+module.exports.log = console.log;
 
 module.exports.template = {
 	'mustStartGame':'You must `/startgame` before you can play.',
@@ -23,30 +23,7 @@ module.exports.template = {
 	'noSave':'You can\'t save in a multiplayer game.',
 };
 
-// TODO: if an external template file is provided, load it here
-// const template = require('./template.json');
-
-module.exports.privateReply = async (interaction, s) => {
-	await interaction.reply({ content: s, flags: 64 });
-};
-
-module.exports.publicReply = async (interaction, s) => {
-	await interaction.reply(s);
-};
-
-module.exports.privateFollowUp = async (interaction, s) => {
-	await interaction.followUp({ content: s, flags: 64 });
-};
-
-module.exports.publicFollowUp = async (interaction, s) => {
-	await interaction.followUp(s);
-};
-
-module.exports.privateMessage = async (interaction, s) => {
-	await interaction.user.send(s);
-};
-
-module.exports.loadGame = async (filePath, interaction) => {
+module.exports.loadGame = async (filePath = './game.json') => {
 	return new Promise((resolve, reject) => {
 		fs.readFile(filePath, 'utf8', async function(err, data) {
 			if (err) {
@@ -58,6 +35,7 @@ module.exports.loadGame = async (filePath, interaction) => {
 			}
 			try {
 				const qgame = JSON.parse(data).aslj;
+				global.qgame = qgame;
 				resolve(qgame);
 			}
 			catch (parseError) {
@@ -68,7 +46,7 @@ module.exports.loadGame = async (filePath, interaction) => {
 	});
 };
 
-module.exports.saveGame = async (filePath, qgame) => {
+module.exports.saveGame = async (filePath = './game.json', qgame = qgame) => {
 	return new Promise((resolve, reject) => {
 		fs.writeFile(filePath, JSON.stringify({ aslj: qgame }, null, 4), function(err) {
 			if (err) {
@@ -79,6 +57,76 @@ module.exports.saveGame = async (filePath, qgame) => {
 			resolve();
 		});
 	});
+};
+
+module.exports.AllObjects = () => {
+	return Object.keys(qgame.objects);
+};
+
+module.exports.AllLocations = () => {
+	return Object.keys(qgame.locations);
+};
+
+module.exports.AllPlayers = () => {
+	return Object.keys(qgame.players);
+};
+
+module.exports.GetObject = (objName) => {
+	for (const key of Object.keys(qgame.objects)) {
+		// console.log('key:', key);
+		const obj = qgame.objects[key];
+		// console.log('obj:', obj);
+		objName = objName.toLowerCase().trim();
+		if (obj.name.toLowerCase() === objName || (typeof obj.alias != 'undefined' && obj.alias.toLowerCase() === objName)) {
+			return obj;
+		}
+		if (typeof obj.alt != 'undefined') {
+			for (const alt of obj.alt) {
+				if (alt.toLowerCase() === objName) {
+					return obj;
+				}
+			}
+		}
+	}
+	// Search for players by name or alias
+
+	for (const playerName of Object.keys(qgame.players)) {
+		const player = qgame.players[playerName];
+		if (player.name.toLowerCase() === objName || player.alias.toLowerCase() === objName) {
+			return player;
+		}
+		if (player.alt) {
+			for (const alt of player.alt) {
+				if (alt.toLowerCase() === objName) {
+					return player;
+				}
+			}
+		}
+	}
+
+	// If not found, return undefined
+	return undefined;
+};
+
+module.exports.msg = async (s, isPrivate = true, isFollowUp = false) => {
+	if (!isPrivate && !isFollowUp) {
+		await interaction.reply(s);
+	}
+	else if (!isPrivate && isFollowUp) {
+		// await interaction.user.send(s);
+		await interaction.followUp(s);
+	}
+	else if (isPrivate && !isFollowUp) {
+		await interaction.reply({ content: s, flags: 64 });
+	}
+	else {
+		// await interaction.user.send({content: s, flags: 64});
+		await interaction.followUp({ content: s, flags: 64 });
+	}
+};
+
+module.exports.sendDM = async (s) => {
+	await interaction.user.send(s);
 };
 
 module.exports.getInventory = (qgame, pov) => {
@@ -212,4 +260,8 @@ module.exports.evalThis = (obj, scriptAttr) => {
 	if (typeof obj[scriptAttr] === 'string') {
 		eval(`(${obj[scriptAttr]})`).call(obj);
 	}
+};
+
+module.exports.SendDM = async (s) => {
+	await interaction.user.send(s);
 };

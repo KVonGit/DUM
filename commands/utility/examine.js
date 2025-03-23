@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const core = require('../../engine/core');
+const q = require('../../engine/q');
 // const warned = {};
 
 module.exports = {
@@ -15,14 +15,14 @@ module.exports = {
 			await interaction.reply('\'object\' not defined.');
 			return;
 		}
-		const qgame = await core.loadGame('./game.json', interaction);
+		const qgame = await q.loadGame('./game.json', interaction);
 		const povName = interaction.user.username;
 		const pov = qgame.players[povName];
 		if (Object.keys(qgame.players).indexOf(povName) < 0) {
-			await interaction.reply({ content: core.template.mustStartGame, flags: 64 });
+			await interaction.reply({ content: q.template.mustStartGame, flags: 64 });
 			return 3;
 		}
-		const obj = core.getObject(qgame, object);;
+		const obj = q.getObject(qgame, object);;
 		if (obj == 'undefined') {
 			await interaction.reply({ content: 'No such object ("' + object + '")!', flags: 64 });
 			return;
@@ -31,14 +31,14 @@ module.exports = {
 		/*
 		if (typeof warned[pov.name] == 'undefined') {
 			warned[pov.name] = true;
-			await core.privateMessage(interaction, 'Hey, ' + pov.alias + '... Tell the admin to fix the `/look` command! It does not check scope, location, or anything else!');
+			await q.privateMessage(interaction, 'Hey, ' + pov.alias + '... Tell the admin to fix the `/look` command! It does not check scope, location, or anything else!');
 		}
 		*/
 		if (obj.loc != pov.loc || (typeof obj.visible != 'undefined' && obj.visible == false)) {
-			await interaction.reply({ content: core.template.cantSee(obj.alias || obj.name), flags: 64 });
+			await interaction.reply({ content: q.template.cantSee(obj.alias || obj.name), flags: 64 });
 		}
 		else if (typeof obj.look == 'undefined') {
-			const s = core.template.defaultLook;
+			const s = q.template.defaultLook;
 			await interaction.reply({ content: s, flags: 64 });
 		}
 		else if (typeof obj.look == 'string') {
@@ -47,10 +47,10 @@ module.exports = {
 		else if (typeof obj.look.type !== 'undefined' && obj.look.type == 'script') {
 			let replyString;
 			eval (obj.look.attr);
-			await interaction.reply({ content: replyString || core.defaultLook, flags: 64 });
+			await interaction.reply({ content: replyString || q.defaultLook, flags: 64 });
 		}
 		else {
-			const s = core.template.defaultLook;
+			const s = q.template.defaultLook;
 			await interaction.reply({ content: s, flags: 64 });
 		}
 	},

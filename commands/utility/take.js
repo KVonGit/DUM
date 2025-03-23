@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const core = require('../../engine/core');
+const q = require('../../engine/q');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -9,16 +9,16 @@ module.exports = {
 			option.setName('object')
 				.setDescription('The object you wish to take')),
 	async execute(interaction) {
-		// core.privateMessage(interaction, 'PING!');
+		// q.privateMessage(interaction, 'PING!');
 		const object = interaction.options.getString('object');
 		if (typeof object == 'undefined') {
 			console.error('\'' + object + '\' not defined.');
 			await interaction.reply({ content: '\'' + object + '\' not defined.', flags: 64 });
 			return;
 		}
-		const qgame = await core.loadGame('./game.json', interaction);
+		const qgame = await q.loadGame('./game.json', interaction);
 		const pov = qgame.players[interaction.user.username];
-		const obj = core.getObject(qgame, object);
+		const obj = q.getObject(qgame, object);
 		if (typeof obj == 'undefined') {
 			console.error('No such object ("' + object + '")!');
 			await interaction.reply({ content: 'No such object ("' + object + '")!', flags: 64 });
@@ -30,7 +30,7 @@ module.exports = {
 		let qtook = false;
 		let inScope = false;
 		if (obj.loc == pov.name) {
-			await interaction.reply({ content: core.template.alreadyHave(obj.name), flags: 64 });
+			await interaction.reply({ content: q.template.alreadyHave(obj.name), flags: 64 });
 			return 0;
 		}
 		else if (obj.loc != pov.loc) {
@@ -41,13 +41,13 @@ module.exports = {
 			if (typeof holder.loc != 'undefined') {
 				if (holder.loc == pov.loc) {
 					// another player has it, or it's in or on something
-					if (typeof holder.inherits != 'undefined') {
+					if (typeof holder.inherit != 'undefined') {
 						// it's a surface or container
-						if (holder.inherits.indexOf('surface') >= 0) {
+						if (holder.inherit.indexOf('surface') >= 0) {
 							// able to take, just let things roll
 							inScope = true;
 						}
-						else if (holder.inherits.indexOf('container') >= 0) {
+						else if (holder.inherit.indexOf('container') >= 0) {
 							// is it closed?
 							if (holder.closed) {
 								if (holder.transparent) {
@@ -70,13 +70,13 @@ module.exports = {
 						return 0;
 					}
 					else {
-						await interaction.reply({ content: core.template.cantSee(obj.name), flags: 64 });
+						await interaction.reply({ content: q.template.cantSee(obj.name), flags: 64 });
 						return 0;
 					}
 				}
 			}
 			else {
-				await interaction.reply({ content: core.template.cantSee(obj.name), flags: 64 });
+				await interaction.reply({ content: q.template.cantSee(obj.name), flags: 64 });
 				return 0;
 			}
 		}
@@ -84,20 +84,40 @@ module.exports = {
 
 		if (typeof obj.takescript != 'undefined') {
 			eval(obj.takescript);
-			if (qtook) {
-				obj.loc = pov.name;
-			};
+			if (obj.loc == pov.name) {
+				qtook = true;
+			}
 		}
-		if (typeof obj.take == 'undefined' || typeof obj.take.type == 'undefined') {
+		if (typeof obj.take == 'undefined') {
 			// definitely not
-			await interaction.reply({ content: core.template.cantTake(obj.name), flags: 64 });
+			s = q.template.cantTake(obj.name);
+			if (typeof obj.takemsg != 'undefined') {
+				s = obj.takemsg;
+			}
+			await q.msg(s);
+			return;
+		}
+		else if (obj.take == true) {
+			obj.loc = pov.name;
+			qtook = true;
+		}
+		if (!qtook && typeof obj.take.type == 'undefined') {
+			s = q.template.cantTake(obj.name);
+			if (typeof obj.takemsg != 'undefined') {
+				s = obj.takemsg;
+			}
+			await q.msg(s);
 			return;
 		}
 		if (!qtook && inScope) {
 			switch (obj.take.type) {
 			case 'undefined':
 			// definitely not
-				await interaction.reply({ content: core.template.cantTake(obj.name), flags: 64 });
+				s = q.template.cantTake(obj.name);
+				if (typeof obj.takemsg != 'undefined') {
+					s = obj.takemsg;
+				}
+				await q.msg(s);
 				break;
 			case 'string':
 			// nope
@@ -110,8 +130,12 @@ module.exports = {
 					obj.loc = pov.name;
 				}
 				else {
-				// can't get it!
-					await interaction.reply({ content: core.template.cantTake(obj.name), flags: 64 });
+					// can't get it!
+					let s = q.template.cantTake(obj.name);
+					if (typeof obj.takemsg != 'undefined') {
+						s = obj.takemsg;
+					}
+					await q.msg(s);
 				}
 				break;
 			case 'script':
@@ -123,13 +147,18 @@ module.exports = {
 				break;
 			}
 		}
+		if (!qtook && obj.take == true) qtook = true;
 		if (qtook) {
 			// tell everybody!
 			await interaction.reply(`${pov.alias} took ${object}.`);
-			// TODO - need to return something if take is a function, to know if it printed something!
-			await interaction.followUp({ content: core.template.taken, flags: 64 });
+			// Use takemsg prop when it exists, to print custom response.
+			let s = q.template.taken;
+			if (typeof obj.takemsg != 'undefined') {
+				s = obj.takemsg;
+			}
+			await interaction.followUp({ content: s, flags: 64 });
 			try {
-				await core.saveGame('./game.json', qgame);
+				await q.saveGame('./game.json', qgame);
 			}
 			catch (err) {
 				console.error('Error saving game data:', err);

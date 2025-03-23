@@ -1,18 +1,18 @@
 const { SlashCommandBuilder } = require('discord.js');
-const core = require('../../engine/core');
+const q = require('../../engine/q');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('xyzzy')
 		.setDescription('??????'),
 	async execute(interaction) {
-		const qgame = await core.loadGame('./game.json', interaction);
+		const qgame = await q.loadGame('./game.json', interaction);
 		if (Object.keys(qgame.players).indexOf(interaction.user.username) < 0) {
-			await interaction.reply({ content: core.template.mustStartGame, flags: 64 });
+			await q.msg(q.template.mustStartGame);
 			return 3;
 		}
-		const s = core.template.xyzzy;
-		Log('Tried to xyzzy!');
-		await interaction.reply({ content: s, flags: 64 });
+		const s = q.template.xyzzy;
+		//q.SendDM('You tried XYZZY! :rofl:');
+		await q.msg(s);
 	},
 };

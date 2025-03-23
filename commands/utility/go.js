@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const core = require('../../engine/core');
+const q = require('../../engine/q');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -15,10 +15,10 @@ module.exports = {
 			await interaction.reply({ content:'\'' + exitName + '\' not defined.', flags:64 });
 			return;
 		}
-		const qgame = await core.loadGame('./game.json', interaction);
+		const qgame = await q.loadGame('./game.json', interaction);
 		const povName = interaction.user.username;
 		if (Object.keys(qgame.players).indexOf(povName) < 0) {
-			await interaction.reply({ content: core.template.mustStartGame, flags: 64 });
+			await interaction.reply({ content: q.template.mustStartGame, flags: 64 });
 			return 3;
 		}
 		const pov = qgame.players[povName];
@@ -28,7 +28,7 @@ module.exports = {
 			return;
 		}
 		if (typeof loc.exits[exitName] == 'undefined') {
-			await interaction.reply({ content: core.template.cantGo(exitName), flags: 64 });
+			await interaction.reply({ content: q.template.cantGo(exitName), flags: 64 });
 			return;
 		}
 		const exitTo = loc.exits[exitName].to;
@@ -38,11 +38,11 @@ module.exports = {
 		// TODO - BEFORE ENTERING SCRIPTS?
 		pov.loc = exitTo;
 		// TODO - AFTER ENTERING SCRIPTS?
-		const s = core.getLocationDescription(qgame, pov);
+		const s = q.getLocationDescription(qgame, pov);
 		await interaction.reply(`${pov.alias || pov.name} goes ${exitName}.`);
 		await interaction.followUp({ content: s, flags: 64 });
 		try {
-			await core.saveGame('./game.json', qgame);
+			await q.saveGame('./game.json', qgame);
 		}
 		catch (err) {
 			console.error('Error saving game data:', err);

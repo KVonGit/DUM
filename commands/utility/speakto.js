@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const core = require('../../engine/core');
+const q = require('../../engine/q');
 // const warned = {};
 
 module.exports = {
@@ -15,24 +15,24 @@ module.exports = {
 			await interaction.reply({ content: '\'' + npc + '\' not defined.', flags: 64 });
 			return;
 		}
-		const qgame = await core.loadGame('./game.json', interaction);
+		const qgame = await q.loadGame('./game.json', interaction);
 		const povName = interaction.user.username;
 		const pov = qgame.players[povName];
 		if (Object.keys(qgame.players).indexOf(povName) < 0) {
-			await interaction.reply({ content: core.template.mustStartGame, flags: 64 });
+			await interaction.reply({ content: q.template.mustStartGame, flags: 64 });
 			return 3;
 		}
-		const obj = core.getObject(qgame, npc);;
+		const obj = q.getObject(qgame, npc);;
 		if (obj == 'undefined') {
 			await interaction.reply({ content: 'No such object ("' + npc + '")!', flags: 64 });
 			return;
 		}
 		// TODO - Check scope!
 		if (obj.loc != pov.loc || (typeof obj.visible != 'undefined' && obj.visible == false)) {
-			await interaction.reply({ content: core.template.cantSee(obj.alias || obj.name), flags: 64 });
+			await interaction.reply({ content: q.template.cantSee(obj.alias || obj.name), flags: 64 });
 		}
 		else if (typeof obj.speakto == 'undefined') {
-			const s = core.template.defaultSpeakTo(obj.alias || obj.name);
+			const s = q.template.defaultSpeakTo(obj.alias || obj.name);
 			if (typeof obj.userName != 'undefined') {
 				await interaction.reply(`${pov.alias} speaks to ${obj.alias || obj.name}.`);
 				await interaction.followUp({ content: s, flags: 64 });
@@ -54,12 +54,12 @@ module.exports = {
 				await interaction.reply({ content: qgame.replyString, flags: 64 });
 			}
 			else {
-				const s = core.template.defaultSpeakTo(obj.alias || obj.name);
+				const s = q.template.defaultSpeakTo(obj.alias || obj.name);
 				await interaction.reply({ content: s, flags: 64 });
 			}
 		}
 		else {
-			const s = core.template.defaultSpeakTo(obj.alias || obj.name);
+			const s = q.template.defaultSpeakTo(obj.alias || obj.name);
 			await interaction.reply({ content: s, flags: 64 });
 		}
 	},

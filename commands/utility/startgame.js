@@ -1,12 +1,12 @@
 const { SlashCommandBuilder } = require('discord.js');
-const core = require('../../engine/core');
+const q = require('../../engine/q');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('startgame')
 		.setDescription('Join the game.'),
 	async execute(interaction) {
-		const qgame = await core.loadGame('./game.json', interaction);
+		const qgame = await q.loadGame('./game.json', interaction);
 		const povName = interaction.user.username;
 		const alias = interaction.member?.displayName || interaction.user.displayName || interaction.user.username;
 		let pov = {};
@@ -36,12 +36,12 @@ module.exports = {
 				qgame.startScript();
 			}
 
-			s += core.getLocationDescription(qgame, pov);
+			s += q.getLocationDescription(qgame, pov);
 			await interaction.reply({ content: `${alias} has joined the game!` });
 			await interaction.followUp({ content: s, flags: 64 });
 
 			try {
-				await core.saveGame('./game.json', qgame);
+				await q.saveGame('./game.json', qgame);
 			}
 			catch (err) {
 				console.error('Error saving game data:', err);

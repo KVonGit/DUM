@@ -43,8 +43,8 @@ fs.readFile('./game.aslx', 'utf8', function(err, data) {
 });
 */
 
-global.Log = console.log;
 
+global.Log = console.log;
 
 // When the client is ready, run this code (only once).
 // The distinction between `client: Client<boolean>` and `readyClient: Client<true>` is important for TypeScript developers.
@@ -58,8 +58,8 @@ client.login(token);
 
 client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isChatInputCommand()) return;
-	console.log(interaction);
-
+	// console.log(interaction);
+	global.interaction = interaction;
 	const command = interaction.client.commands.get(interaction.commandName);
 
 	if (!command) {
@@ -83,3 +83,4 @@ client.on(Events.InteractionCreate, async interaction => {
 		}
 	}
 });
+

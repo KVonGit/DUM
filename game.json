@@ -14,15 +14,20 @@
         "objects": {
             "newspaper": {
                 "name": "newspaper",
-                "inherits": [
+                "inherit": [
                     "container"
                 ],
                 "take": {
                     "type": "script",
                     "attr": "obj.loc = pov.name; console.log(obj.name + \" TAKEN\");"
                 },
-                "look": "It's yesterday's newspaper.",
-                "loc": "Lounge"
+                "takemsg": "You fold the newspaper and place it neatly under your arm.",
+                "read": "There's no time for reading the paper.",
+                "look": "It's yesterday's edition, but there's an article about Quest Viva in it.",
+                "loc": "Lounge",
+                "alt": [
+                    "paper"
+                ]
             },
             "table": {
                 "name": "table",
@@ -30,17 +35,18 @@
                 "prefix": "a",
                 "look": {
                     "type": "script",
-                    "attr": "replyString = \"An ordinary table.\"; replyString += core.getObject(qgame, \"newspaper\").loc === \"table\" ? \" There is a newspaper on it.\" : \"\";"
+                    "attr": "replyString = \"A wooden table, probably made of oak.\"; replyString += q.getObject(qgame, \"newspaper\").loc === \"table\" ? \" There is a newspaper on it.\" : \"\";"
                 },
                 "take": {
                     "type": "script",
                     "attr": "It's too heavy to take."
                 },
-                "inherits": [
+                "inherit": [
                     "container",
                     "surface"
                 ],
-                "listChildren": true
+                "listchildren": true,
+                "listchildrenprefix": "On it, you see"
             },
             "lamp": {
                 "name": "lamp",
@@ -56,10 +62,28 @@
                     "type": "string",
                     "attr": "It is fixed in place."
                 },
-                "inherits": [
+                "inherit": [
                     "lightsource",
                     "switchable"
-                ]
+                ],
+                "switchedondesc": "It is currently switched on.",
+                "switchedoffdesc": "It is currently switched off.",
+                "scenery": true
+            },
+            "carpet": {
+                "name": "carpet",
+                "scenery": true,
+                "look": "The dark brown shag carpet is the bee's knees, and you've never seen a cleaner floor.",
+                "alt": [
+                    "shag"
+                ],
+                "loc": "Lounge"
+            },
+            "wallpaper": {
+                "name": "wallpaper",
+                "loc": "Lounge",
+                "scenery": true,
+                "look": "The wallpaper is very eye-pleasing. You could look at it repeatedly, although it would accomplish very little."
             },
             "box": {
                 "name": "box",
@@ -69,7 +93,7 @@
                     "type": "string",
                     "attr": "It's not finished yet."
                 },
-                "inherits": [
+                "inherit": [
                     "container",
                     "closedcontainer"
                 ]
@@ -91,7 +115,8 @@
             "hundred dollar bill": {
                 "name": "hundred dollar bill",
                 "look": "It's a hundred bucks!",
-                "loc": "Kitchen",
+                "loc": "kv_online",
+                "take": true,
                 "drop": {
                     "type": "string",
                     "attr": "It might come in handy sometime. You are not allowed to drop it."
@@ -100,7 +125,7 @@
             "Bob": {
                 "name": "Bob",
                 "loc": "Lounge",
-                "look": "Bob is lying __***very***__ still.",
+                "look": "Bob is lying on the floor, a lot more still than usual",
                 "attack": {
                     "type": "string",
                     "attr": "He is dead! No need to attack him, you monster! :laughing:"
@@ -109,15 +134,17 @@
                     "type": "string",
                     "attr": "He's dead, Jim! :rofl:"
                 },
-                "inherits": [
+                "inherit": [
+                    "male",
                     "npc"
-                ]
+                ],
+                "useDefaultPrefix": false
             }
         },
         "locations": {
             "Lounge": {
                 "name": "Lounge",
-                "description": "Nothing fancy, just a janky lounge in a DUM server.",
+                "description": "This is a nice, cozy lounge with an fancy beige carpet and pristine wallpaper.",
                 "exits": {
                     "east": {
                         "to": "Kitchen"
@@ -126,7 +153,7 @@
             },
             "Kitchen": {
                 "name": "Kitchen",
-                "description": "The kitchen hasn't been built yet. It is only whitespace. Please move along.",
+                "description": "This kitchen hasn't been finished yet. Please move along.",
                 "exits": {
                     "west": {
                         "to": "Lounge"
@@ -154,14 +181,19 @@
                 "alias": "KV",
                 "userName": "kv_online",
                 "dateJoined": 1742754760816,
-                "loc": "Lounge",
-                "attack":{
-                    "type":"script",
-                    "attr":"responded = true; if(pov.name == obj.name){ msg(`${pov.alias} has attacked ${obj.alias || object}. :rolling_eyes:`); } else { msg(`${pov.alias} has attacked ${obj.alias || object}!`); };"
+                "loc": "Kitchen",
+                "attack": {
+                    "type": "script",
+                    "attr": "responded = true; if(pov.name == obj.name){ q.msg(`${pov.alias} has attacked ${obj.alias || object}. :rolling_eyes:`); } else { q.msg(`${pov.alias} has attacked ${obj.alias || object}!`); };"
                 }
             }
         },
         "timers": {},
-        "turnScripts": {}
+        "turnScripts": {
+            "busyBee": {
+                "@type": "script",
+                "script": "if (pov.loc = bee.loc) { q.msg (\"The bee buzzes past you. Pesky bee.\", true, true)}"
+            }
+        }
     }
 }
