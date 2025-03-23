@@ -12,7 +12,7 @@ module.exports = {
 			return 3;
 		}
 		const s = q.template.xyzzy;
-		//q.SendDM('You tried XYZZY! :rofl:');
+		// q.SendDM('You tried XYZZY! :rofl:');
 		await q.msg(s);
 	},
 };

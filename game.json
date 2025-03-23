@@ -181,7 +181,7 @@
                 "alias": "KV",
                 "userName": "kv_online",
                 "dateJoined": 1742754760816,
-                "loc": "Kitchen",
+                "loc": "Lounge",
                 "attack": {
                     "type": "script",
                     "attr": "responded = true; if(pov.name == obj.name){ q.msg(`${pov.alias} has attacked ${obj.alias || object}. :rolling_eyes:`); } else { q.msg(`${pov.alias} has attacked ${obj.alias || object}!`); };"

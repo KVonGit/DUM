@@ -178,7 +178,7 @@ module.exports.getLocationDescription = (qgame, pov) => {
 	Object.keys(qgame.objects).forEach(obj => {
 		// console.log('obj:', obj);
 		obj = qgame.objects[obj];
-		if (obj.loc == pov.loc) {
+		if (obj.loc == pov.loc && !obj.scenery) {
 			inRoomObjects.push(obj.alias || obj.name);
 		}
 	});
