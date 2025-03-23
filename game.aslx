@@ -1,0 +1,338 @@
+<!--Saved by Quest 5.9.9165.39352-->
+<asl version="580">
+  <include ref="English.aslx" />
+  <include ref="Core.aslx" />
+  <game name="Don't Test Me!">
+    <gameid>6713dd33-8b29-4d69-a998-843ac7efe286-2</gameid>
+    <version>0.0 alpha</version>
+    <firstpublished>2025</firstpublished>
+    <cover>wipq59.png</cover>
+    <description>Don't Test Me!</description>
+    <subtitle>(A Test Game)</subtitle>
+    <author>KV</author>
+    <start type="script">
+      Log ("Testing.")
+    </start>
+  </game>
+  <object name="lounge">
+    <isroom />
+    <description>This is a nice, cozy lounge with an fancy beige carpet and pristine wallpaper.</description>
+    <object name="player">
+      <score type="int">0</score>
+      <statusattributes type="stringdictionary">
+        <item>
+          <key>score</key>
+          <value>Score: !/10</value>
+        </item>
+        <item>
+          <key>turns</key>
+          <value>Turns: !</value>
+        </item>
+      </statusattributes>
+      <turns type="int">0</turns>
+    </object>
+    <exit alias="south" to="kitchen">
+      <inherit name="southdirection" />
+      <runscript />
+      <script type="script">
+        if (box.parent = lounge and box.timesexamined = 0) {
+          msg ("You{once: accidentally} kick {once:a}{notfirst:the} box {notfirst:again }on your way out.")
+        }
+        MovePlayer (this.to)
+      </script>
+    </exit>
+    <object name="TV">
+      <inherit name="switchable" />
+      <alt type="stringlist">
+        <value>television</value>
+        <value>telly</value>
+        <value>tube</value>
+      </alt>
+      <look>The TV is an old model, possibly 20 years old.</look>
+      <switchedondesc>It is currently showing an old western.</switchedondesc>
+      <switchedoffdesc>It is currently switched off.</switchedoffdesc>
+      <watch type="script">
+        OutputTextNoBr ("You watch for a few minutes")
+        if (IsSwitchedOn(TV)) {
+          msg (". You’ve always loved watching westerns!")
+        }
+        else {
+          msg (", thinking that the latest episode of what they call ‘Star Trek’ these days is even more boring than usual. You then realise that the TV is in fact switched off.")
+        }
+      </watch>
+    </object>
+    <object name="sofa">
+      <look>The sofa looks old, worn, and thoroughly inviting!</look>
+      <sit>There’s no time for lounging about now.</sit>
+      <alt type="stringlist">
+        <value>couch</value>
+      </alt>
+    </object>
+    <object name="table">
+      <inherit name="surface" />
+      <listchildren />
+      <listchildrenprefix>On it, you see</listchildrenprefix>
+      <look type="script">
+        OutputTextNoBr ("A wooden table, probably made of oak. ")
+      </look>
+      <object name="newspaper">
+        <look>It's yesterday's edition, but there's an article about Quest Viva in it.</look>
+        <read>There's no time for reading the paper.</read>
+        <take />
+        <takemsg>You fold the newspaper and place it neatly under your arm.</takemsg>
+        <alt type="stringlist">
+          <value>paper</value>
+        </alt>
+      </object>
+      <object name="cat">
+        <inherit name="female" />
+        <alt type="stringlist">
+          <value>kitty cat</value>
+          <value>pussy cat</value>
+        </alt>
+        <scenery type="boolean">false</scenery>
+        <look>The cat is lying quietly on the table.</look>
+      </object>
+      <object name="apple">
+        <look>The red apple looks delicious.</look>
+        <take />
+        <eat type="script">
+          msg ("You eat the apple. Tasty, except for the odd metal object, which you spit onto the floor.")
+          MoveObjectHere (key)
+          RemoveObject (apple)
+        </eat>
+        <object name="key">
+          <take />
+          <look>A perfectly ordinary key.</look>
+          <visible type="boolean">false</visible>
+        </object>
+      </object>
+    </object>
+    <object name="wallpaper">
+      <scenery />
+      <look>The wallpaper is very eye-pleasing. You could look at it repeatedly, although it would accomplish very little.</look>
+    </object>
+    <object name="carpet">
+      <scenery />
+      <look>The dark brown shag carpet is the bee's knees, and you've never seen a cleaner floor.</look>
+      <alt type="stringlist">
+        <value>shag</value>
+      </alt>
+    </object>
+    <object name="Bob">
+      <inherit name="male" />
+      <usedefaultprefix type="boolean">false</usedefaultprefix>
+      <alt type="stringlist">
+        <value>Robert</value>
+        <value>Bobby</value>
+      </alt>
+      <look type="script">
+        OutputTextNoBr ("Bob is ")
+        if (GetBoolean(Bob, "alive")) {
+          OutputTextNoBr ("sitting up, appearing to feel somewhat under the weather")
+        }
+        else {
+          OutputTextNoBr ("lying on the floor, a lot more still than usual")
+        }
+        msg (".")
+      </look>
+      <useon type="scriptdictionary">
+        <item key="defibrillator">
+          revive bob
+        </item>
+      </useon>
+      <ask type="scriptdictionary">
+        <item key="heart attack cardiac arrest">
+          if (GetBoolean (Bob, "alive")) {
+            msg ("“Well, one moment I was sitting there, feeling pretty happy with myself after eating my afternoon snack - a cheeseburger, pizza and ice cream pie, smothered in bacon, which I’d washed down with a bucket of coffee and six cans of Red Bull - when all of a sudden, I was in terrible pain, and then everything was peaceful. Then you came along.”")
+          }
+          else {
+            msg ("He's dead, Jim!")
+          }
+        </item>
+      </ask>
+    </object>
+    <object name="lamp">
+      <inherit name="switchable" />
+      <alt type="stringlist">
+        <value>light</value>
+      </alt>
+      <look>It's an old wall-mounted lamp.</look>
+      <switchedondesc>It is currently switched on.</switchedondesc>
+      <switchedoffdesc>It is currently switched off.</switchedoffdesc>
+      <scenery />
+    </object>
+    <object name="box">
+      <inherit name="container_closed" />
+      <inherit name="container_lockable" />
+      <listchildren />
+      <listchildrenprefix>In the box you find</listchildrenprefix>
+      <keycount type="int">1</keycount>
+      <locked />
+      <key type="object">key</key>
+      <look type="script">
+        OutputTextNoBr ("An medium-sized box. ")
+      </look>
+      <object name="defibrillator">
+        <look>A heart defibrillator can magically revive a dead person, if all those hospital dramas are to be believed.</look>
+        <take />
+        <use type="script">
+          revive bob
+        </use>
+      </object>
+    </object>
+  </object>
+  <object name="kitchen">
+    <isroom />
+    <description>The kitchen is cold, but it looks clean enough to eat off of the floor.</description>
+    <exit alias="north" to="lounge">
+      <inherit name="northdirection" />
+    </exit>
+    <object name="bin">
+      <scenery />
+      <look>There's no time for examining trash.</look>
+      <alt type="stringlist">
+        <value>trash can</value>
+        <value>garbage bin</value>
+        <value>trash bin</value>
+        <value>garbage bin</value>
+      </alt>
+    </object>
+    <object name="fridge">
+      <inherit name="container_closed" />
+      <listchildren />
+      <listchildrenprefix>In the fridge you find</listchildrenprefix>
+      <close type="boolean">false</close>
+      <alt type="stringlist">
+        <value>refrigerator</value>
+        <value>icebox</value>
+      </alt>
+      <look type="script">
+        if (fridge.isopen) {
+          msg ("The fridge is open, casting its light out into the gloomy kitchen.")
+        }
+        else {
+          msg ("A big old refrigerator sits in the corner, humming quietly.")
+        }
+      </look>
+      <object name="beer">
+        <usedefaultprefix type="boolean">false</usedefaultprefix>
+        <look>A bottle of Squiffy beer, with “XanMag” written all over it.</look>
+        <prefix>XanMag's</prefix>
+        <takemsg>XanMag probably wouldn't like that.</takemsg>
+      </object>
+    </object>
+    <object name="cupboard">
+      <inherit name="container_closed" />
+      <look>The cupboard is currently {either cupboard.isopen=true:open|closed}.</look>
+      <listchildren />
+      <listchildrenprefix>The cupboard is bare except for ...</listchildrenprefix>
+      <object name="bottle opener">
+        <take />
+      </object>
+    </object>
+    <object name="window">
+      <inherit name="openable" />
+      <look type="script">
+        OutputTextNoBr ("The window is currently ")
+        if (window.isopen) {
+          OutputTextNoBr ("open")
+        }
+        else {
+          OutputTextNoBr ("closed")
+        }
+        msg (".")
+      </look>
+      <openscript type="script">
+        HelperOpenObject (window)
+        OutputTextNoBr ("You open the window")
+        if (bee.parent = kitchen) {
+          msg (". Not much happens.")
+        }
+        else {
+          msg (" and a bee flies into the kitchen.")
+          MoveObjectHere (bee)
+          EnableTurnScript (busy bee)
+        }
+      </openscript>
+      <closescript type="script">
+        msg ("You close the window.")
+        HelperCloseObject (window)
+      </closescript>
+    </object>
+  </object>
+  <object name="nowhere">
+    <object name="bee">
+      <look>The bee is buzzing around angrily.</look>
+    </object>
+  </object>
+  <verb>
+    <property>watch</property>
+    <pattern>watch</pattern>
+    <defaultexpression>WriteVerb(game.pov, "can't") + " watch " + object.article + "."</defaultexpression>
+  </verb>
+  <command name="say">
+    <pattern>say #text#;shout #text#;yell #text#</pattern>
+    <script>
+      msg ("You say “" + text + "”, but nobody replies.")
+    </script>
+  </command>
+  <command name="sayto">
+    <pattern type="string"><![CDATA[^say (?<text>.*) to (?<object>.*)$]]></pattern>
+    <script>
+      OutputTextNoBr ("You say “" + text + "” to " + GetDisplayName (object) + ".  ")
+      switch (object) {
+        case (Bob) {
+          msg ("He{either GetBoolean(Bob,\"alive\"): smiles back at you.|'s deadJim!}")
+        }
+        case (cat) {
+          msg ("She casually ignores you.")
+        }
+        default {
+          msg (WriteVerb(object, "do") + " not reply.")
+        }
+      }
+    </script>
+  </command>
+  <turnscript name="turncount turnscript">
+    <enabled />
+    <script>
+      game.pov.turns = game.pov.turns + 1
+    </script>
+  </turnscript>
+  <turnscript name="busy bee">
+    <counter type="int">0</counter>
+    <script>
+      if (game.pov.parent = bee.parent and busy bee.counter % 2 = 0) {
+        msg ("")
+        msg ("The bee buzzes past you. Pesky bee.")
+        ScrollToEnd
+      }
+      busy bee.counter = busy bee.counter + 1
+    </script>
+  </turnscript>
+  <exit />
+  <function name="revive bob" type="int">
+    if (game.pov.parent = lounge) {
+      if (not GetBoolean(Bob, "alive")) {
+        msg ("Using everything you've learned from TV dramas, you attempt to revive Bob.")
+        msg ("")
+        msg ("Miraculously, the defibrillator lived up to its promise, and Bob is now alive again. He says his head feels kind of fuzzy.")
+        set (Bob, "alive", true)
+        return (1)
+      }
+      else {
+        msg ("You've already revived Bob!")
+        return (0)
+      }
+    }
+    else {
+      msg ("Don't worry. The men in white coats will arrive to help you soon!")
+      return (0)
+    }
+  </function>
+  <function name="ScrollToEnd" type="string">
+    JS.scrollToEnd ()
+    return ("")
+  </function>
+</asl>
