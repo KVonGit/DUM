@@ -68,7 +68,7 @@
                 ],
                 "switchedondesc": "It is currently switched on.",
                 "switchedoffdesc": "It is currently switched off.",
-                "scenery": true
+                "scenery": false
             },
             "carpet": {
                 "name": "carpet",
@@ -115,12 +115,17 @@
             "hundred dollar bill": {
                 "name": "hundred dollar bill",
                 "look": "It's a hundred bucks!",
-                "loc": "kv_online",
+                "loc": "Kitchen",
                 "take": true,
                 "drop": {
                     "type": "string",
                     "attr": "It might come in handy sometime. You are not allowed to drop it."
-                }
+                },
+                "alt":[
+                    "hundred",
+                    "bill",
+                    "money"
+                ]
             },
             "Bob": {
                 "name": "Bob",
