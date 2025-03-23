@@ -22,7 +22,7 @@
                     "attr": "obj.loc = pov.name; console.log(obj.name + \" TAKEN\");"
                 },
                 "look": "It's yesterday's newspaper.",
-                "loc": "table"
+                "loc": "Lounge"
             },
             "table": {
                 "name": "table",
@@ -153,12 +153,8 @@
                 "name": "kv_online",
                 "alias": "KV",
                 "userName": "kv_online",
-                "dateJoined": 1742612185066,
-                "loc": "Lounge",
-                "attack": {
-                    "type": "string",
-                    "attr": "You attack KV!"
-                }
+                "dateJoined": 1742754760816,
+                "loc": "Lounge"
             }
         },
         "timers": {},

@@ -12,6 +12,7 @@ module.exports = {
 			return 3;
 		}
 		const s = core.template.xyzzy;
+		Log('Tried to xyzzy!');
 		await interaction.reply({ content: s, flags: 64 });
 	},
 };

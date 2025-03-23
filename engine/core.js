@@ -84,7 +84,7 @@ module.exports.saveGame = async (filePath, qgame) => {
 module.exports.getInventory = (qgame, pov) => {
 	const inv = [];
 	for (const element in qgame.objects) {
-		const obj = qgame[element];
+		const obj = qgame.objects[element];
 		if (obj.loc == pov.name) {
 			inv.push(obj.name);
 		}
@@ -94,7 +94,8 @@ module.exports.getInventory = (qgame, pov) => {
 
 module.exports.getInventoryAsString = (qgame, pov) => {
 	const inv = [];
-	for (const obj in qgame.objects) {
+	for (const element in qgame.objects) {
+		const obj = qgame.objects[element];
 		if (obj.loc == pov.name) {
 			inv.push(obj.name);
 		}

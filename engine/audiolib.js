@@ -1,5 +1,18 @@
 const { createReadStream } = require('node:fs');
 const { createAudioResource, StreamType } = require('@discordjs/voice');
+/*
+const player = createAudioPlayer();
+
+const resource = createAudioResource('/home/user/voice/music.mp3', {
+	metadata: {
+		title: 'A good song!',
+	},
+});
+
+// Not recommended - listen to errors from the audio player instead for most usecases!
+
+*/
+
 
 module.exports.playAudio = (filename) => {
 	const player = createAudioPlayer();

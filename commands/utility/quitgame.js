@@ -8,13 +8,14 @@ module.exports = {
 	async execute(interaction) {
 		const qgame = await core.loadGame('./game.json', interaction);
 		const povName = interaction.user.username;
-		const pov = qgame[povName];
+		const pov = qgame.players[povName];
 		const alias = pov.alias;
 		if (Object.keys(qgame.players).indexOf(povName) > -1) {
 			// get inventory and drop it in the location of the player
 			const items = core.getInventory(qgame, pov);
 			for (const i in items) {
-				core.getObject(items[i]).loc = pov.loc;
+				console.log('Dropping', items[i]);
+				qgame.objects[items[i]].loc = pov.loc;
 			}
 			delete qgame.players[povName];
 			await interaction.reply(`${alias} has left the game!`);

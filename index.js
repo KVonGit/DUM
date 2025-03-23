@@ -31,8 +31,6 @@ for (const folder of commandFolders) {
 // This actually works, converting the ASLX file to JSON and parsing it, but I don't wish to use actual nested objects for locations (parents).
 
 const parser = require('xml2json');
-
-
 fs.readFile('./game.aslx', 'utf8', function(err, data) {
 	const json = parser.toJson(data);
 	fs.writeFile('./game.json', json, function(err) {
@@ -44,6 +42,10 @@ fs.readFile('./game.aslx', 'utf8', function(err, data) {
 	});
 });
 */
+
+global.Log = console.log;
+
+
 // When the client is ready, run this code (only once).
 // The distinction between `client: Client<boolean>` and `readyClient: Client<true>` is important for TypeScript developers.
 // It makes some properties non-nullable.
