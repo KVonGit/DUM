@@ -66,7 +66,12 @@ module.exports.template = {
 	'oops':'There is nothing to correct.',
 	'noUndo':'You can\'t use UNDO in a multiplayer game.',
 	'noSave':'You can\'t save in a multiplayer game.',
-	'containerClosed':(object) => {return `${object} is closed.`;},
+	'containerClosed':(object) => {return `${object.capFirst()} is closed.`;},
+	'defaultOpen':(object) => {return `You open ${object}.`;},
+	'alreadyOpen':(object) => {return `${object.capFirst()} is already open.`;},
+	'defaultClose':(object) => {return `You close ${object}.`;},
+	'alreadyClosed':(object) => {return `${object.capFirst()} is already closed.`;},
+	'cantOpenOrClose':(object) => {return `${object.capFirst()}: not openable or closeable.`;},
 };
 
 module.exports.loadGame = async (filePath = './game.json') => {
@@ -159,18 +164,23 @@ module.exports.GetObject = (objName) => {
 };
 
 module.exports.msg = async (s, isPrivate = true, isFollowUp = false) => {
+	// console.log('msg:', s);
 	if (!isPrivate && !isFollowUp) {
+		console.log('msg: not private or follow up');
 		await interaction.reply(s);
 	}
 	else if (!isPrivate && isFollowUp) {
+		console.log('msg: not private but is follow up');
 		// await interaction.user.send(s);
 		await interaction.followUp(s);
 	}
 	else if (isPrivate && !isFollowUp) {
+		console.log('msg: private but not follow up');
 		await interaction.reply({ content: s, flags: 64 });
 	}
 	else {
 		// await interaction.user.send({content: s, flags: 64});
+		console.log('msg: private follow up');
 		await interaction.followUp({ content: s, flags: 64 });
 	}
 };
@@ -637,3 +647,30 @@ function resolveTypeInheritance(type) {
 
 	return { ...inheritedDefaults, ...typeDef };
 }
+
+module.exports.runTurnScripts = () => {
+	const allScripts = Object.keys(qgame.turnScripts) || [];
+	if (allScripts.length === 0) {
+		return;
+	}
+	const enabled = allScripts.filter(script => qgame.turnScripts[script].enabled);
+	if (enabled.length === 0) {
+		return;
+	}
+	for (const script of enabled) {
+		const scriptObj = qgame.turnScripts[script];
+		if (scriptObj.attr) {
+			eval(scriptObj.attr);
+		}
+	}
+};
+
+module.exports.openWindowProc = async () => {
+	let s = 'You open the window.';
+	if (this.GetObject('bee').loc == 'nowhere') {
+		s += ' A bee flies in.';
+		this.GetObject('bee').loc = 'Kitchen';
+	}
+	this.GetObject('window').isOpen = true;
+	await interaction.reply({ content: s, flags: 64 });
+};

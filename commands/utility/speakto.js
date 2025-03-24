@@ -27,7 +27,6 @@ module.exports = {
 			await interaction.reply({ content: 'No such object ("' + npc + '")!', flags: 64 });
 			return;
 		}
-		// TODO - Check scope!
 		if (obj.loc != pov.loc || (typeof obj.visible != 'undefined' && obj.visible == false)) {
 			await interaction.reply({ content: q.template.cantSee(obj.alias || obj.name), flags: 64 });
 		}
@@ -49,10 +48,14 @@ module.exports = {
 				await interaction.reply({ content:obj.speakto.attr, flags: 64 });
 			}
 			else if (obj.speakto.type == 'script') {
-				console.log('speakto script:', obj.speakto.attr);
-				qgame.replyString = '';
-				eval (obj.speakto.attr);
-				await interaction.reply({ content: qgame.replyString, flags: 64 });
+				// console.log('speakto script:', obj.speakto.attr);
+				try {
+				  await eval (obj.speakto.attr);
+				}
+				catch {
+				  console.error('Error in ' + obj.name + ' speakto script.');
+				  await interaction.reply({ content: 'Error in speakto script.', flags: 64 });
+				}
 			}
 			else {
 				const s = q.template.defaultSpeakTo(obj.alias || obj.name);

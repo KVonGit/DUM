@@ -24,7 +24,7 @@
                 "takemsg": "You fold the newspaper and place it neatly under your arm.",
                 "read": "There's no time for reading the paper.",
                 "look": "It's yesterday's edition, but there's an article about Quest Viva in it.",
-                "loc": "table",
+                "loc": "kv_online",
                 "alt": [
                     "paper"
                 ]
@@ -145,6 +145,37 @@
                     "male"
                 ],
                 "useDefaultPrefix": false
+            },
+            "window": {
+                "name": "window",
+                "prefix": "the",
+                "loc": "Kitchen",
+                "look": {
+                    "type": "script",
+                    "attr": "if (qgame.objects[\"window\"].isOpen) { replyString = \"The window is open.\"; } else { replyString = \"The window is closed.\"; }"
+                },
+                "open": {
+                    "type": "script",
+                    "attr": "q.openWindowProc();"
+                },
+                "isOpen": false,
+                "close": true,
+                "inherit": [
+                    "openable"
+                ]
+            },
+            "bee": {
+                "name": "bee",
+                "prefix": "the",
+                "loc": "Kitchen",
+                "look": "It's buzzing around the room.",
+                "attack": {
+                    "type": "string",
+                    "attr": "You can't attack the bee. It's too fast."
+                },
+                "inherit": [
+                    "animal"
+                ]
             }
         },
         "locations": {
@@ -165,6 +196,10 @@
                         "to": "Lounge"
                     }
                 }
+            },
+            "nowhere": {
+                "name": "nowhere",
+                "description": "You are nowhere. You should probably go somewhere."
             }
         },
         "players": {
@@ -176,7 +211,7 @@
                     "Oblomov"
                 ],
                 "dateJoined": 1742575169757,
-                "loc": "Lounge",
+                "loc": "Kitchen",
                 "take": {
                     "type": "string",
                     "attr": "He only lets Mrs. Pertex do that!"
@@ -186,23 +221,24 @@
                 "name": "kv_online",
                 "alias": "KV",
                 "userName": "kv_online",
-                "dateJoined": 1742754760816,
+                "dateJoined": 1742848805597,
+                "commandHistory": [
+                    null
+                ],
                 "loc": "Lounge",
-                "attack": {
-                    "type": "script",
-                    "attr": "responded = true; if(pov.name == obj.name){ q.msg(`${pov.alias} has attacked ${obj.alias || object}. :rolling_eyes:`); } else { q.msg(`${pov.alias} has attacked ${obj.alias || object}!`); };"
-                },
                 "speakto": {
                     "type": "script",
-                    "attr": "qgame.replyString = '“Hello, ' + q.GetDisplayName(pov) + ',” says KV. :grin:';"
-                }
+                    "attr": "interaction.reply(\"“Hello, \" + q.GetDisplayName(interaction.user.username) + \",” says KV. :grin:\");"
+                },
+                "lastCommand": null
             }
         },
         "timers": {},
         "turnScripts": {
             "busyBee": {
-                "@type": "script",
-                "script": "if (pov.loc = bee.loc) { q.msg (\"The bee buzzes past you. Pesky bee.\", true, true)}"
+                "type": "script",
+                "enabled": true,
+                "attr": "if (qgame.players[interaction.user.username].loc == qgame.objects[\"bee\"].loc) { interaction.followUp ({ content: \"The bee buzzes past you. Pesky bee.\", flags: 64 }); }"
             }
         }
     }

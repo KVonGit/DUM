@@ -36,8 +36,8 @@ module.exports = {
 			await q.msg(q.template.defaultAttack(obj.alias || object));
 		}
 		else if (obj.attack.type == 'string') {
-			await q.msg(`${pov.alias} has attacked ${obj.alias || object}!`, true);
-			await q.msg(obj.attack.attr, false, true);
+			await q.msg(`${pov.alias} has attacked ${q.GetDisplayName(obj)}!`, false, false);
+			await q.msg(obj.attack.attr, true, true);
 		}
 		else if (obj.attack.type == 'script') {
 			// eslint-disable-next-line prefer-const

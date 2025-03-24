@@ -46,6 +46,13 @@ fs.readFile('./game.aslx', 'utf8', function(err, data) {
 
 global.Log = console.log;
 
+Object.defineProperty(String.prototype, 'capFirst', {
+	value: function() {
+	  return this.charAt(0).toUpperCase() + this.slice(1);
+	},
+	enumerable: false,
+});
+
 // When the client is ready, run this code (only once).
 // The distinction between `client: Client<boolean>` and `readyClient: Client<true>` is important for TypeScript developers.
 // It makes some properties non-nullable.
@@ -73,6 +80,7 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 	try {
 		await command.execute(interaction);
+		require('./engine/q').runTurnScripts();
 	}
 	catch (error) {
 		console.error(error);

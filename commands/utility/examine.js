@@ -46,7 +46,7 @@ module.exports = {
 		}
 		else if (typeof obj.look.type !== 'undefined' && obj.look.type == 'script') {
 			let replyString;
-			eval (obj.look.attr);
+			await eval (obj.look.attr);
 			await interaction.reply({ content: replyString || q.defaultLook, flags: 64 });
 		}
 		else {
