@@ -168,7 +168,7 @@ module.exports.getLocationDescription = (qgame, pov) => {
 	if (typeof room == 'undefined') {
 		return 'Location not found!';
 	}
-	let s = '### ' + room.name + '\n';
+	let s = '### ' + this.GetDisplayName(room) + '\n';
 	if (typeof room.description == 'function') {
 		s += room.description();
 	}
@@ -180,14 +180,14 @@ module.exports.getLocationDescription = (qgame, pov) => {
 		// console.log('obj:', obj);
 		obj = qgame.objects[obj];
 		if (obj.loc == pov.loc && !obj.scenery) {
-			inRoomObjects.push(obj.alias || obj.name);
+			inRoomObjects.push(this.GetDisplayName(obj));
 		}
 	});
 	Object.keys(qgame.players).forEach(obj => {
 		// console.log('obj:', obj);
 		obj = qgame.players[obj];
 		if (obj.loc == pov.loc && obj.name != pov.name) {
-			inRoomObjects.push('@' + obj.alias || obj.name);
+			inRoomObjects.push('@' + this.GetDisplayName(obj));
 		}
 	});
 	let inTheRoom = '';
@@ -211,11 +211,18 @@ module.exports.getLocationDescription = (qgame, pov) => {
 	return s;
 };
 
-
 module.exports.getObject = (qgame, objName) => {
+	const regEx = /^(a|an|the)\s+/i;
+	objName = objName.replace(regEx, '');
 	for (const key of Object.keys(qgame.objects)) {
 		// console.log('key:', key);
 		const obj = qgame.objects[key];
+		if (obj.prefix && objName.startsWith(obj.prefix.toLowerCase() + ' ')) {
+			objName = objName.slice(obj.prefix.length).trim();
+		}
+		if (obj.suffix && objName.endsWith(' ' + obj.suffix.toLowerCase())) {
+			objName = objName.slice(0, -obj.suffix.length).trim();
+		}
 		// console.log('obj:', obj);
 		objName = objName.toLowerCase().trim();
 		if (obj.name.toLowerCase() === objName || (typeof obj.alias != 'undefined' && obj.alias.toLowerCase() === objName)) {
@@ -330,3 +337,246 @@ module.exports.GetDisplayName = (obj) => {
 	}
 	return n;
 };
+
+module.exports.FilterByType = (objectlist, objecttype) => {
+	return Object.values(objectlist).filter(obj => obj.inherit && obj.inherit.includes(objecttype));
+};
+
+module.exports.FilterByGetBoolean = (objectArray, property) => {
+	return objectArray.filter(obj => obj[property] === true);
+};
+
+module.exports.FilterByNotGetBoolean = (objectArray, property) => {
+	return objectArray.filter(obj => obj[property] !== true);
+};
+
+module.exports.FilterByHasAttribute = (objectArray, property) => {
+	return objectArray.filter(obj => Object.hasOwn(obj, property));
+};
+
+module.exports.GetDirectChildren = (obj) => {
+	return this.AllObjects().filter(o => o.loc && o.loc == obj.name);
+};
+
+module.exports.GetDirectChildrenAsString = (obj, joiner = 'and', useOxfordComma = true) => {
+	// Get all direct children of the object
+	const children = this.AllObjects()
+		.filter(o => o.loc && o.loc === obj.name)
+		.map(o => this.GetDisplayName(o));
+
+	// If no children, return an empty string
+	if (children.length === 0) {
+		return '';
+	}
+
+	// If only one child, return it directly
+	if (children.length === 1) {
+		return children[0];
+	}
+
+	// Handle multiple children
+	const lastChild = children.pop();
+	const separator = useOxfordComma && children.length > 1 ? ', ' : ' ';
+	return children.join(', ') + separator + joiner + ' ' + lastChild;
+};
+
+module.exports.filterByType = (qgame, type, category = 'objects') => {
+	// Ensure the category is valid (either 'objects' or 'players')
+	if (!['objects', 'players'].includes(category)) {
+		throw new Error(`Invalid category: ${category}. Must be 'objects' or 'players'.`);
+	}
+
+	// Get the list of objects or players based on the category
+	const list = qgame[category];
+
+	// Return filtered results based on the 'inherit' property
+	return Object.values(list).filter(obj => obj.inherit && obj.inherit.includes(type));
+};
+
+module.exports.GetObjectListAsString = (objectList, joiner = 'and', useOxfordComma = true) => {
+	// Map the object list to their display names
+	const displayNames = objectList.map(obj => this.GetDisplayName(obj));
+
+	// If no objects, return an empty string
+	if (displayNames.length === 0) {
+		return '';
+	}
+
+	// If only one object, return it directly
+	if (displayNames.length === 1) {
+		return displayNames[0];
+	}
+
+	// Handle multiple objects
+	// // Remove the last object
+	const lastObject = displayNames.pop();
+	const separator = useOxfordComma && displayNames.length > 1 ? ', ' : ' ';
+	return displayNames.join(', ') + separator + joiner + ' ' + lastObject;
+};
+
+module.exports.ListCombine = (list1, list2) => {
+	return list1.concat(list2);
+};
+
+module.exports.ListContains = (list, item) => {
+	return list.includes(item);
+};
+
+module.exports.ListRemove = (list, item) => {
+	return list.filter(i => i !== item);
+};
+
+module.exports.ListAdd = (list, item) => {
+	return list.concat(item);
+};
+
+module.exports.DictionaryContains = (dictionary, key) => {
+	return Object.hasOwn(dictionary, key);
+};
+
+module.exports.DictionaryRemove = (dictionary, key) => {
+	// eslint-disable-next-line no-unused-vars
+	const { [key]: unused, ...rest } = dictionary;
+	return rest;
+};
+
+module.exports.DictionaryAdd = (dictionary, key, value) => {
+	// This will update if the key exists, or add it if it doesn't
+	return { ...dictionary, [key]: value };
+};
+
+module.exports.DictionaryCombine = (dict1, dict2) => {
+	return { ...dict1, ...dict2 };
+};
+
+module.exports.DictionaryKeys = (dictionary) => {
+	return Object.keys(dictionary);
+};
+
+module.exports.DictionaryValues = (dictionary) => {
+	return Object.values(dictionary);
+};
+
+module.exports.DictionaryContainsValue = (dictionary, value) => {
+	return Object.values(dictionary).includes(value);
+};
+
+module.exports.DictionaryFilterByValue = (dictionary, predicate) => {
+	return Object.fromEntries(
+		// eslint-disable-next-line no-unused-vars
+		Object.entries(dictionary).filter(([key, value]) => predicate(value)),
+	);
+};
+
+module.exports.DictionaryMap = (dictionary, transform) => {
+	return Object.fromEntries(
+		Object.entries(dictionary).map(([key, value]) => [key, transform(value)]),
+	);
+};
+
+/* example usage
+const dict = { a: 1, b: 2, c: 3 };
+const mappedDict = q.DictionaryMap(dict, value => value * 2);
+console.log(mappedDict); // Output: { a: 2, b: 4, c: 6 }
+*/
+
+module.exports.DictionaryReduce = (dictionary, reducer, initialValue) => {
+	return Object.entries(dictionary).reduce(
+		(acc, [key, value]) => reducer(acc, key, value),
+		initialValue,
+	);
+};
+
+module.exports.type = {
+	default: {
+		subjectPronoun: 'it',
+		objectPronoun: 'it',
+		possessivePronoun: 'its',
+	},
+	npc: {
+		subjectPronoun: 'they',
+		objectPronoun: 'them',
+		possessivePronoun: 'their',
+	},
+	male: {
+		inherit: ['npc'],
+		subjectPronoun: 'he',
+		objectPronoun: 'him',
+		possessivePronoun: 'his',
+	},
+	female: {
+		inherit: ['npc'],
+		subjectPronoun: 'she',
+		objectPronoun: 'her',
+		possessivePronoun: 'her',
+	},
+	malePlural: {
+		inherit: ['male'],
+		subjectPronoun: 'they',
+		objectPronoun: 'them',
+		possessivePronoun: 'their',
+	},
+	femalePlural: {
+		inherit: ['female'],
+		subjectPronoun: 'they',
+		objectPronoun: 'them',
+		possessivePronoun: 'their',
+	},
+	player: {
+		subjectPronoun: 'you',
+		objectPronoun: 'you',
+		possessivePronoun: 'your',
+	},
+	animal: {
+		subjectPronoun: 'it',
+		objectPronoun: 'it',
+		possessivePronoun: 'its',
+	},
+	vehicle: {
+		subjectPronoun: 'it',
+		objectPronoun: 'it',
+		possessivePronoun: 'its',
+	},
+	surface: {
+		subjectPronoun: 'it',
+		objectPronoun: 'it',
+		possessivePronoun: 'its',
+	},
+	container: {
+		subjectPronoun: 'it',
+		objectPronoun: 'it',
+		possessivePronoun: 'its',
+	},
+};
+
+module.exports.getTypeDefaults = (qgame, obj) => {
+	const types = obj.inherit || [];
+	let resolvedDefaults = { ...q.type.default };
+
+	for (const type of types) {
+		if (q.type[type]) {
+			resolvedDefaults = {
+				...resolvedDefaults,
+				...resolveTypeInheritance(type),
+			};
+		}
+	}
+
+	return resolvedDefaults;
+};
+
+// Helper function to resolve inheritance for a type
+function resolveTypeInheritance(type) {
+	const typeDef = q.type[type] || {};
+	const inheritedTypes = typeDef.inherit || [];
+	let inheritedDefaults = {};
+
+	for (const parentType of inheritedTypes) {
+		inheritedDefaults = {
+			...inheritedDefaults,
+			...resolveTypeInheritance(parentType),
+		};
+	}
+
+	return { ...inheritedDefaults, ...typeDef };
+}

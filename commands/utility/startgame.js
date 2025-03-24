@@ -18,6 +18,7 @@ module.exports = {
 				'alias': alias,
 				'userName': interaction.user.username,
 				'dateJoined': Date.now(),
+				'commandHistory': [],
 			};
 			pov = qgame.players[povName];
 
@@ -29,7 +30,7 @@ module.exports = {
 				s += qgame.joinScript(povName) || '';
 			}
 			else {
-				s += `Welcome, ${alias}!\r\n\r\n`;
+				s += `Welcome, ${alias}!\n\n`;
 			}
 
 			if (typeof qgame.startScript !== 'undefined') {

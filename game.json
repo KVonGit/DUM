@@ -42,9 +42,9 @@
                     "attr": "It's too heavy to take."
                 },
                 "inherit": [
-                    "container",
                     "surface"
                 ],
+                "surfacePrefix": "on",
                 "listchildren": true,
                 "listchildrenprefix": "On it, you see"
             },
@@ -115,8 +115,9 @@
             },
             "hundred dollar bill": {
                 "name": "hundred dollar bill",
+                "prefix": "a",
                 "look": "It's a hundred bucks!",
-                "loc": "Kitchen",
+                "loc": "kv_online",
                 "take": true,
                 "drop": {
                     "type": "string",
@@ -141,8 +142,7 @@
                     "attr": "He's dead, Jim! :rofl:"
                 },
                 "inherit": [
-                    "male",
-                    "npc"
+                    "male"
                 ],
                 "useDefaultPrefix": false
             }
