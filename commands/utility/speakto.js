@@ -45,10 +45,11 @@ module.exports = {
 			await interaction.reply({ content:obj.speakto, flags: 64 });
 		}
 		else if (typeof obj.speakto.type !== 'undefined') {
-			if (typeof obj.speakto.type == 'string') {
+			if (obj.speakto.type == 'string') {
 				await interaction.reply({ content:obj.speakto.attr, flags: 64 });
 			}
 			else if (obj.speakto.type == 'script') {
+				console.log('speakto script:', obj.speakto.attr);
 				qgame.replyString = '';
 				eval (obj.speakto.attr);
 				await interaction.reply({ content: qgame.replyString, flags: 64 });

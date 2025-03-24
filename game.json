@@ -132,7 +132,7 @@
             "Bob": {
                 "name": "Bob",
                 "loc": "Lounge",
-                "look": "Bob is lying on the floor, a lot more still than usual",
+                "look": "Bob is lying on the floor, a lot more still than usual. :worried:",
                 "attack": {
                     "type": "string",
                     "attr": "He is dead! No need to attack him, you monster! :laughing:"
@@ -191,6 +191,10 @@
                 "attack": {
                     "type": "script",
                     "attr": "responded = true; if(pov.name == obj.name){ q.msg(`${pov.alias} has attacked ${obj.alias || object}. :rolling_eyes:`); } else { q.msg(`${pov.alias} has attacked ${obj.alias || object}!`); };"
+                },
+                "speakto": {
+                    "type": "script",
+                    "attr": "qgame.replyString = '“Hello, ' + q.GetDisplayName(pov) + ',” says KV. :grin:';"
                 }
             }
         },

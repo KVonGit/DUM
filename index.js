@@ -57,7 +57,7 @@ client.once(Events.ClientReady, readyClient => {
 client.login(token);
 
 client.on(Events.InteractionCreate, async interaction => {
-	console.log('interaction', interaction);
+	// console.log('interaction', interaction);
 	if (!interaction.isChatInputCommand()) return;
 	// console.log(interaction);
 	if (interaction.channelId != '1352673869013586023') {

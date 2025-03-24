@@ -2,6 +2,51 @@ const fs = require('fs');
 /* eslint-disable no-useless-escape */
 module.exports.log = console.log;
 
+module.exports.templateOG = {
+	'LanguageId': 'en',
+	'WantRestartGame': 'Are you sure you want to restart the game?',
+	'Again1': 'again',
+	'Again2': 'g',
+	'NothingToRepeat': 'There is nothing to repeat.',
+	'UnresolvedObject': 'I can\'t see that.',
+	'UnresolvedLocation': '{=WriteVerb(game.pov, "can\'t")} go there.',
+	'DefaultObjectDescription': 'Nothing out of the ordinary.',
+	'DefaultSelfDescription': 'Looking good.',
+	'SeeListHeader': '{=WriteVerb(game.pov, "can")} see',
+	'GoListHeader': '{=WriteVerb(game.pov, "can")} go',
+	'And': 'and',
+	'Nothing': 'nothing',
+	'Or': 'or',
+	'NothingToUndo': 'Nothing to undo!',
+	'NotCarryingAnything': '{=WriteVerb(game.pov, "be")} not carrying anything.',
+	'CarryingListHeader': '{=WriteVerb(game.pov, "be")} carrying',
+	'UnrecognisedCommand': 'I don\'t understand your command.',
+	'YouAreIn': '{=WriteVerb(game.pov, "be")} in',
+	'LookAt': 'Look at',
+	'Take': 'Take',
+	'SpeakTo': 'Speak to',
+	'Use': 'Use',
+	'Drop': 'Drop',
+	'GoTo': 'Go to',
+	'Go': 'Go',
+	'SwitchOn': 'Switch on',
+	'SwitchOff': 'Switch off',
+	'Wear': 'Wear',
+	'Remove': 'Remove',
+};
+
+module.exports.dynamicTemplate = {
+	'TakeSuccessful': (object) => { return 'WriteVerb(game.pov, \"pick\") + " " + object.article + " up."'; },
+	'TakeUnsuccessful': (object) => { return 'WriteVerb(game.pov, \"can\'t\") + " take " + object.article + "."'; },
+	'FullInventory': (object) => { return 'WriteVerb(object, \"be\") + " too heavy to be taken."'; },
+	'MaxObjectsInInventory': (object) => { return 'WriteVerb(game.pov, \"can\'t\") + " carry any more items."'; },
+	'MaxObjectsInContainer': (object) => { return 'WriteVerb(game.pov, \"can\'t\") + " put more items in " + object.article + "."'; },
+	'DropSuccessful': (object) => { return 'WriteVerb(game.pov, \"drop\") + " " + object.article + "."'; },
+	'DropUnsuccessful': (object) => { return 'WriteVerb(game.pov, \"can\'t\") + " drop " + object.article + "."'; },
+	'ObjectCannotBeStored': (object) => { return 'WriteVerb(game.pov, \"can\'t\") + " put " + object.article + " there."'; },
+	'AlreadyTaken': (object) => { return 'WriteVerb(game.pov, \"be\") + " already carrying " + object.article + "."'; },
+};
+
 module.exports.template = {
 	'mustStartGame':'You must `/startgame` before you can play.',
 	'alreadyPlaying':'You are already playing the game.',
@@ -70,6 +115,10 @@ module.exports.AllLocations = () => {
 
 module.exports.AllPlayers = () => {
 	return Object.keys(qgame.players);
+};
+
+module.exports.All = () => {
+	return this.ListCombine(this.ListCombine(this.AllObjects(), this.AllPlayers()), this.AllLocations());
 };
 
 module.exports.GetObject = (objName) => {
@@ -264,6 +313,10 @@ module.exports.allPlayers = (qgame) => {
 	return Object.keys(qgame.players);
 };
 
+module.exports.AllPlayers = (qgame) => {
+	return qgame.players;
+};
+
 module.exports.evalThis = (obj, scriptAttr) => {
 	if (typeof obj[scriptAttr] === 'string') {
 		eval(`(${obj[scriptAttr]})`).call(obj);
@@ -324,6 +377,9 @@ module.exports.doGo = async (qgame, pov, loc, exitName, interaction) => {
 };
 
 module.exports.GetDisplayName = (obj) => {
+	if (typeof obj === 'string') {
+		obj = this.GetObject(obj);
+	}
 	let n = '';
 	if (obj.prefix) {
 		n += obj.prefix + ' ';
@@ -395,7 +451,8 @@ module.exports.filterByType = (qgame, type, category = 'objects') => {
 
 module.exports.GetObjectListAsString = (objectList, joiner = 'and', useOxfordComma = true) => {
 	// Map the object list to their display names
-	const displayNames = objectList.map(obj => this.GetDisplayName(obj));
+	console.log('objectList:', objectList);
+	const displayNames = Object.keys(objectList).map(obj => this.GetDisplayName(obj));
 
 	// If no objects, return an empty string
 	if (displayNames.length === 0) {
