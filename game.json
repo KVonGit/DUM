@@ -24,7 +24,7 @@
                 "takemsg": "You fold the newspaper and place it neatly under your arm.",
                 "read": "There's no time for reading the paper.",
                 "look": "It's yesterday's edition, but there's an article about Quest Viva in it.",
-                "loc": "Lounge",
+                "loc": "table",
                 "alt": [
                     "paper"
                 ]
@@ -68,7 +68,8 @@
                 ],
                 "switchedondesc": "It is currently switched on.",
                 "switchedoffdesc": "It is currently switched off.",
-                "scenery": false
+                "scenery": false,
+                "switchedOn": true
             },
             "carpet": {
                 "name": "carpet",
@@ -121,7 +122,7 @@
                     "type": "string",
                     "attr": "It might come in handy sometime. You are not allowed to drop it."
                 },
-                "alt":[
+                "alt": [
                     "hundred",
                     "bill",
                     "money"
@@ -186,7 +187,7 @@
                 "alias": "KV",
                 "userName": "kv_online",
                 "dateJoined": 1742754760816,
-                "loc": "Lounge",
+                "loc": "Kitchen",
                 "attack": {
                     "type": "script",
                     "attr": "responded = true; if(pov.name == obj.name){ q.msg(`${pov.alias} has attacked ${obj.alias || object}. :rolling_eyes:`); } else { q.msg(`${pov.alias} has attacked ${obj.alias || object}!`); };"

@@ -21,6 +21,7 @@ module.exports.template = {
 	'oops':'There is nothing to correct.',
 	'noUndo':'You can\'t use UNDO in a multiplayer game.',
 	'noSave':'You can\'t save in a multiplayer game.',
+	'containerClosed':(object) => {return `${object} is closed.`;},
 };
 
 module.exports.loadGame = async (filePath = './game.json') => {
@@ -264,4 +265,68 @@ module.exports.evalThis = (obj, scriptAttr) => {
 
 module.exports.SendDM = async (s) => {
 	await interaction.user.send(s);
+};
+
+module.exports.doGo = async (qgame, pov, loc, exitName, interaction) => {
+	if (!loc.exits) {
+		await interaction.reply({ content: 'There are no exits!', flags: 64 });
+		return;
+	}
+
+	const exit = loc.exits[exitName];
+	if (!exit) {
+		await interaction.reply({ content: this.template.cantGo(exitName), flags: 64 });
+		return;
+	}
+
+	if (exit.locked) {
+		await interaction.reply({ content: this.template.lockedExit(exitName), flags: 64 });
+		return;
+	}
+	if (typeof exit.visible != 'undefined' && exit.visible === false) {
+		await interaction.reply({ content: this.template.cantGo(exitName), flags: 64 });
+		return;
+	}
+
+	// Execute "before leaving" scripts
+	if (loc.beforeLeavingScript) {
+		eval(loc.beforeLeavingScript);
+	}
+
+	// Update the player's location
+	pov.loc = exit.to;
+
+	// Execute "before entering" scripts
+	if (qgame.locations[exit.to].afterEnteringScript) {
+		eval(qgame.locations[exit.to].afterEnteringScript);
+	}
+
+	// Get the location description and respond
+	const locationDescription = this.getLocationDescription(qgame, pov);
+	await interaction.reply(`${pov.alias || pov.name} goes ${exitName}.`);
+	await interaction.followUp({ content: locationDescription, flags: 64 });
+
+	// Save the game state
+	try {
+		await this.saveGame('./game.json', qgame);
+	}
+	catch (err) {
+		console.error('Error saving game data:', err);
+		await interaction.followUp({ content: 'Failed to save game data.', flags: 64 });
+	}
+};
+
+module.exports.GetDisplayName = (obj) => {
+	let n = '';
+	if (obj.prefix) {
+		n += obj.prefix + ' ';
+	}
+	n += obj.alias || obj.name;
+	if (obj.suffix) {
+		n += ' ' + obj.suffix;
+	}
+	if (obj.listChildren) {
+		n += ' (' + obj.listChildren() + ')';
+	}
+	return n;
 };
