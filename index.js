@@ -18,7 +18,7 @@ clientK.once(Events.ClientReady, readyClient => {
 
 clientK.login(token);
 clientK.on(Events.MessageCreate, async message => {
-	if (message.author.bot) return;
+	if (message.author.bot || message.channelId != '1353941635859353670') return;
 	console.log('message', message);
 	global.message = message;
 	const regExp = {
@@ -65,12 +65,18 @@ clientK.on(Events.MessageCreate, async message => {
 		'wait': /^(wait|z)$/i,
 		'quit': /^(quit|exit)$/i,
 	};
+	let foundCommand = false;
 	for (const [command, regex] of Object.entries(regExp)) {
 		const match = message.content.match(regex);
 		if (match) {
+			foundCommand = true;
 			await handleCommand(command, match.groups);
 			break;
 		}
+	}
+	if (!foundCommand) {
+		await message.reply('Command not recognized');
+		return;
 	}
 
 	async function handleCommand(command, groups) {

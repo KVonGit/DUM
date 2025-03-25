@@ -226,7 +226,7 @@
                     null,
                     null
                 ],
-                "loc": "Lounge",
+                "loc": "Kitchen",
                 "speakto": {
                     "type": "script",
                     "attr": "interaction.reply(\"“Hello, \" + q.GetDisplayName(interaction.user.username) + \",” says KV. :grin:\");"
