@@ -3,11 +3,11 @@ const q = require('../../engine/q');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('switchoff')
-		.setDescription('Switch something off.')
+		.setName('switchon')
+		.setDescription('Switch something on.')
 		.addStringOption(option =>
 			option.setName('object')
-				.setDescription('The object you wish to switch off')
+				.setDescription('The object you wish to switch on')
 				.setRequired(true)),
 	async execute(interaction) {
 		const object = interaction.options.getString('object');
@@ -31,53 +31,53 @@ module.exports = {
 			await interaction.reply({ content: q.template.cantSee(q.GetDisplayName(obj)), flags: 64 });
 			return;
 		}
-		if (obj.switchedOn === false) {
-			await interaction.reply({ content: q.template.alreadyOff(q.GetDisplayName(obj)), flags: 64 });
+		if (obj.switchedOn === true) {
+			await interaction.reply({ content: q.template.alreadyOn(q.GetDisplayName(obj)), flags: 64 });
 			return;
 		}
 		if (obj.inherit && obj.inherit.indexOf('switchable') >= 0) {
-			if (obj.canSwitchOff === true) {
-				obj.switchedOn = false;
+			if (obj.canSwitchOn === true) {
+				obj.switchedOn = true;
 			}
-			else if (obj.canSwitchOff === false) {
+			else if (obj.canSwitchOn === false) {
 				await interaction.reply({ content: q.template.cantSwitch(q.GetDisplayName(obj)), flags: 64 });
 				return;
 			}
-			else if (obj.switchOff.type) {
-				switch (obj.switchOff.type) {
+			else if (obj.switchOn.type) {
+				switch (obj.switchOn.type) {
 				case 'string':
-					await interaction.reply({ content: obj.switchOff.attr, flags: 64 });
+					await interaction.reply({ content: obj.switchOn.attr, flags: 64 });
 					break;
 				case 'script':
-					await eval(obj.switchOff.attr);
+					await eval(obj.switchOn.attr);
 					break;
 				case 'boolean':
-					obj.switchedOn = false;
+					obj.switchedOn = true;
 					break;
 				default:
-					await interaction.reply({ content: 'There was an error in the switchOff property.', flags: 64 });
+					await interaction.reply({ content: 'There was an error in the switchOn property.', flags: 64 });
 				}
 
 			}
 			else {
 				obj.switchedOn = false;
 			}
-			if (typeof obj.switchedOffMsg === 'string') {
-				await interaction.reply({ content: obj.switchedOffMsg, flags: 64 });
+			if (typeof obj.switchedOnMsg === 'string') {
+				await interaction.reply({ content: obj.switchedOnMsg, flags: 64 });
 			}
 			else {
-				await interaction.reply({ content: 'You switch ' + q.GetDisplayName(obj) + ' off.', flags: 64 });
+				await interaction.reply({ content: 'You switch ' + q.GetDisplayName(obj) + ' on.', flags: 64 });
 			}
-			if (typeof obj.afterSwitchingOffMsg === 'string') {
-				await interaction.followUp({ content: obj.afterSwitchingOffMsg, flags: 64 });
+			if (typeof obj.afterSwitchingOnMsg === 'string') {
+				await interaction.followUp({ content: obj.afterSwitchingOnMsg, flags: 64 });
 			}
-			if (obj.afterSwitchingOff) {
+			if (obj.afterSwitchingOn) {
 				try {
-					await eval(obj.afterSwitchingOff);
+					await eval(obj.afterSwitchingOn);
 				}
 				catch {
-					console.error('Error in ' + obj.name + ' afterSwitchingOff script.');
-					await interaction.followUp({ content: 'Error in afterSwitchingOff script.', flags: 64 });
+					console.error('Error in ' + obj.name + ' afterSwitchingOn script.');
+					await interaction.followUp({ content: 'Error in afterSwitchingOn script.', flags: 64 });
 				}
 			}
 			try {

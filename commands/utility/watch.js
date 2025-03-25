@@ -1,21 +1,15 @@
 const { SlashCommandBuilder } = require('discord.js');
 const q = require('../../engine/q');
-// const warned = {};
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('examine')
-		.setDescription('Examine something')
+		.setName('watch')
+		.setDescription('Watch something')
 		.addStringOption(option =>
 			option.setName('object')
-				.setDescription('The object you wish to examine')
+				.setDescription('The object you wish to watch')
 				.setRequired(true)),
 	async execute(interaction) {
-		const object = interaction.options.getString('object');
-		if (typeof object == 'undefined') {
-			await interaction.reply('\'object\' not defined.');
-			return;
-		}
 		const qgame = await q.loadGame('./game.json', interaction);
 		const povName = interaction.user.username;
 		const pov = qgame.players[povName];
@@ -23,37 +17,35 @@ module.exports = {
 			await interaction.reply({ content: q.template.mustStartGame, flags: 64 });
 			return 3;
 		}
+		const object = interaction.options.getString('object');
+		if (typeof object == 'undefined') {
+			await interaction.reply('\'object\' not defined.');
+			return;
+		}
 		const obj = q.getObject(qgame, object);;
 		if (obj == 'undefined') {
 			await interaction.reply({ content: 'No such object ("' + object + '")!', flags: 64 });
 			return;
 		}
+
 		if ((obj.loc != pov.loc && obj.loc != pov.name) || (typeof obj.visible != 'undefined' && obj.visible == false)) {
 			await interaction.reply({ content: q.template.cantSee(obj.alias || obj.name), flags: 64 });
 		}
-		else if (typeof obj.look == 'undefined') {
-			const s = q.template.defaultLook;
+		else if (typeof obj.watch == 'undefined') {
+			const s = `You can't watch ${(obj.prefix ? obj.prefix + ' ' : '') + (obj.alias || obj.name)}.`;
 			await interaction.reply({ content: s, flags: 64 });
 		}
-		else if (typeof obj.look == 'string') {
-			await interaction.reply({ content:obj.look, flags: 64 });
+		else if (typeof obj.watch == 'string') {
+			await interaction.reply({ content:obj.watch, flags: 64 });
 		}
-		else if (typeof obj.look.type !== 'undefined' && obj.look.type == 'script') {
-			let replyString;
-			await eval (obj.look.attr);
-			await interaction.reply({ content: replyString || q.defaultLook, flags: 64 });
+		else if (typeof obj.watch.type !== 'undefined' && obj.watch.type == 'script') {
+			let qOutput;
+			await eval (obj.watch.attr);
+			await interaction.reply({ content: qOutput || `You can't watch ${(obj.prefix ? obj.prefix + ' ' : '') + (obj.alias || obj.name)}.`, flags: 64 });
 		}
 		else {
-			const s = q.template.defaultLook;
+			const s = `You can't watch ${(obj.prefix ? obj.prefix + ' ' : '') + (obj.alias || obj.name)}.`;
 			await interaction.reply({ content: s, flags: 64 });
-		}
-		if (typeof obj.switchedOn != 'undefined') {
-			if (obj.switchedOn && typeof obj.switchedondesc == 'string') {
-				await interaction.followUp({ content: obj.switchedondesc, flags: 64 });
-			}
-			else if (!obj.switchedOn && obj.switchedoffdesc == 'string') {
-				await interaction.followUp({ content: obj.switchedoffdesc, flags: 64 });
-			}
 		}
 	},
 };

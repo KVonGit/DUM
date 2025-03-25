@@ -72,6 +72,9 @@ module.exports.template = {
 	'defaultClose':(object) => {return `You close ${object}.`;},
 	'alreadyClosed':(object) => {return `${object.capFirst()} is already closed.`;},
 	'cantOpenOrClose':(object) => {return `${object.capFirst()}: not openable or closeable.`;},
+	'alreadyOn':(object) => {return `${object.capFirst()} is already on.`;},
+	'alreadyOff':(object) => {return `${object.capFirst()} is already off.`;},
+	'cantSwitch':(object) => {return `You can't switch ${object} on or off.`;},
 };
 
 module.exports.loadGame = async (filePath = './game.json') => {

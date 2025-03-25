@@ -161,6 +161,7 @@
             },
             "TV": {
                 "name": "TV",
+                "prefix": "the",
                 "inherit": [
                     "switchable"
                 ],
@@ -173,10 +174,22 @@
                 "look": "The TV is an old model, possibly 20 years old.",
                 "switchedondesc": "It is currently showing an old western.",
                 "switchedoffdesc": "It is currently switched off.",
+                "switchedOn": true,
+                "canSwitchOn": true,
+                "canSwitchOff": true,
                 "watch": {
                     "type": "script",
                     "attr": "qOutput = (\"You watch for a few minutes\");      if (obj.isSwitchedOn) { qOutput += \". You’ve always loved watching westerns!\";    } else { qOutput += \", thinking that the latest episode of what they call ‘Star Trek’ these days is even more boring than usual. You then realise that the TV is in fact switched off.\"; }"
                 }
+            },
+            "sofa": {
+                "name": "sofa",
+                "look": "The sofa looks old, worn, and thoroughly inviting!",
+                "sit": "There’s no time for lounging about now.",
+                "alt": [
+                     "couch"
+                ],
+                "loc": "Lounge"
             },
             "window": {
                 "name": "window",
@@ -208,6 +221,70 @@
                 "inherit": [
                     "animal"
                 ]
+            },
+            "bin":{
+                "name": "bin",
+                "scenery": true,
+                "look": "There's no time for examining trash.",
+                "alt": {
+                    "type": "stringlist",
+                    "value": [
+                        "trash can",
+                        "garbage bin",
+                        "trash bin",
+                        "garbage bin"
+                    ]
+                },
+                "loc": "Kitchen"
+            },
+            "fridge": {
+                "name": "fridge",
+                "inherit": [
+                    "closedcontainer",
+                    "container"
+                ],
+                "listChildren": true,
+                "listchildrenprefix": "In the fridge you find",
+                "isClosed": true,
+                "canClose": true,
+                "canOpen": true,
+                "loc": "Kitchen",
+                "alt":  [
+                    "refrigerator",
+                    "icebox"
+                ],
+                "look": {
+                    "type": "script",
+                    "attr": "if (obj.isOpen) {       q.msg (\"The fridge is open, casting its light out into the gloomy kitchen.\")        }       else {         q.msg (\"A big old refrigerator sits in the corner, humming quietly.\")       }"
+                }
+            },
+            "cupboard": {
+                "name": "cupboard",
+                "inherit": [
+                    "closedcontainer",
+                    "container"
+                ],
+                "isopen:": false,
+                "canOpen": true,
+                "canClose": true,
+                "look": "The cupboard is currently {either cupboard.isopen=true:open|closed}.",
+                "listChildren": true,
+                "listchildrenprefix": "The cupboard is bare except for ...",
+                "loc": "Kitchen"
+            },
+            "bottle opener": {
+                "name": "bottle opener",
+                "take": true,
+                "loc": "cupboard",
+                "look": "It's a bottle opener. You can't use it on the fridge, though."
+            },
+            "beer": {
+                "name": "beer",
+                "usedefaultprefix": false,
+                "look": "A bottle of Squiffy beer, with “XanMag” written all over it.",
+                "prefix": "XanMag's",
+                "takemsg": "XanMag probably wouldn't like that.",
+                "loc": "fridge"
             }
         },
         "locations": {
