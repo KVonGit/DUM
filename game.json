@@ -14,6 +14,7 @@
         "objects": {
             "newspaper": {
                 "name": "newspaper",
+                "prefix": "a",
                 "inherit": [
                     "container"
                 ],
@@ -24,7 +25,7 @@
                 "takemsg": "You fold the newspaper and place it neatly under your arm.",
                 "read": "There's no time for reading the paper.",
                 "look": "It's yesterday's edition, but there's an article about Quest Viva in it.",
-                "loc": "ajbruner77",
+                "loc": "table",
                 "alt": [
                     "paper"
                 ]
@@ -45,7 +46,7 @@
                     "surface"
                 ],
                 "surfacePrefix": "on",
-                "listchildren": true,
+                "listChildren": true,
                 "listchildrenprefix": "On it, you see"
             },
             "lamp": {
@@ -89,6 +90,7 @@
             "box": {
                 "name": "box",
                 "loc": "table",
+                "prefix": "a",
                 "look": "It's a small box, currently closed. (And there isn't an `/open` command yet. :man_facepalming:)",
                 "take": {
                     "type": "string",
@@ -101,6 +103,7 @@
             },
             "defibrillator": {
                 "name": "defibrillator",
+                "prefix": "a",
                 "loc": "box",
                 "look": "An ordinary defibrillator.",
                 "take": {
@@ -112,6 +115,16 @@
                 "name": "hammer",
                 "loc": "pertex1",
                 "look": "It's a mini war hammer."
+            },
+            "banana": {
+                "name": "banana",
+                "prefix": "a",
+                "loc": "table",
+                "look": "It's a banana. You can't eat it, though.",
+                "take": {
+                    "type": "string",
+                    "attr": "It's not finished yet."
+                }
             },
             "hundred dollar bill": {
                 "name": "hundred dollar bill",
@@ -145,6 +158,25 @@
                     "male"
                 ],
                 "useDefaultPrefix": false
+            },
+            "TV": {
+                "name": "TV",
+                "inherit": [
+                    "switchable"
+                ],
+                "alt": [
+                    "television",
+                    "telly",
+                    "tube"
+                ],
+                "loc": "Lounge",
+                "look": "The TV is an old model, possibly 20 years old.",
+                "switchedondesc": "It is currently showing an old western.",
+                "switchedoffdesc": "It is currently switched off.",
+                "watch": {
+                    "type": "script",
+                    "attr": "qOutput = (\"You watch for a few minutes\");      if (obj.isSwitchedOn) { qOutput += \". You’ve always loved watching westerns!\";    } else { qOutput += \", thinking that the latest episode of what they call ‘Star Trek’ these days is even more boring than usual. You then realise that the TV is in fact switched off.\"; }"
+                }
             },
             "window": {
                 "name": "window",
@@ -226,7 +258,7 @@
                     null,
                     null
                 ],
-                "loc": "Kitchen",
+                "loc": "Lounge",
                 "speakto": {
                     "type": "script",
                     "attr": "interaction.reply(\"“Hello, \" + q.GetDisplayName(interaction.user.username) + \",” says KV. :grin:\");"

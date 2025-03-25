@@ -7,7 +7,8 @@ module.exports = {
 		.setDescription('Take something')
 		.addStringOption(option =>
 			option.setName('object')
-				.setDescription('The object you wish to take')),
+				.setDescription('The object you wish to take')
+				.setRequired(true)),
 	async execute(interaction) {
 		const objectName = interaction.options.getString('object');
 		if (!objectName) {

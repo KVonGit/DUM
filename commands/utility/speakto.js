@@ -8,7 +8,8 @@ module.exports = {
 		.setDescription('Speakto someone (or something?)')
 		.addStringOption(option =>
 			option.setName('npc')
-				.setDescription('The npc you wish to which you wish to speak')),
+				.setDescription('The npc you wish to which you wish to speak')
+				.setRequired(true)),
 	async execute(interaction) {
 		const npc = interaction.options.getString('npc');
 		if (typeof npc == 'undefined') {

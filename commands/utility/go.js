@@ -7,7 +7,8 @@ module.exports = {
 		.setDescription('Go somewhere')
 		.addStringOption(option =>
 			option.setName('direction')
-				.setDescription('The direction (or location to which) you wish to go')),
+				.setDescription('The direction (or location to which) you wish to go')
+				.setRequired(true)),
 	async execute(interaction) {
 		const exitName = interaction.options.getString('direction');
 		if (!exitName) {

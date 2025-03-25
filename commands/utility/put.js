@@ -7,10 +7,12 @@ module.exports = {
 		.setDescription('Put something on/in something')
 		.addStringOption(option =>
 			option.setName('object1')
-				.setDescription('The object you wish to put on/in something'))
+				.setDescription('The object you wish to put on/in something')
+				.setRequired(true))
 		.addStringOption(option =>
 			option.setName('object2')
-				.setDescription('The object you wish to put something on/in')),
+				.setDescription('The object you wish to put something on/in')
+				.setRequired(true)),
 	async execute(interaction) {
 		const qgame = await q.loadGame('./game.json', interaction);
 		const povName = interaction.user.username;

@@ -7,7 +7,8 @@ module.exports = {
 		.setDescription('Drop something')
 		.addStringOption(option =>
 			option.setName('object')
-				.setDescription('The object you wish to drop')),
+				.setDescription('The object you wish to drop')
+				.setRequired(true)),
 	async execute(interaction) {
 		const objectName = interaction.options.getString('object');
 		if (!objectName) {

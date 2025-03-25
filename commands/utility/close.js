@@ -7,7 +7,8 @@ module.exports = {
 		.setDescription('Close something')
 		.addStringOption(option =>
 			option.setName('object')
-				.setDescription('The object you wish to close')),
+				.setDescription('The object you wish to close')
+				.setRequired(true)),
 	async execute(interaction) {
 		const object = interaction.options.getString('object');
 		if (typeof object == 'undefined') {

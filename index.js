@@ -544,7 +544,7 @@ let roleMap = {
 	'🧙': 'Magic wielder',
 };
 
-const TARGET_MESSAGE_ID = '1353954120402210827'; // The message ID to track
+const TARGET_MESSAGE_ID = '1353954120402210827';
 
 clientSetterUpper.once('ready', () => {
 	console.log(`Logged in as ${clientSetterUpper.user.tag}!`);

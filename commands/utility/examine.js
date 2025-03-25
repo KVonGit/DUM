@@ -8,7 +8,8 @@ module.exports = {
 		.setDescription('Examine something')
 		.addStringOption(option =>
 			option.setName('object')
-				.setDescription('The object you wish to examine')),
+				.setDescription('The object you wish to examine')
+				.setRequired(true)),
 	async execute(interaction) {
 		const object = interaction.options.getString('object');
 		if (typeof object == 'undefined') {

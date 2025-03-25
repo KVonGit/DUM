@@ -316,7 +316,7 @@ module.exports.getObject = (qgame, objName) => {
 };
 
 module.exports.allObjects = (qgame) => {
-	return Object.keys(qgame.objects);
+	return Object.keys(qgame.objects).map(key => qgame.objects[key]);
 };
 
 module.exports.allPlayers = (qgame) => {
@@ -341,6 +341,25 @@ module.exports.doGo = async (qgame, pov, loc, exitName, interaction) => {
 	if (!loc.exits) {
 		await interaction.reply({ content: 'There are no exits!', flags: 64 });
 		return;
+	}
+
+	const synonyms = {
+		'north': 'n',
+		'south': 's',
+		'east': 'e',
+		'west': 'w',
+		'northeast': 'ne',
+		'northwest': 'nw',
+		'southeast': 'se',
+		'southwest': 'sw',
+		'up': 'u',
+		'down': 'd',
+	};
+
+	for (const key in synonyms) {
+		if (synonyms[key] === exitName) {
+			exitName = key;
+		}
 	}
 
 	const exit = loc.exits[exitName];
@@ -399,7 +418,17 @@ module.exports.GetDisplayName = (obj) => {
 		n += ' ' + obj.suffix;
 	}
 	if (obj.listChildren) {
-		n += ' (' + obj.listChildren() + ')';
+		console.log('obj says listChildren:', obj);
+		// Get the direct children of the object
+		const children = this.GetDirectChildren(obj);
+		console.log('children:', children);
+
+		// If there are children, list them
+		if (children.length > 0) {
+			console.log('children:', children);
+			const preString = obj.listChildrenPreString || 'on which you see';
+			n += ` (${preString}: ${this.GetDirectChildrenAsString(obj)})`;
+		}
 	}
 	return n;
 };
@@ -421,13 +450,23 @@ module.exports.FilterByHasAttribute = (objectArray, property) => {
 };
 
 module.exports.GetDirectChildren = (obj) => {
-	return this.AllObjects().filter(o => o.loc && o.loc == obj.name);
+	const allObjects = this.allObjects(qgame);
+	const children = [];
+	for (const o of allObjects) {
+		console.log('o:', o);
+		console.log('o.loc:', o.loc);
+		console.log('obj.name:', obj.name);
+		if (o.loc === obj.name) {
+			children.push(o);
+		}
+	}
+	return children;
 };
 
 module.exports.GetDirectChildrenAsString = (obj, joiner = 'and', useOxfordComma = true) => {
 	// Get all direct children of the object
-	const children = this.AllObjects()
-		.filter(o => o.loc && o.loc === obj.name)
+	const children = this.allObjects(qgame)
+		.filter(o => o.loc === obj.name)
 		.map(o => this.GetDisplayName(o));
 
 	// If no children, return an empty string
