@@ -21,10 +21,8 @@ clientK.on(Events.MessageCreate, async message => {
 	if (message.author.bot) return;
 	console.log('message', message);
 	global.message = message;
-
-
 	const regExp = {
-		'look': /^look$/,
+		'look': /^(l|look)$/,
 		'go': /^(go)?( )?(to)?( )?( the )?(?<dir>(north|n|northwest|nw|west|w|southwest|sw|south|s|southeast|se|east|e|northeast|ne|in|out|o|up|u|down|d))$/i,
 		'examine': /^(x|examine|look at) (a |an |the |)(?<obj>.+)$/i,
 		'take': /^(?:take|get) (a |an |the |)(?<obj>.+)$/i,
@@ -94,6 +92,60 @@ clientK.on(Events.MessageCreate, async message => {
 			break;
 
 			// Add cases for other commands as needed
+		case 'go':
+			dir = groups.dir;
+			switch (dir) {
+			case 'n':
+				dir = 'north';
+				break;
+			case 'ne':
+				dir = 'northeast';
+				break;
+			case 'nw':
+				dir = 'northwest';
+				break;
+			case 's':
+				dir = 'south';
+				break;
+			case 'se':
+				dir = 'southeast';
+				break;
+			case 'sw':
+				dir = 'southwest';
+				break;
+			case 'e':
+				dir = 'east';
+				break;
+			case 'w':
+				dir = 'west';
+				break;
+			case 'o':
+				dir = 'out';
+				break;
+			case 'u':
+				dir = 'up';
+				break;
+			case 'd':
+				dir = 'down';
+				break;
+			case 'f':
+				dir = 'fore';
+				break;
+			case 'a':
+				dir = 'aft';
+				break;
+			case 'sb':
+				dir = 'starboard';
+				break;
+			case 'p':
+				dir = 'port';
+				break;
+			}
+			qgame = await loadGame();
+			pov = qgame.players[message.author.username];
+			loc = qgame.locations[pov.loc];
+			await doGo(pov, loc, dir);
+			break;
 
 		default:
 			await message.reply(`Command "${command}" is recognized but not yet implemented.`);
@@ -415,4 +467,53 @@ const template = {
 	'defaultClose':(object) => {return `You close ${object}.`;},
 	'alreadyClosed':(object) => {return `${object.capFirst()} is already closed.`;},
 	'cantOpenOrClose':(object) => {return `${object.capFirst()}: not openable or closeable.`;},
+};
+
+const doGo = async (pov, loc, exitName) => {
+	if (!loc.exits) {
+		await message.reply({ content: 'There are no exits!', flags: 64 });
+		return;
+	}
+
+	const exit = loc.exits[exitName];
+	if (!exit) {
+		await message.reply({ content: template.cantGo(exitName), flags: 64 });
+		return;
+	}
+
+	if (exit.locked) {
+		await message.reply({ content: template.lockedExit(exitName), flags: 64 });
+		return;
+	}
+	if (typeof exit.visible != 'undefined' && exit.visible === false) {
+		await message.reply({ content: template.cantGo(exitName), flags: 64 });
+		return;
+	}
+
+	// Execute "before leaving" scripts
+	if (loc.beforeLeavingScript) {
+		eval(loc.beforeLeavingScript);
+	}
+
+	// Update the player's location
+	pov.loc = exit.to;
+
+	// Execute "before entering" scripts
+	if (qgame.locations[exit.to].afterEnteringScript) {
+		eval(qgame.locations[exit.to].afterEnteringScript);
+	}
+
+	// Get the location description and respond
+	const locationDescription = getLocationDescription(pov);
+	await message.reply(`${pov.alias || pov.name} goes ${exitName}.`);
+	await message.reply({ content: locationDescription, flags: 64 });
+
+	// Save the game state
+	try {
+		await saveGame('./game.json', qgame);
+	}
+	catch (err) {
+		console.error('Error saving game data:', err);
+		await message.reply({ content: 'Failed to save game data.', flags: 64 });
+	}
 };

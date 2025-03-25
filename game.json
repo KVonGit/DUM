@@ -223,6 +223,7 @@
                 "userName": "kv_online",
                 "dateJoined": 1742848805597,
                 "commandHistory": [
+                    null,
                     null
                 ],
                 "loc": "Lounge",
