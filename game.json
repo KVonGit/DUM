@@ -24,7 +24,7 @@
                 "takemsg": "You fold the newspaper and place it neatly under your arm.",
                 "read": "There's no time for reading the paper.",
                 "look": "It's yesterday's edition, but there's an article about Quest Viva in it.",
-                "loc": "kv_online",
+                "loc": "ajbruner77",
                 "alt": [
                     "paper"
                 ]
@@ -230,6 +230,17 @@
                     "type": "script",
                     "attr": "interaction.reply(\"“Hello, \" + q.GetDisplayName(interaction.user.username) + \",” says KV. :grin:\");"
                 },
+                "lastCommand": null
+            },
+            "ajbruner77": {
+                "name": "ajbruner77",
+                "alias": "AJBruner77",
+                "userName": "ajbruner77",
+                "dateJoined": 1742866449829,
+                "commandHistory": [
+                    null
+                ],
+                "loc": "Lounge",
                 "lastCommand": null
             }
         },
