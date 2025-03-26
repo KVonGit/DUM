@@ -148,6 +148,11 @@ module.exports = {
 			await q.saveGame('./game.json', qgame);
 			return;
 		}
-		await interaction.reply({ content: q.template.cantOpenOrClose(q.GetDisplayName(obj)), flags: 64 });
+		let prefix = obj.prefix || '';
+		if (obj.prefix && obj.prefix === 'a') prefix = 'the';
+		if (prefix !== '') prefix += ' ';
+		const name = obj.alias || obj.name;
+		const displayName = prefix + name;
+		await interaction.reply({ content: q.template.cantOpenOrClose(displayName), flags: 64 });
 	},
 };

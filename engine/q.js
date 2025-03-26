@@ -2,51 +2,6 @@ const fs = require('fs');
 /* eslint-disable no-useless-escape */
 module.exports.log = console.log;
 
-module.exports.templateOG = {
-	'LanguageId': 'en',
-	'WantRestartGame': 'Are you sure you want to restart the game?',
-	'Again1': 'again',
-	'Again2': 'g',
-	'NothingToRepeat': 'There is nothing to repeat.',
-	'UnresolvedObject': 'I can\'t see that.',
-	'UnresolvedLocation': '{=WriteVerb(game.pov, "can\'t")} go there.',
-	'DefaultObjectDescription': 'Nothing out of the ordinary.',
-	'DefaultSelfDescription': 'Looking good.',
-	'SeeListHeader': '{=WriteVerb(game.pov, "can")} see',
-	'GoListHeader': '{=WriteVerb(game.pov, "can")} go',
-	'And': 'and',
-	'Nothing': 'nothing',
-	'Or': 'or',
-	'NothingToUndo': 'Nothing to undo!',
-	'NotCarryingAnything': '{=WriteVerb(game.pov, "be")} not carrying anything.',
-	'CarryingListHeader': '{=WriteVerb(game.pov, "be")} carrying',
-	'UnrecognisedCommand': 'I don\'t understand your command.',
-	'YouAreIn': '{=WriteVerb(game.pov, "be")} in',
-	'LookAt': 'Look at',
-	'Take': 'Take',
-	'SpeakTo': 'Speak to',
-	'Use': 'Use',
-	'Drop': 'Drop',
-	'GoTo': 'Go to',
-	'Go': 'Go',
-	'SwitchOn': 'Switch on',
-	'SwitchOff': 'Switch off',
-	'Wear': 'Wear',
-	'Remove': 'Remove',
-};
-
-module.exports.dynamicTemplate = {
-	'TakeSuccessful': (object) => { return 'WriteVerb(game.pov, \"pick\") + " " + object.article + " up."'; },
-	'TakeUnsuccessful': (object) => { return 'WriteVerb(game.pov, \"can\'t\") + " take " + object.article + "."'; },
-	'FullInventory': (object) => { return 'WriteVerb(object, \"be\") + " too heavy to be taken."'; },
-	'MaxObjectsInInventory': (object) => { return 'WriteVerb(game.pov, \"can\'t\") + " carry any more items."'; },
-	'MaxObjectsInContainer': (object) => { return 'WriteVerb(game.pov, \"can\'t\") + " put more items in " + object.article + "."'; },
-	'DropSuccessful': (object) => { return 'WriteVerb(game.pov, \"drop\") + " " + object.article + "."'; },
-	'DropUnsuccessful': (object) => { return 'WriteVerb(game.pov, \"can\'t\") + " drop " + object.article + "."'; },
-	'ObjectCannotBeStored': (object) => { return 'WriteVerb(game.pov, \"can\'t\") + " put " + object.article + " there."'; },
-	'AlreadyTaken': (object) => { return 'WriteVerb(game.pov, \"be\") + " already carrying " + object.article + "."'; },
-};
-
 module.exports.template = {
 	'mustStartGame':'You must `/startgame` before you can play.',
 	'alreadyPlaying':'You are already playing the game.',
@@ -226,6 +181,7 @@ module.exports.getInventoryAsString = (qgame, pov) => {
 };
 
 module.exports.getLocationDescription = (qgame, pov) => {
+	console.log('running getLocationDescription');
 	const room = qgame.locations[pov.loc];
 	if (typeof room == 'undefined') {
 		return 'Location not found!';
@@ -421,17 +377,17 @@ module.exports.GetDisplayName = (obj) => {
 		n += ' ' + obj.suffix;
 	}
 	if (obj.listChildren) {
-		console.log('obj says listChildren:', obj);
+		// console.log('obj says listChildren:', obj);
 		// Get the direct children of the object
 		const children = this.GetDirectChildren(obj);
-		console.log('children:', children);
+		// console.log('children:', children);
 
 		// If there are children, list them
 		if (obj.inherit.indexOf('container') >= 0 && (obj.isOpen === false || !obj.transparent)) {
 			// do nothing
 		}
 		else if (children.length > 0) {
-			console.log('children:', children);
+			// console.log('children:', children);
 			let preString = 'in which you see';
 			if (obj.inherit.indexOf('surface') >= 0) {
 				preString = 'on which you see';
@@ -468,9 +424,9 @@ module.exports.GetDirectChildren = (obj) => {
 	const allObjects = this.allObjects(qgame);
 	const children = [];
 	for (const o of allObjects) {
-		console.log('o:', o);
-		console.log('o.loc:', o.loc);
-		console.log('obj.name:', obj.name);
+		// console.log('o:', o);
+		// console.log('o.loc:', o.loc);
+		// console.log('obj.name:', obj.name);
 		if (o.loc === obj.name) {
 			children.push(o);
 		}
@@ -781,4 +737,20 @@ module.exports.scopeVisibleNotHeld = () => {
 	const visibleObjects = this.scopeVisible();
 	const heldObjects = this.getInventory(qgame, pov);
 	return visibleObjects.filter(obj => !heldObjects.includes(obj.name));
+};
+
+module.exports.getAttribute = async (obj, attr) => {
+	const objAttr = {};
+	if (obj[attr]) {
+		objAttr.type = typeof obj[attr];
+		if (objAttr.type === 'object') {
+			objAttr.type = obj[attr].type;
+			objAttr.attr = obj[attr].attr;
+		}
+		else {
+			objAttr.attr = obj[attr];
+		}
+		return objAttr;
+	}
+	return null;
 };

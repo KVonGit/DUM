@@ -6,6 +6,7 @@ module.exports = {
 		.setName('look')
 		.setDescription('Look at your surroundings.'),
 	async execute(interaction) {
+		console.log('look');
 		const qgame = await q.loadGame('./game.json', interaction);
 		if (Object.keys(qgame.players).indexOf(interaction.user.username) < 0) {
 			await interaction.reply({ content: q.template.mustStartGame, flags: 64 });

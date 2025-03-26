@@ -14,8 +14,6 @@ module.exports = {
 		await interaction.reply({ content: 'DUM DUM DUM!!!', flags: 64 });
 		await q.msg('Initiating DUM test...', true, true);
 		await q.msg(`Start DateTime: ${new Date().toLocaleString()}`, true, true);
-		await q.msg('This may take a while...', true, true);
-		await q.msg('DUM DEE DUM DUM DUM!!!', true, true);
 		await q.msg('RESULTS: TEST FAILED!!! :rofl:', true, true);
 		await q.msg(`End DateTime: ${new Date().toLocaleString()}`, true, true);
 	},

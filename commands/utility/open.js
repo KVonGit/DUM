@@ -55,7 +55,12 @@ module.exports = {
 				await interaction.reply({ content: obj.openMsg, flags: 64 });
 			}
 			else {
-				await interaction.reply({ content: q.template.defaultOpen(q.GetDisplayName(obj)), flags: 64 });
+				let prefix = obj.prefix || '';
+				if (obj.prefix && obj.prefix === 'a') prefix = 'the';
+				if (prefix !== '') prefix += ' ';
+				const name = obj.alias || obj.name;
+				const displayName = prefix + name;
+				await interaction.reply({ content: q.template.defaultOpen(displayName), flags: 64 });
 			}
 
 			// Send any follow-up messages
@@ -100,6 +105,11 @@ module.exports = {
 		}
 
 		// If the object cannot be opened
-		await interaction.reply({ content: q.template.cantOpen(q.GetDisplayName(obj)), flags: 64 });
+		let prefix = obj.prefix || '';
+		if (obj.prefix && obj.prefix === 'a') prefix = 'the';
+		if (prefix !== '') prefix += ' ';
+		const name = obj.alias || obj.name;
+		const displayName = prefix + name;
+		await interaction.reply({ content: q.template.cantOpenOrClose(displayName), flags: 64 });
 	},
 };

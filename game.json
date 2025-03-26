@@ -25,7 +25,7 @@
                 "takemsg": "You fold the newspaper and place it neatly under your arm.",
                 "read": "There's no time for reading the paper.",
                 "look": "It's yesterday's edition, but there's an article about Quest Viva in it.",
-                "loc": "table",
+                "loc": "Lounge",
                 "alt": [
                     "paper"
                 ]
@@ -52,6 +52,7 @@
             "cat": {
                 "name": "cat",
                 "loc": "table",
+                "prefix": "a",
                 "look": "It's an orange tabby cat, sitting on the table, looking right back at you.",
                 "attack": {
                     "type": "string",
@@ -113,7 +114,7 @@
             },
             "box": {
                 "name": "box",
-                "loc": "kv_online",
+                "loc": "Lounge",
                 "prefix": "a",
                 "look": {
                     "type": "script",
@@ -145,11 +146,15 @@
             "banana": {
                 "name": "banana",
                 "prefix": "a",
-                "loc": "table",
-                "look": "It's a banana. You can't eat it, though.",
-                "take": {
-                    "type": "string",
-                    "attr": "It's not finished yet."
+                "loc": "nowhere",
+                "look": "It's a banana.",
+                "take": true,
+                "inherit": [
+                    "edible"
+                ],
+                "eat": {
+                    "type": "script",
+                    "attr": "replyString = `You eat the banana. Mmm. Tasty!`; qgame.objects['banana'].loc = 'nowhere';"
                 }
             },
             "Bob": {
@@ -202,6 +207,9 @@
                 "sit": "There’s no time for lounging about now.",
                 "alt": [
                     "couch"
+                ],
+                "inherit": [
+                    "surface"
                 ],
                 "loc": "Lounge"
             },
@@ -296,6 +304,20 @@
                 "loc": "cupboard",
                 "look": "It's a bottle opener. You can't use it on the **can** of beer, though. :rofl:"
             },
+            "apple": {
+                "name": "apple",
+                "prefix": "a",
+                "loc": "cupboard",
+                "look": "It's a red apple.",
+                "take": true,
+                "inherit": [
+                    "edible"
+                ],
+                "eat": {
+                    "type": "script",
+                    "attr": "replyString = `You eat the apple. Mmm. Tasty!`; qgame.objects['apple'].loc = 'nowhere';"
+                }
+            },
             "beer": {
                 "name": "beer",
                 "usedefaultprefix": false,
@@ -349,22 +371,6 @@
                     "type": "string",
                     "attr": "He only lets Mrs. Pertex do that!"
                 }
-            },
-            "kv_online": {
-                "name": "kv_online",
-                "alias": "KV",
-                "userName": "kv_online",
-                "dateJoined": 1742848805597,
-                "commandHistory": [
-                    null,
-                    null
-                ],
-                "loc": "Lounge",
-                "speakto": {
-                    "type": "script",
-                    "attr": "interaction.reply(\"“Hello, \" + q.GetDisplayName(interaction.user.username) + \",” says KV. :grin:\");"
-                },
-                "lastCommand": null
             },
             "ajbruner77": {
                 "name": "ajbruner77",
