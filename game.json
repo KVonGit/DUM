@@ -252,8 +252,8 @@
                     "container"
                 ],
                 "listChildren": true,
-                "listchildrenprefix": "In the fridge you find",
-                "isOpen": false,
+                "listchildrenprefix": "In the fridge you find ",
+                "isOpen": true,
                 "close": true,
                 "open": true,
                 "loc": "Kitchen",
@@ -263,7 +263,7 @@
                 ],
                 "look": {
                     "type": "script",
-                    "attr": "if (obj.isOpen) {       q.msg (\"The fridge is open, casting its light out into the gloomy kitchen.\")        }       else {         q.msg (\"A big old refrigerator sits in the corner, humming quietly.\")       }"
+                    "attr": "if (obj.isOpen) { replyString = \"The fridge is open, casting its light out into the gloomy kitchen.\";  }  else {  replyString = \"A big old refrigerator sits in the corner, humming quietly.\"; }"
                 }
             },
             "cupboard": {

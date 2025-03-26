@@ -137,6 +137,21 @@ module.exports = {
 						await interaction.followUp({ content: 'Error in afterOpening script.', flags: 64 });
 					}
 				}
+				if (obj.listChildren === true) {
+					if (obj.inherit.indexOf('container') >= 0 && obj.isOpen === false) {
+						return;
+					}
+					const children = q.GetDirectChildren(obj);
+					let n = obj.inherit.indexOf('surface') >= 0 ? 'On ' : 'In ';
+					n += q.GetDisplayName(obj) + ', you see ';
+					if (children.length > 0) {
+						if (typeof obj.listchildrenprefix === 'string') {
+							n = obj.listchildrenprefix;
+						}
+						n += q.GetDirectChildrenAsString(obj);
+					}
+					await q.msg(n, true, true);
+				}
 				try {
 					await q.saveGame('./game.json', qgame);
 				}
