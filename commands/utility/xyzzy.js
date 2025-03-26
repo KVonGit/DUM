@@ -6,11 +6,10 @@ module.exports = {
 		.setName('xyzzy')
 		.setDescription('??????'),
 	async execute(interaction) {
-		const qgame = await q.loadGame('./game.json', interaction);
-		if (Object.keys(qgame.players).indexOf(interaction.user.username) < 0) {
-			await q.msg(q.template.mustStartGame);
-			return 3;
-		}
+		global.interaction = interaction;
+		const { qgame, pov } = await q.getGamePov();
+		if (!pov) return;
+		global.qgame = qgame;
 		const s = q.template.xyzzy;
 		// q.SendDM('You tried XYZZY! :rofl:');
 		await q.msg(s);

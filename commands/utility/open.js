@@ -10,24 +10,14 @@ module.exports = {
 				.setDescription('The object you wish to open')
 				.setRequired(true)),
 	async execute(interaction) {
+		const { qgame, pov } = await q.getGamePov();
+		if (!pov) return;
 		const object = interaction.options.getString('object');
 		if (!object) {
 			await interaction.reply('\'object\' not defined.');
 			return;
 		}
-
-		const qgame = await q.loadGame('./game.json', interaction);
-		const povName = interaction.user.username;
-		const pov = qgame.players[povName];
-
-		// Check if the player exists
-		if (!pov) {
-			await interaction.reply({ content: q.template.mustStartGame, flags: 64 });
-			return;
-		}
-
 		const obj = q.getObject(qgame, object);
-
 		// Check if the object exists
 		if (!obj) {
 			await interaction.reply({ content: `No such object ("${object}")!`, flags: 64 });

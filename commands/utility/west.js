@@ -6,15 +6,10 @@ module.exports = {
 		.setName('west')
 		.setDescription('Go west'),
 	async execute(interaction) {
+		const { qgame, pov } = await q.getGamePov();
+		if (!pov) return;
 		const exitName = 'west';
 		// console.log('exitName:', exitName);
-		const qgame = await q.loadGame('./game.json', interaction);
-		const povName = interaction.user.username;
-		if (Object.keys(qgame.players).indexOf(povName) < 0) {
-			await interaction.reply({ content: q.template.mustStartGame, flags: 64 });
-			return 3;
-		}
-		const pov = qgame.players[povName];
 		const loc = qgame.locations[pov.loc];
 		await q.doGo(qgame, pov, loc, exitName, interaction);
 	},

@@ -10,17 +10,13 @@ module.exports = {
 				.setDescription('The npc you wish to which you wish to speak')
 				.setRequired(true)),
 	async execute(interaction) {
-		const qgame = await q.loadGame('./game.json', interaction);
-		if (Object.keys(qgame.players).indexOf(interaction.user.username) < 0) {
-			await interaction.reply({ content: q.template.mustStartGame, flags: 64 });
-			return 3;
-		}
+		const { qgame, pov } = await q.getGamePov();
+		if (!pov) return;
 		const objectName = interaction.options.getString('npc');
 		if (!objectName) {
 			await interaction.reply({ content: '\'object\' not defined.', flags: 64 });
 			return;
 		}
-		const pov = qgame.players[interaction.user.username];
 		const obj = q.getObject(qgame, objectName);
 
 		if (!obj) {

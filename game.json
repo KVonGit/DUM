@@ -1,10 +1,10 @@
 {
     "aslj": {
-        "version": 420,
+        "version": 69105,
         "game": {
             "name": "DUM",
             "author": "KV",
-            "version": "0.1 alpha",
+            "version": "0.2 alpha",
             "year": 2025,
             "copyright": "© 2025 KV",
             "description": "A DUM server test game.",
@@ -93,7 +93,7 @@
             "carpet": {
                 "name": "carpet",
                 "scenery": true,
-                "look": "The dark brown shag carpet is the bee's knees, and you've never seen a cleaner floor.",
+                "look": "The dark brown shag carpet is the bee's knees.",
                 "alt": [
                     "shag",
                     "rug",
@@ -139,14 +139,14 @@
             },
             "hammer": {
                 "name": "hammer",
-                "loc": "pertex1",
+                "loc": "Kitchen",
                 "look": "It's a mini war hammer.",
                 "take": true
             },
             "banana": {
                 "name": "banana",
                 "prefix": "a",
-                "loc": "nowhere",
+                "loc": "table",
                 "look": "It's a banana.",
                 "take": true,
                 "inherit": [
@@ -234,7 +234,7 @@
             "bee": {
                 "name": "bee",
                 "prefix": "the",
-                "loc": "Kitchen",
+                "loc": "nowhere",
                 "look": "It's buzzing around the room.",
                 "attack": {
                     "type": "string",
@@ -265,7 +265,7 @@
                 ],
                 "listChildren": true,
                 "listchildrenprefix": "In the fridge you find ",
-                "isOpen": true,
+                "isOpen": false,
                 "close": true,
                 "open": true,
                 "loc": "Kitchen",
@@ -330,7 +330,8 @@
                     "can of beer",
                     "can",
                     "beer can"
-                ]
+                ],
+                "drink": "You can't drink that. It's XanMag's."
             }
         },
         "locations": {
@@ -345,7 +346,7 @@
             },
             "Kitchen": {
                 "name": "Kitchen",
-                "description": "This kitchen hasn't been finished yet. Please move along.",
+                "description": "The kitchen looks clean enough to eat off of the floor.",
                 "exits": {
                     "west": {
                         "to": "Lounge"
@@ -357,33 +358,7 @@
                 "description": "You are nowhere. You should probably go somewhere."
             }
         },
-        "players": {
-            "pertex1": {
-                "name": "pertex1",
-                "userName": "pertex1",
-                "alias": "Pertex",
-                "alt": [
-                    "Oblomov"
-                ],
-                "dateJoined": 1742575169757,
-                "loc": "Kitchen",
-                "take": {
-                    "type": "string",
-                    "attr": "He only lets Mrs. Pertex do that!"
-                }
-            },
-            "ajbruner77": {
-                "name": "ajbruner77",
-                "alias": "AJBruner77",
-                "userName": "ajbruner77",
-                "dateJoined": 1742866449829,
-                "commandHistory": [
-                    null
-                ],
-                "loc": "Lounge",
-                "lastCommand": null
-            }
-        },
+        "players": {},
         "timers": {},
         "turnScripts": {
             "busyBee": {

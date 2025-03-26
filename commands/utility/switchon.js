@@ -10,17 +10,12 @@ module.exports = {
 				.setDescription('The object you wish to switch on')
 				.setRequired(true)),
 	async execute(interaction) {
+		const { qgame, pov } = await q.getGamePov();
+		if (!pov) return;
 		const object = interaction.options.getString('object');
 		if (typeof object === 'undefined') {
 			await interaction.reply('\'' + object + '\' not defined.');
 			return;
-		}
-		const qgame = await q.loadGame('./game.json', interaction);
-		const povName = interaction.user.username;
-		const pov = qgame.players[povName];
-		if (Object.keys(qgame.players).indexOf(povName) < 0) {
-			await interaction.reply({ content: q.template.mustStartGame, flags: 64 });
-			return 3;
 		}
 		const obj = q.getObject(qgame, object);
 		if (typeof obj === 'undefined') {

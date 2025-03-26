@@ -278,10 +278,6 @@ module.exports.allObjects = (qgame) => {
 	return Object.keys(qgame.objects).map(key => qgame.objects[key]);
 };
 
-module.exports.allPlayers = (qgame) => {
-	return Object.keys(qgame.players);
-};
-
 module.exports.AllPlayers = (qgame) => {
 	return qgame.players;
 };
@@ -691,6 +687,32 @@ module.exports.reviveBobProc = async () => {
 		if (Bob.alive !== true) {
 			await this.msg ('Using everything you\'ve learned from TV dramas, you attempt to revive Bob.\nMiraculously, the defibrillator lived up to its promise, and Bob is now alive again. He says his head feels kind of fuzzy.');
 			Bob.alive = true;
+
+			const { ChannelType } = require('discord.js');
+
+			async function handleInteraction(interaction) {
+				if (!interaction.isCommand()) return;
+
+				const channelId = '1354201798029606974';
+
+				try {
+					const channel = await interaction.client.channels.fetch(channelId);
+
+					if (channel && channel.type === ChannelType.GuildText) {
+						await channel.send('This is a message sent to another channel!');
+					}
+					else {
+						console.log('Target channel is not a text channel.');
+					}
+				}
+				catch (error) {
+					console.error('Error sending message to another channel:', error);
+				}
+
+				await interaction.followUp({ content: 'Message sent to another channel!', ephemeral: true });
+			}
+			await handleInteraction(interaction);
+
 			// const s = `${this.GetDisplayName(pov)} has revived Bob!\n# GAME OVER\n\nEnter <code>/startgame</code> to play again.`;
 			// msg (s, false, true);
 			// const qgame = await this.loadGame('./game.json.bak', interaction);
@@ -742,6 +764,12 @@ module.exports.scopeVisibleNotHeld = () => {
 	return visibleObjects.filter(obj => !heldObjects.includes(obj.name));
 };
 
+module.exports.scopeInventory = () => {
+	const visibleObjects = this.scopeVisible();
+	const heldObjects = this.getInventory(qgame, pov);
+	return visibleObjects.filter(obj => heldObjects.includes(obj.name));
+};
+
 module.exports.getAttribute = async (obj, attr) => {
 	const objAttr = {};
 	if (obj[attr]) {
@@ -756,4 +784,16 @@ module.exports.getAttribute = async (obj, attr) => {
 		return objAttr;
 	}
 	return null;
+};
+
+module.exports.getGamePov = async () => {
+	const qgame = await this.loadGame('./game.json', interaction);
+	console.log('interaction.user.username', interaction.user.username);
+	const povName = interaction.user.username;
+	if (Object.keys(qgame.players).indexOf(povName) < 0) {
+		await interaction.reply({ content: this.template.mustStartGame, flags: 64 });
+		return;
+	}
+	const pov = qgame.players[povName];
+	return { qgame: qgame, pov: pov };
 };

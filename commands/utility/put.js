@@ -14,13 +14,8 @@ module.exports = {
 				.setDescription('The object you wish to put something on/in')
 				.setRequired(true)),
 	async execute(interaction) {
-		const qgame = await q.loadGame('./game.json', interaction);
-		const povName = interaction.user.username;
-
-		if (!q.allPlayers(qgame).includes(povName)) {
-			await interaction.reply({ content: q.template.mustStartGame, flags: 64 });
-			return;
-		}
+		const { qgame, pov } = await q.getGamePov();
+		if (!pov) return;
 
 		const object1Name = interaction.options.getString('object1');
 		if (!object1Name) {
@@ -46,7 +41,6 @@ module.exports = {
 			return;
 		}
 
-		const pov = qgame.players[povName];
 		if (obj1.loc !== pov.name) {
 			await interaction.reply({ content: q.template.dontHave(obj1.name), flags: 64 });
 			return;

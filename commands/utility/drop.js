@@ -10,27 +10,18 @@ module.exports = {
 				.setDescription('The object you wish to drop')
 				.setRequired(true)),
 	async execute(interaction) {
+		const { qgame, pov } = await q.getGamePov();
+		if (!pov) return;
 		const objectName = interaction.options.getString('object');
 		if (!objectName) {
 			await interaction.reply({ content: '\'object\' not defined.', flags: 64 });
 			return;
 		}
-
-		const qgame = await q.loadGame('./game.json', interaction);
-		const povName = interaction.user.username;
-
-		if (!q.allPlayers(qgame).includes(povName)) {
-			await interaction.reply({ content: q.template.mustStartGame, flags: 64 });
-			return;
-		}
-
 		const obj = q.getObject(qgame, objectName);
 		if (!obj) {
 			await interaction.reply({ content: `No such object ("${objectName}")!`, flags: 64 });
 			return;
 		}
-
-		const pov = qgame.players[povName];
 		if (obj.loc !== pov.name) {
 			await interaction.reply({ content: q.template.dontHave(obj.name), flags: 64 });
 			return;

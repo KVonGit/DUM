@@ -10,14 +10,14 @@ module.exports = {
 				.setDescription('The object you wish to take')
 				.setRequired(true)),
 	async execute(interaction) {
+		const { qgame, pov } = await q.getGamePov();
+		if (!pov) return;
 		const objectName = interaction.options.getString('object');
 		if (!objectName) {
 			await interaction.reply({ content: '\'object\' not defined.', flags: 64 });
 			return;
 		}
 
-		const qgame = await q.loadGame('./game.json', interaction);
-		const pov = qgame.players[interaction.user.username];
 		const obj = q.getObject(qgame, objectName);
 
 		if (!obj) {

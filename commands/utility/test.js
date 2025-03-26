@@ -11,10 +11,10 @@ module.exports = {
 			await interaction.reply({ content: q.template.mustStartGame, flags: 64 });
 			return 3;
 		}
-		await interaction.reply({ content: 'DUM DUM DUM!!!', flags: 64 });
-		await q.msg('Initiating DUM test...', true, true);
-		await q.msg(`Start DateTime: ${new Date().toLocaleString()}`, true, true);
+		await interaction.reply({ content: 'PING DUMParser (127.0.0.1) 56(84) bytes of data.', flags: 64 });
+		await q.msg(`64 bytes from dumserv.net (127.0.1.1): icmp_seq=${0 + 1} ttl=106 time=${Date.now()} ms`, true, true);
+		await q.msg(`64 bytes from dumserv.net (127.0.1.1): icmp_seq=${0 + 2} ttl=106 time=${Date.now()} ms`, true, true);
+		await q.msg(`64 bytes from dumserv.net (127.0.1.1): icmp_seq=${0 + 3} ttl=106 time=${Date.now()} ms`, true, true);
 		await q.msg('RESULTS: TEST FAILED!!! :rofl:', true, true);
-		await q.msg(`End DateTime: ${new Date().toLocaleString()}`, true, true);
 	},
 };
