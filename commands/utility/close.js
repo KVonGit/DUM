@@ -83,6 +83,7 @@ module.exports = {
 						await interaction.followUp({ content: 'Error in afterClosing script.', flags: 64 });
 					}
 				}
+				await q.saveGame('./game.json', qgame);
 				return;
 			}
 			if (typeof obj.close === 'string') {
@@ -144,6 +145,7 @@ module.exports = {
 					await interaction.followUp({ content: 'Failed to save game data.', flags: 64 });
 				}
 			}
+			await q.saveGame('./game.json', qgame);
 			return;
 		}
 		await interaction.reply({ content: q.template.cantOpenOrClose(q.GetDisplayName(obj)), flags: 64 });

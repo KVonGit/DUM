@@ -427,9 +427,21 @@ module.exports.GetDisplayName = (obj) => {
 		console.log('children:', children);
 
 		// If there are children, list them
-		if (children.length > 0) {
+		if (obj.inherit.indexOf('container') >= 0 && (obj.isOpen === false || !obj.transparent)) {
+			// do nothing
+		}
+		else if (children.length > 0) {
 			console.log('children:', children);
-			const preString = obj.listChildrenPreString || 'on which you see';
+			let preString = 'in which you see';
+			if (obj.inherit.indexOf('surface') >= 0) {
+				preString = 'on which you see';
+			}
+			else if (obj.inherit.indexOf('container') >= 0) {
+				preString = 'in which you see';
+			}
+			if (typeof obj.listChildrenPreString === 'string') {
+				preString = obj.listChildrenPreString;
+			}
 			n += ` (${preString}: ${this.GetDirectChildrenAsString(obj)})`;
 		}
 	}

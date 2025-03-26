@@ -55,6 +55,7 @@ module.exports = {
 					await interaction.followUp({ content: 'Error in afterOpening script.', flags: 64 });
 				}
 			}
+			await q.saveGame('./game.json', qgame);
 			return;
 		}
 		if (obj.inherit && obj.inherit.indexOf('openable') >= 0) {
@@ -82,6 +83,7 @@ module.exports = {
 						await interaction.followUp({ content: 'Error in afterOpening script.', flags: 64 });
 					}
 				}
+				await q.saveGame('./game.json', qgame);
 				return;
 			}
 			if (typeof obj.open === 'string') {

@@ -49,6 +49,23 @@
                 "listChildren": true,
                 "listchildrenprefix": "On it, you see"
             },
+            "cat": {
+                "name": "cat",
+                "loc": "table",
+                "look": "It's an orange tabby cat, sitting on the table, looking right back at you.",
+                "attack": {
+                    "type": "string",
+                    "attr": "You can't attack the cat. It's too cute."
+                },
+                "take": "She won't let you do that.",
+                "speakto": {
+                    "type": "string",
+                    "attr": "She meows at you."
+                },
+                "inherit": [
+                    "animal"
+                ]
+            },
             "lamp": {
                 "name": "lamp",
                 "prefix": "a",
@@ -61,7 +78,7 @@
                 "look": "It's an old, antique lamp.",
                 "take": {
                     "type": "string",
-                    "attr": "It is fixed in place."
+                    "attr": "It appears to be fixed in place."
                 },
                 "inherit": [
                     "lightsource",
@@ -77,7 +94,11 @@
                 "scenery": true,
                 "look": "The dark brown shag carpet is the bee's knees, and you've never seen a cleaner floor.",
                 "alt": [
-                    "shag"
+                    "shag",
+                    "rug",
+                    "floor",
+                    "flooring",
+                    "ground"
                 ],
                 "loc": "Lounge"
             },
@@ -85,7 +106,10 @@
                 "name": "wallpaper",
                 "loc": "Lounge",
                 "scenery": true,
-                "look": "The wallpaper is very eye-pleasing. You could look at it repeatedly, although it would accomplish very little."
+                "look": "The wallpaper is very eye-pleasing. You could look at it repeatedly, although it would accomplish very little.",
+                "alt": [
+                    "wall"
+                ]
             },
             "box": {
                 "name": "box",
@@ -99,22 +123,24 @@
                 "inherit": [
                     "container",
                     "closedcontainer"
-                ]
+                ],
+                "isOpen": false,
+                "open": true,
+                "close": false,
+                "listChildren": true
             },
             "defibrillator": {
                 "name": "defibrillator",
                 "prefix": "a",
                 "loc": "box",
                 "look": "An ordinary defibrillator.",
-                "take": {
-                    "type": "string",
-                    "attr": "It's in the closed box, and you shouldn't be able to see it."
-                }
+                "take": true
             },
             "hammer": {
                 "name": "hammer",
                 "loc": "pertex1",
-                "look": "It's a mini war hammer."
+                "look": "It's a mini war hammer.",
+                "take": true
             },
             "banana": {
                 "name": "banana",
@@ -125,22 +151,6 @@
                     "type": "string",
                     "attr": "It's not finished yet."
                 }
-            },
-            "hundred dollar bill": {
-                "name": "hundred dollar bill",
-                "prefix": "a",
-                "look": "It's a hundred bucks!",
-                "loc": "kv_online",
-                "take": true,
-                "drop": {
-                    "type": "string",
-                    "attr": "It might come in handy sometime. You are not allowed to drop it."
-                },
-                "alt": [
-                    "hundred",
-                    "bill",
-                    "money"
-                ]
             },
             "Bob": {
                 "name": "Bob",
@@ -187,7 +197,7 @@
                 "look": "The sofa looks old, worn, and thoroughly inviting!",
                 "sit": "There’s no time for lounging about now.",
                 "alt": [
-                     "couch"
+                    "couch"
                 ],
                 "loc": "Lounge"
             },
@@ -222,34 +232,32 @@
                     "animal"
                 ]
             },
-            "bin":{
+            "bin": {
                 "name": "bin",
                 "scenery": true,
                 "look": "There's no time for examining trash.",
-                "alt": {
-                    "type": "stringlist",
-                    "value": [
-                        "trash can",
-                        "garbage bin",
-                        "trash bin",
-                        "garbage bin"
-                    ]
-                },
+                "alt": [
+                    "trash can",
+                    "garbage bin",
+                    "trash bin",
+                    "garbage bin"
+                ],
                 "loc": "Kitchen"
             },
             "fridge": {
                 "name": "fridge",
+                "prefix": "the",
                 "inherit": [
                     "closedcontainer",
                     "container"
                 ],
                 "listChildren": true,
                 "listchildrenprefix": "In the fridge you find",
-                "isClosed": true,
-                "canClose": true,
-                "canOpen": true,
+                "isOpen": false,
+                "close": true,
+                "open": true,
                 "loc": "Kitchen",
-                "alt":  [
+                "alt": [
                     "refrigerator",
                     "icebox"
                 ],
@@ -260,31 +268,43 @@
             },
             "cupboard": {
                 "name": "cupboard",
+                "prefix": "the",
                 "inherit": [
                     "closedcontainer",
                     "container"
                 ],
-                "isopen:": false,
-                "canOpen": true,
-                "canClose": true,
-                "look": "The cupboard is currently {either cupboard.isopen=true:open|closed}.",
+                "isOpen:": false,
+                "open": true,
+                "close": true,
+                "look": {
+                    "type": "script",
+                    "attr": "replyString = `The cupboard is currently ${qgame.objects['cupboard'].isOpen === true ? 'open' : 'closed'}.`;"
+                },
                 "listChildren": true,
-                "listchildrenprefix": "The cupboard is bare except for ...",
-                "loc": "Kitchen"
+                "listchildrenprefix": "The cupboard is bare except for... ",
+                "loc": "Kitchen",
+                "isOpen": true
             },
             "bottle opener": {
                 "name": "bottle opener",
+                "prefix": "a",
                 "take": true,
                 "loc": "cupboard",
-                "look": "It's a bottle opener. You can't use it on the fridge, though."
+                "look": "It's a bottle opener. You can't use it on the **can** of beer, though. :rofl:"
             },
             "beer": {
                 "name": "beer",
                 "usedefaultprefix": false,
-                "look": "A bottle of Squiffy beer, with “XanMag” written all over it.",
+                "look": "A can of Squiffy beer, with “XanMag” written all over it.",
                 "prefix": "XanMag's",
                 "takemsg": "XanMag probably wouldn't like that.",
-                "loc": "fridge"
+                "loc": "fridge",
+                "open": "That belongs to XanMag!",
+                "alt": [
+                    "can of beer",
+                    "can",
+                    "beer can"
+                ]
             }
         },
         "locations": {
@@ -335,7 +355,7 @@
                     null,
                     null
                 ],
-                "loc": "Lounge",
+                "loc": "Kitchen",
                 "speakto": {
                     "type": "script",
                     "attr": "interaction.reply(\"“Hello, \" + q.GetDisplayName(interaction.user.username) + \",” says KV. :grin:\");"

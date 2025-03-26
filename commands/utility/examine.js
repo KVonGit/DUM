@@ -55,5 +55,28 @@ module.exports = {
 				await interaction.followUp({ content: obj.switchedoffdesc, flags: 64 });
 			}
 		}
+		// TODO: Also check for listChildren for surfaces/containers that are isOpen
+		if (obj.listChildren) {
+			// console.log('obj says listChildren:', obj);
+			// Get the direct children of the object
+			const children = q.GetDirectChildren(obj);
+			// console.log('children:', children);
+
+			// If there are children, list them
+			let n = obj.inherit.indexOf('surface') >= 0 ? 'On ' : 'In ';
+			n += q.GetDisplayName(obj) + ', you see ';
+			if (obj.inherit.indexOf('container') >= 0 && (obj.isOpen === false && !obj.transparent)) {
+				return;
+			}
+			else if (children.length > 0) {
+				// console.log('children:', children);
+
+				if (typeof obj.listchildrenprefix === 'string') {
+					n = obj.listchildrenprefix;
+				}
+				n += q.GetDirectChildrenAsString(obj);
+			}
+			await q.msg(n, true, true);
+		}
 	},
 };
