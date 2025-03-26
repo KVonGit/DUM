@@ -24,7 +24,7 @@ module.exports = {
 
 		const object1Name = interaction.options.getString('object1');
 		if (!object1Name) {
-			await interaction.reply({ content: '\'' + object + '\' not defined.', flags: 64 });
+			await interaction.reply({ content: '\'object\' not defined.', flags: 64 });
 			return;
 		}
 

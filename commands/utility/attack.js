@@ -9,13 +9,9 @@ module.exports = {
 		.setDescription('Attack something (or someone)!')
 		.addStringOption(option =>
 			option.setName('target')
-				.setDescription('The target you wish to attack')),
+				.setDescription('The target you wish to attack')
+				.setRequired(true)),
 	async execute(interaction) {
-		const object = interaction.options.getString('target');
-		if (typeof object == 'undefined') {
-			await q.msg('\'' + object + '\' not defined.');
-			return;
-		}
 		const qgame = await q.loadGame('./game.json', interaction);
 		const povName = interaction.user.username;
 		if (Object.keys(qgame.players).indexOf(povName) < 0) {
@@ -23,6 +19,11 @@ module.exports = {
 			return 3;
 		}
 		const pov = qgame.players[povName];
+		const object = interaction.options.getString('target');
+		if (typeof object == 'undefined') {
+			await q.msg('\'' + object + '\' not defined.');
+			return;
+		}
 		if (typeof q.getObject(qgame, object) == 'undefined') {
 			await q.msg('No such object ("' + object + '")!');
 			return;

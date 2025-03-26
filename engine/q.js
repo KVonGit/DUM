@@ -728,3 +728,57 @@ module.exports.openWindowProc = async () => {
 	this.GetObject('window').isOpen = true;
 	await interaction.reply({ content: s, flags: 64 });
 };
+
+module.exports.reviveBobProc = async () => {
+	const Bob = this.GetObject('Bob');
+	if (pov.loc === 'Lounge') {
+		if (Bob.alive !== true) {
+			await this.msg ('Using everything you\'ve learned from TV dramas, you attempt to revive Bob.\nMiraculously, the defibrillator lived up to its promise, and Bob is now alive again. He says his head feels kind of fuzzy.');
+			Bob.alive = true;
+			await this.saveGame('./game.json', qgame);
+		}
+		else {
+			await this.msg ('You\'ve already revived Bob!');
+		}
+	}
+	else {
+		await this.msg ('Don\'t worry. The men in white coats will arrive to help you soon!');
+	}
+};
+
+module.exports.scopeVisible = () => {
+	const visibleObjects = [];
+
+	// Check if obj has a location
+	if (!obj.loc) return visibleObjects;
+
+	// Get objects in the same location
+	const everything = qgame.objects + qgame.players;
+	for (const key in Object.keys(everything)) {
+		const item = everything[key];
+		if ((item.loc === pov.loc || (item.loc === pov.name)) && (item.visible === undefined || item.visible)) {
+			visibleObjects.push(item);
+		}
+	}
+
+	// Include items in open containers and on surfaces
+	for (const key in everything) {
+		const item = everything[key];
+		if (visibleObjects.includes(item.loc)) {
+			if (item.isOpen === true && (item.visible === undefined || item.visible)) {
+				visibleObjects.push(item);
+			}
+			if (item.inherit.indexOf('surface') >= 0 && (item.visible === undefined || item.visible)) {
+				visibleObjects.push(item);
+			}
+		}
+	}
+
+	return visibleObjects;
+};
+
+module.exports.scopeVisibleNotHeld = () => {
+	const visibleObjects = this.scopeVisible();
+	const heldObjects = this.getInventory(qgame, pov);
+	return visibleObjects.filter(obj => !heldObjects.includes(obj.name));
+};

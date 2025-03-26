@@ -113,13 +113,13 @@
             },
             "box": {
                 "name": "box",
-                "loc": "table",
+                "loc": "kv_online",
                 "prefix": "a",
-                "look": "It's a small box, currently closed. (And there isn't an `/open` command yet. :man_facepalming:)",
-                "take": {
-                    "type": "string",
-                    "attr": "It's not finished yet."
+                "look": {
+                    "type": "script",
+                    "attr": "replyString = `It's a small box, currently ${obj.isOpen ? 'open' : 'closed'}.`;"
                 },
+                "take": true,
                 "inherit": [
                     "container",
                     "closedcontainer"
@@ -155,19 +155,23 @@
             "Bob": {
                 "name": "Bob",
                 "loc": "Lounge",
-                "look": "Bob is lying on the floor, a lot more still than usual. :worried:",
+                "look": {
+                    "type": "script",
+                    "attr": "replyString = `Bob is ${obj.alive !== true ? 'lying on the floor, a lot more still than usual' : 'sitting up, appearing to feel somewhat under the weather'}.`;"
+                },
                 "attack": {
                     "type": "string",
-                    "attr": "He is dead! No need to attack him, you monster! :laughing:"
+                    "attr": "Violence is never the answer! :laughing:"
                 },
                 "speakto": {
-                    "type": "string",
-                    "attr": "He's dead, Jim! :rofl:"
+                    "type": "script",
+                    "attr": "replyString = `${obj.alive === false ? 'He\\'s dead, Jim! :rofl:' : '“Well, one moment I was sitting there, feeling pretty happy with myself after eating my afternoon snack - a cheeseburger, pizza and ice cream pie, smothered in bacon, which I’d washed down with a bucket of coffee and six cans of Red Bull - when all of a sudden, I was in terrible pain, and then everything was peaceful. Then you came along.”'}`;"
                 },
                 "inherit": [
                     "male"
                 ],
-                "useDefaultPrefix": false
+                "useDefaultPrefix": false,
+                "alive": true
             },
             "TV": {
                 "name": "TV",
@@ -355,7 +359,7 @@
                     null,
                     null
                 ],
-                "loc": "Kitchen",
+                "loc": "Lounge",
                 "speakto": {
                     "type": "script",
                     "attr": "interaction.reply(\"“Hello, \" + q.GetDisplayName(interaction.user.username) + \",” says KV. :grin:\");"

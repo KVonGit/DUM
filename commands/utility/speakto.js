@@ -51,7 +51,10 @@ module.exports = {
 			else if (obj.speakto.type == 'script') {
 				// console.log('speakto script:', obj.speakto.attr);
 				try {
-				  await eval (obj.speakto.attr);
+					// eslint-disable-next-line prefer-const
+					let replyString = '';
+				    await eval (obj.speakto.attr);
+					await interaction.reply({ content: replyString || q.template.defaultSpeakTo(obj.alias || obj.name), flags: 64 });
 				}
 				catch {
 				  console.error('Error in ' + obj.name + ' speakto script.');

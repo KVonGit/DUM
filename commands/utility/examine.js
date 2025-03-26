@@ -39,7 +39,8 @@ module.exports = {
 			await interaction.reply({ content:obj.look, flags: 64 });
 		}
 		else if (typeof obj.look.type !== 'undefined' && obj.look.type == 'script') {
-			let replyString;
+			// eslint-disable-next-line prefer-const
+			let replyString = '';
 			await eval (obj.look.attr);
 			await interaction.reply({ content: replyString || q.defaultLook, flags: 64 });
 		}
@@ -64,7 +65,7 @@ module.exports = {
 
 			// If there are children, list them
 			let n = obj.inherit.indexOf('surface') >= 0 ? 'On ' : 'In ';
-			n += q.GetDisplayName(obj) + ', you see ';
+			n += q.GetDisplayName(obj).replace(/^a /, 'the ') + ', you see ';
 			if (obj.inherit.indexOf('container') >= 0 && (obj.isOpen === false && !obj.transparent)) {
 				return;
 			}
@@ -75,8 +76,8 @@ module.exports = {
 					n = obj.listchildrenprefix;
 				}
 				n += q.GetDirectChildrenAsString(obj);
+				await q.msg(n, true, true);
 			}
-			await q.msg(n, true, true);
 		}
 	},
 };

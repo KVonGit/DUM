@@ -79,7 +79,7 @@ module.exports = {
 				const children = q.GetDirectChildren(obj);
 				if (children.length > 0) {
 					let n = obj.inherit.indexOf('surface') >= 0 ? 'On ' : 'In ';
-					n += q.GetDisplayName(obj) + ', you see ';
+					n += q.GetDisplayName(obj).replace(/^a /, 'the ') + ', you see ';
 					if (typeof obj.listchildrenprefix === 'string') {
 						n = obj.listchildrenprefix;
 					}
