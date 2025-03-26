@@ -388,17 +388,17 @@ module.exports.GetDisplayName = (obj) => {
 		}
 		else if (children.length > 0) {
 			// console.log('children:', children);
-			let preString = 'in which you see';
+			let preString = 'in which you see:';
 			if (obj.inherit.indexOf('surface') >= 0) {
-				preString = 'on which you see';
+				preString = 'on which you see:';
 			}
 			else if (obj.inherit.indexOf('container') >= 0) {
-				preString = 'in which you see';
+				preString = 'in which you see:';
 			}
 			if (typeof obj.listChildrenPreString === 'string') {
 				preString = obj.listChildrenPreString;
 			}
-			n += ` (${preString}: ${this.GetDirectChildrenAsString(obj)})`;
+			n += ` (${preString} ${this.GetDirectChildrenAsString(obj)})`;
 		}
 	}
 	return n;
@@ -691,6 +691,9 @@ module.exports.reviveBobProc = async () => {
 		if (Bob.alive !== true) {
 			await this.msg ('Using everything you\'ve learned from TV dramas, you attempt to revive Bob.\nMiraculously, the defibrillator lived up to its promise, and Bob is now alive again. He says his head feels kind of fuzzy.');
 			Bob.alive = true;
+			// const s = `${this.GetDisplayName(pov)} has revived Bob!\n# GAME OVER\n\nEnter <code>/startgame</code> to play again.`;
+			// msg (s, false, true);
+			// const qgame = await this.loadGame('./game.json.bak', interaction);
 			await this.saveGame('./game.json', qgame);
 		}
 		else {
