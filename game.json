@@ -267,7 +267,7 @@
                 ],
                 "listChildren": true,
                 "listchildrenprefix": "In the fridge you find ",
-                "isOpen": false,
+                "isOpen": true,
                 "close": true,
                 "open": true,
                 "loc": "Kitchen",
@@ -331,7 +331,9 @@
                 "alt": [
                     "can of beer",
                     "can",
-                    "beer can"
+                    "beer can",
+                    "XanMag's beer",
+                    "XM's beer"
                 ],
                 "drink": "You can't drink that. It's XanMag's."
             }

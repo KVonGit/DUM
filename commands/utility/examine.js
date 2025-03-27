@@ -23,10 +23,12 @@ module.exports = {
 			await q.msg('No such object ("' + object + '")!');
 			return;
 		}
-		if ((obj.loc != pov.loc && obj.loc != pov.name) || (typeof obj.visible != 'undefined' && obj.visible == false)) {
+		if (!q.inScope(obj)) {
+			console.log('q.inScope("' + obj.name + '")', q.inScope(obj));
 			await q.msg(q.template.cantSee(obj.alias || obj.name));
+			return;
 		}
-		else if (typeof obj.look == 'undefined') {
+		if (typeof obj.look == 'undefined') {
 			const s = q.template.defaultLook;
 			await q.msg(s);
 		}

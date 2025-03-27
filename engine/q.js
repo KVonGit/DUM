@@ -777,31 +777,34 @@ module.exports.scopeVisible = (pov) => {
 
 	// Get objects in the same location
 	const everything = Object.keys(qgame.objects).concat(Object.keys(qgame.players));
-	console.log('everything:', everything);
+	// console.log('everything:', everything);
 	for (const key of everything) {
-		console.log('key:', key);
+		// console.log('key:', key);
 		const item = this.GetObject(key);
-		console.log('item:', item);
-		console.log('pov', pov);
-		if ((item.loc === pov.loc || (item.loc === pov.name)) && (item.visible === undefined || item.visible)) {
+		// console.log('item:', item);
+		// console.log('pov', pov);
+		if ((item.loc === pov.loc || item.loc === pov.name) && (typeof item.visible === 'undefined' || item.visible === true)) {
+			// console.log('item is visible:', item.name);
 			visibleObjects.push(item);
 		}
 	}
 
-	console.log('Checking for things in open containers and surfaces...');
-	// Include items in open containers and on surfaces
+	// console.log('Checking for things in open containers and surfaces...');
+	// Include objects in open containers and on surfaces
 	for (const key of everything) {
-		const item = this.GetObject(key);
-		if (visibleObjects.includes(item.loc)) {
-			if (item.isOpen === true && (item.visible === undefined || item.visible)) {
-				visibleObjects.push(item);
+		const obj = this.GetObject(key);
+		if (visibleObjects.includes(this.GetObject(obj.loc))) {
+			if (this.GetObject(obj.loc).isOpen === true && (typeof obj.visible === 'undefined' || obj.visible === true)) {
+				// console.log('obj is visible:', obj.name);
+				visibleObjects.push(obj);
 			}
-			if (item.inherit.indexOf('surface') >= 0 && (item.visible === undefined || item.visible)) {
-				visibleObjects.push(item);
+			if (obj.inherit?.indexOf('surface') >= 0 && (typeof obj.visible === 'undefined' || obj.visible === true)) {
+				// console.log('obj is visible:', obj.name);
+				visibleObjects.push(obj);
 			}
 		}
 	}
-
+	// console.log('visibleObjects:', visibleObjects);
 	return visibleObjects;
 };
 
@@ -823,11 +826,13 @@ module.exports.scopeInventory = () => {
 
 module.exports.getAttribute = (obj, attr) => {
 	const objAttr = {};
-	// console.log('getAttribute: obj:', obj);
-	// console.log('getAttribute: attr:', attr);
+	console.log('getAttribute: obj:', obj);
+	console.log('getAttribute: attr:', attr);
+	console.log('typeof obj[attr]:', typeof obj[attr]);
+	console.log('obj[attr]:', obj[attr]);
 	if (typeof obj[attr] != 'undefined') {
 		objAttr.type = typeof obj[attr];
-		// console.log('objAttr.type:', objAttr.type);
+		console.log('objAttr.type:', objAttr.type);
 		if (objAttr.type === 'object') {
 			objAttr.type = obj[attr].type;
 			objAttr.attr = obj[attr]['attr'];
@@ -835,10 +840,10 @@ module.exports.getAttribute = (obj, attr) => {
 		else {
 			objAttr.attr = obj[attr];
 		}
-		// console.log('objAttr:', objAttr);
+		console.log('objAttr:', objAttr);
 		return objAttr;
 	}
-	return null;
+	return {};
 };
 
 module.exports.getGamePov = async () => {

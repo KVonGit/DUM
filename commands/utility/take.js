@@ -14,26 +14,24 @@ module.exports = {
 		if (!pov) return;
 		const objectName = interaction.options.getString('object');
 		if (!objectName) {
-			await interaction.reply({ content: '\'object\' not defined.', flags: 64 });
+			await q.msg('\'object\' not defined.');
 			return;
 		}
 
 		const obj = q.getObject(qgame, objectName);
 
 		if (!obj) {
-			await interaction.reply({ content: `No such object ("${objectName}")!`, flags: 64 });
+			await q.msg(`No such object ("${objectName}")!`);
 			return;
 		}
 
 		if (obj.loc === pov.name) {
-			await interaction.reply({ content: q.template.alreadyHave(obj.name), flags: 64 });
+			await q.msg(q.template.alreadyHave(obj.name));
 			return;
 		}
 
-		const visibleObjects = q.scopeVisible(pov);
-		// console.log('visibleObjects:', visibleObjects);
-		if (!visibleObjects.includes(obj)) {
-			await interaction.reply({ content: q.template.cantSee(obj.name), flags: 64 });
+		if (!q.inScope(obj)) {
+			await q.msg(q.template.cantSee(obj.name));
 			return;
 		}
 
@@ -42,9 +40,9 @@ module.exports = {
 		const { type, attr } = q.getAttribute(obj, 'take');
 		// console.log('type:', type);
 		// console.log('attr:', attr);
-		if (typeof type == 'undefined') {
+		if (!type) {
 			// console.log('take: type is undefined');
-			await interaction.reply({ content: q.template.cantTake(obj.name), flags: 64 });
+			await q.msg(obj.takemsg || q.template.cantTake(q.GetDisplayName(obj)));
 			return;
 		}
 		if (type === 'boolean') {
@@ -53,7 +51,7 @@ module.exports = {
 				wasTaken = true;
 			}
 			else {
-				await q.msg(q.template.cantTake(obj.name));
+				await q.msg(q.template.cantTake(q.GetDisplayName(obj)));
 				return;
 			}
 		}
@@ -65,18 +63,18 @@ module.exports = {
 			// eslint-disable-next-line prefer-const
 			let replyString = '';
 			await eval(attr);
-			await q.msg(replyString || q.template.cantTake(obj.name));
+			await q.msg(replyString || q.template.cantTake(q.GetDisplayName(obj)));
 			return;
 		}
 		else {
-			await q.msg(q.template.cantTake(obj.name));
+			await q.msg(q.template.cantTake(q.GetDisplayName(obj)));
 			return;
 		}
 
 		// Handle successful take
 		if (wasTaken && !interaction.replied) {
 			// console.log('take: wasTaken and !interaction.replied');
-			await q.msg(`${pov.alias} took ${obj.name}.`, false, false);
+			await q.msg(`${pov.alias} took ${q.GetDisplayName(obj)}.`, false, false);
 			const successMessage = obj.takemsg || q.template.taken;
 			await q.msg(successMessage);
 
