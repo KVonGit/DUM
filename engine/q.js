@@ -826,13 +826,13 @@ module.exports.scopeInventory = () => {
 
 module.exports.getAttribute = (obj, attr) => {
 	const objAttr = {};
-	console.log('getAttribute: obj:', obj);
-	console.log('getAttribute: attr:', attr);
-	console.log('typeof obj[attr]:', typeof obj[attr]);
-	console.log('obj[attr]:', obj[attr]);
+	// console.log('getAttribute: obj:', obj);
+	// console.log('getAttribute: attr:', attr);
+	// console.log('typeof obj[attr]:', typeof obj[attr]);
+	// console.log('obj[attr]:', obj[attr]);
 	if (typeof obj[attr] != 'undefined') {
 		objAttr.type = typeof obj[attr];
-		console.log('objAttr.type:', objAttr.type);
+		// console.log('objAttr.type:', objAttr.type);
 		if (objAttr.type === 'object') {
 			objAttr.type = obj[attr].type;
 			objAttr.attr = obj[attr]['attr'];
@@ -840,7 +840,7 @@ module.exports.getAttribute = (obj, attr) => {
 		else {
 			objAttr.attr = obj[attr];
 		}
-		console.log('objAttr:', objAttr);
+		// console.log('objAttr:', objAttr);
 		return objAttr;
 	}
 	return {};
