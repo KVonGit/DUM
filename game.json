@@ -127,7 +127,7 @@
                     "container",
                     "closedcontainer"
                 ],
-                "isOpen": true,
+                "isOpen": false,
                 "open": true,
                 "close": false,
                 "listChildren": true
@@ -135,7 +135,7 @@
             "defibrillator": {
                 "name": "defibrillator",
                 "prefix": "a",
-                "loc": "fridge",
+                "loc": "box",
                 "look": "An ordinary defibrillator.",
                 "take": true
             },
@@ -167,8 +167,8 @@
                     "attr": "replyString = `Bob is ${obj.alive !== true ? 'lying on the floor, a lot more still than usual' : 'sitting up, appearing to feel somewhat under the weather'}.`;"
                 },
                 "attack": {
-                    "type": "string",
-                    "attr": "Violence is never the answer! :laughing:"
+                    "type": "script",
+                    "attr": "responded = true; if (obj.alive === true) { await q.msg(\"Bob looks at you, confused, shocked, and a little bit angry. He raises his fists... then keels over, right back in the position he was in before being revived! :face_with_peeking_eye:\", true, true); obj.alive = false; } else { await q.msg(\"You try slapping him to revive him, to no avail. :laugh:\", true, true); }"
                 },
                 "speakto": {
                     "type": "script",
@@ -267,7 +267,7 @@
                 ],
                 "listChildren": true,
                 "listchildrenprefix": "In the fridge you find ",
-                "isOpen": true,
+                "isOpen": false,
                 "close": true,
                 "open": true,
                 "loc": "Kitchen",
@@ -296,8 +296,7 @@
                 },
                 "listChildren": true,
                 "listchildrenprefix": "The cupboard is bare except for... ",
-                "loc": "Kitchen",
-                "isOpen": true
+                "loc": "Kitchen"
             },
             "bottle opener": {
                 "name": "bottle opener",
@@ -363,14 +362,6 @@
             }
         },
         "players": {
-            "kv_online": {
-                "name": "kv_online",
-                "alias": "KV",
-                "userName": "kv_online",
-                "dateJoined": 1743027438634,
-                "commandHistory": [],
-                "loc": "Lounge"
-            },
             "pertex1": {
                 "name": "pertex1",
                 "alias": "Pertex",

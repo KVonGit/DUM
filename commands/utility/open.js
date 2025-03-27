@@ -93,6 +93,27 @@ module.exports = {
 			}
 			return;
 		}
+		if (typeof obj.open.type != 'undefined') {
+			if (obj.open.type == 'string') {
+				await q.msg(obj.open.attr);
+			}
+			else if (obj.open.type == 'script') {
+				const replyString = '';
+				await eval(obj.open.attr);
+				await q.msg(replyString || 'No replyString sent from open script.');
+			}
+			else {
+				await q.msg(q.template.defaultOpen(q.GetDisplayName(obj)));
+			}
+			try {
+				await q.saveGame('./game.json', qgame);
+			}
+			catch (err) {
+				console.error('Error saving game data:', err);
+				await q.msg('Failed to save game data.');
+			}
+			return;
+		}
 
 		// If the object cannot be opened
 		await q.msg(q.template.cantOpenOrClose(q.GetDisplayName(obj, true)));
