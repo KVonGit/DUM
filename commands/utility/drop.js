@@ -14,59 +14,69 @@ module.exports = {
 		if (!pov) return;
 		const objectName = interaction.options.getString('object');
 		if (!objectName) {
-			await interaction.reply({ content: '\'object\' not defined.', flags: 64 });
+			await q.msg('\'object\' not defined.');
 			return;
 		}
 		const obj = q.getObject(qgame, objectName);
 		if (!obj) {
-			await interaction.reply({ content: `No such object ("${objectName}")!`, flags: 64 });
+			await q.msg(`No such object ("${objectName}")!`);
 			return;
 		}
+
+		if (!q.inScope(obj)) {
+			await q.msg(q.template.cantSee(obj.name));
+			return;
+		}
+
 		if (obj.loc !== pov.name) {
-			await interaction.reply({ content: q.template.dontHave(obj.name), flags: 64 });
+			await q.msg(q.template.dontHave(obj.name));
 			return;
 		}
 
-		let wasDropped = false;
+		let { type, attr } = q.getAttribute(obj, 'drop');
 
-		if (!obj.drop || !obj.drop.type) {
-			wasDropped = true;
-			obj.loc = pov.loc;
+		if (!type) {
+			type = 'boolean';
+			attr = true;
 		}
-		else {
-			switch (obj.drop.type) {
-			case 'string':
-				await interaction.reply({ content: obj.drop.attr, flags: 64 });
-				break;
-			case 'boolean':
-				if (obj.drop.attr) {
-					wasDropped = true;
-					obj.loc = pov.loc;
-				}
-				else {
-					await interaction.reply({ content: q.template.cantDrop(obj.name), flags: 64 });
-				}
-				break;
-			case 'script':
-				eval(obj.drop.attr);
-				wasDropped = obj.loc !== pov.name;
-				break;
-			default:
-				wasDropped = true;
+
+		if (type === 'boolean') {
+			if (attr) {
 				obj.loc = pov.loc;
-				break;
+				await finishUp(true);
+			}
+			else {
+				await q.msg(q.template.cantDrop(q.GetDisplayName(obj)));
+				await finishUp();
 			}
 		}
+		else if (type === 'string') {
+			await q.msg(attr);
+			await finishUp();
+		}
+		else if (type === 'script') {
+			const replyString = '';
+			await eval(attr);
+			await q.msg(replyString === '' ? 'No response from object attribute script.' : replyString);
+			await finishUp();
+			return;
+		}
+		else {
+			obj.loc = pov.loc;
+			await finishUp(true);
+		}
 
-		if (wasDropped) {
-			await interaction.reply(`${pov.alias} dropped ${obj.alias || obj.name} in ${pov.loc}.`);
-			await interaction.followUp({ content: 'Dropped.', flags: 64 });
+		async function finishUp(printMsg = false) {
+			if (printMsg) {
+				await q.msg(`${q.GetDisplayName(pov)} dropped ${q.GetDisplayName(obj)} in ${pov.loc}.`, false, false);
+				await q.msg(obj.dropmsg || q.template.dropped);
+			}
 			try {
 				await q.saveGame('./game.json', qgame);
 			}
 			catch (err) {
 				console.error('Error saving game data:', err);
-				await interaction.followUp({ content: 'Failed to save game data.', flags: 64 });
+				await q.msg('Failed to save game data.');
 			}
 		}
 	},

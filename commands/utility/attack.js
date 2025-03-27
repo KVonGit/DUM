@@ -24,12 +24,15 @@ module.exports = {
 			return;
 		}
 		const obj = q.getObject(qgame, object);
-		// TODO - Check scope!
+		if (!q.inScope(obj)) {
+			await q.msg(q.template.cantSee(obj.name));
+			return;
+		}
 		if (typeof obj.attack == 'undefined') {
-			await q.msg(q.template.defaultAttack(obj.alias || object));
+			await q.msg(q.template.defaultAttack(q.GetDisplayName(obj)));
 		}
 		else if (typeof obj.attack.type == 'undefined') {
-			await q.msg(q.template.defaultAttack(obj.alias || object));
+			await q.msg(q.template.defaultAttack(q.GetDisplayName(obj)));
 		}
 		else if (obj.attack.type == 'string') {
 			await q.msg(`${pov.alias} has attacked ${q.GetDisplayName(obj)}!`, false, false);
@@ -38,13 +41,13 @@ module.exports = {
 		else if (obj.attack.type == 'script') {
 			// eslint-disable-next-line prefer-const
 			let responded = false;
-			eval (obj.attack.attr);
+			await eval (obj.attack.attr);
 			if (!responded) {
-				await q.msg(q.template.defaultAttack(obj.alias || object));
+				await q.msg(q.template.defaultAttack(q.GetDisplayName(obj)));
 			}
 		}
 		else {
-			const s = q.template.defaultAttack(obj.alias || object);
+			const s = q.template.defaultAttack(q.GetDisplayName(obj));
 			await q.msg(s);
 		}
 	},

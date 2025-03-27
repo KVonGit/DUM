@@ -218,7 +218,7 @@ module.exports.getInventoryAsString = (qgame, pov) => {
 };
 
 module.exports.getLocationDescription = (qgame, pov) => {
-	console.log('running getLocationDescription');
+	// console.log('running getLocationDescription');
 	const room = qgame.locations[pov.loc];
 	if (typeof room == 'undefined') {
 		return 'Location not found!';
@@ -508,7 +508,7 @@ module.exports.filterByType = (qgame, type, category = 'objects') => {
 
 module.exports.GetObjectListAsString = (objectList, joiner = 'and', useOxfordComma = true) => {
 	// Map the object list to their display names
-	console.log('objectList:', objectList);
+	// console.log('objectList:', objectList);
 	const displayNames = Object.keys(objectList).map(obj => this.GetDisplayName(obj));
 
 	// If no objects, return an empty string
@@ -849,7 +849,7 @@ module.exports.getAttribute = (obj, attr) => {
 module.exports.getGamePov = async () => {
 	const qgame = await this.loadGame('./game.json', interaction);
 	global.qgame = qgame;
-	console.log('interaction.user.username', interaction.user.username);
+	// console.log('interaction.user.username', interaction.user.username);
 	const povName = interaction.user.username;
 	if (Object.keys(qgame.players).indexOf(povName) < 0) {
 		await this.msg(this.template.mustStartGame);
@@ -861,16 +861,16 @@ module.exports.getGamePov = async () => {
 };
 
 module.exports.thisCommand = async (interaction) => {
-	const povName = interaction.user.globalName || interaction.user.username;
+	const povName = interaction.user.username;
 	const commandName = interaction.commandName;
 
 	// Extract options dynamically, handling 0-2 options with arbitrary names
 	const optionsString = interaction.options.data
-		.map(option => `**${option.name}:** ${option.value}`)
+		.map(option => `${option.name}: ${option.value}`)
 		.join(' ');
 
 	// Construct the final string
-	const commandString = `### ${povName}\n**>** \`/${commandName}\` ${optionsString}`.trim();
+	const commandString = `${povName} @ ${new Date()}\n> /${commandName} ${optionsString}`.trim();
 
 	// console.log(commandString);
 	return commandString;
@@ -884,7 +884,7 @@ module.exports.addThisCommandToTranscriptAsEmbed = async (interaction, transcrip
 	const commandName = interaction.commandName;
 
 	const optionsString = interaction.options.data
-		.map(option => `**${option.name}:** ${option.value}`)
+		.map(option => `${option.name}: ${option.value} `)
 		.join(' ');
 
 	const commandString = `**>** \`/${commandName}\` ${optionsString}`.trim();

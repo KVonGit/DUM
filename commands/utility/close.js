@@ -24,9 +24,6 @@ module.exports = {
 			return;
 		}
 
-		// console.log('q.scopeVisible', q.scopeVisible(pov));
-		// console.log('q.scopeInventory', q.scopeInventory(pov));
-		console.log('q.inScope(obj)', q.inScope(obj));
 		if (!q.inScope(obj)) {
 			await q.msg(q.template.cantSee(q.GetDisplayName(obj)));
 			return;

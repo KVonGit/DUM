@@ -27,7 +27,7 @@
                 "takemsg": "You fold the newspaper and place it neatly under your arm.",
                 "read": "There's no time for reading the paper.",
                 "look": "It's yesterday's edition, but there's an article about Quest Viva in it.",
-                "loc": "kv_online",
+                "loc": "Kitchen",
                 "alt": [
                     "paper"
                 ]
@@ -135,7 +135,7 @@
             "defibrillator": {
                 "name": "defibrillator",
                 "prefix": "a",
-                "loc": "kv_online",
+                "loc": "fridge",
                 "look": "An ordinary defibrillator.",
                 "take": true
             },
@@ -369,7 +369,7 @@
                 "userName": "kv_online",
                 "dateJoined": 1743027438634,
                 "commandHistory": [],
-                "loc": "Kitchen"
+                "loc": "Lounge"
             },
             "pertex1": {
                 "name": "pertex1",

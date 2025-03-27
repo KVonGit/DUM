@@ -42,7 +42,7 @@ module.exports = {
 		}
 
 		if (obj1.loc !== pov.name) {
-			await interaction.reply({ content: q.template.dontHave(obj1.name), flags: 64 });
+			await q.msg(q.template.dontHave(q.GetDisplayName(obj1)));
 			return;
 		}
 
