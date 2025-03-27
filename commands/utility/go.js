@@ -14,7 +14,7 @@ module.exports = {
 		if (!pov) return;
 		const exitName = interaction.options.getString('direction');
 		if (!exitName) {
-			await interaction.reply({ content: '\'direction\' not defined.', flags: 64 });
+			await q.msg('\'direction\' not defined.');
 			return;
 		}
 		const loc = qgame.locations[pov.loc];

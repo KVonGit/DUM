@@ -15,42 +15,42 @@ module.exports = {
 		if (!pov) return;
 		const object = interaction.options.getString('object');
 		if (typeof object == 'undefined') {
-			await interaction.reply('\'object\' not defined.');
+			await q.msg('\'object\' not defined.');
 			return;
 		}
 		if (Object.keys(qgame.players).indexOf(povName) < 0) {
-			await interaction.reply({ content: q.template.mustStartGame, flags: 64 });
+			await q.msg(q.template.mustStartGame);
 			return 3;
 		}
 		const obj = q.getObject(qgame, object);;
 		if (obj == 'undefined') {
-			await interaction.reply({ content: 'No such object ("' + object + '")!', flags: 64 });
+			await q.msg('No such object ("' + object + '")!');
 			return;
 		}
 		if ((obj.loc != pov.loc && obj.loc != pov.name) || (typeof obj.visible != 'undefined' && obj.visible == false)) {
-			await interaction.reply({ content: q.template.cantSee(q.GetDisplayName(obj)), flags: 64 });
+			await q.msg(q.template.cantSee(q.GetDisplayName(obj)));
 			return;
 		}
 		if (typeof obj.sit == 'undefined') {
 			const s = 'You can\'t do that.';
-			await interaction.reply({ content: s, flags: 64 });
+			await q.msg(s);
 		}
 		else if (obj.sit === true) {
 			obj.loc = 'nowhere';
-			await interaction.reply({ content: 'You sit for a while.', flags: 64 });
+			await q.msg('You sit for a while.');
 		}
 		else if (typeof obj.sit == 'string') {
-			await interaction.reply({ content:obj.sit, flags: 64 });
+			await q.msg(obj.sit);
 		}
 		else if (typeof obj.sit.type !== 'undefined' && obj.sit.type == 'script') {
 			// eslint-disable-next-line prefer-const
 			let replyString = '';
 			await eval (obj.sit.attr);
-			await interaction.reply({ content: replyString || 'You can\'t do that.', flags: 64 });
+			await q.msg(replyString || 'You can\'t do that.');
 		}
 		else {
 			const s = 'You can\'t do that.';
-			await interaction.reply({ content: s, flags: 64 });
+			await q.msg(s);
 		}
 		await q.saveGame('./game.json', qgame);
 	},

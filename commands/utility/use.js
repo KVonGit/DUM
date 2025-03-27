@@ -23,8 +23,8 @@ module.exports = {
 			await q.msg('No such object ("' + object + '")!');
 			return;
 		}
-		if ((obj.loc != pov.loc && obj.loc != pov.name) || (typeof obj.visible != 'undefined' && obj.visible == false)) {
-			await q.msg(q.template.cantSee(q.GetDisplayName(obj)));
+		if (obj.loc != pov.name || (typeof obj.visible != 'undefined' && obj.visible == false)) {
+			await q.msg(q.template.dontHave(q.GetDisplayName(obj)));
 			return;
 		}
 		if (typeof obj.use == 'undefined') {

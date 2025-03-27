@@ -14,25 +14,25 @@ module.exports = {
 		if (!pov) return;
 		const objectName = interaction.options.getString('npc');
 		if (!objectName) {
-			await interaction.reply({ content: '\'object\' not defined.', flags: 64 });
+			await q.msg('\'object\' not defined.');
 			return;
 		}
 		const obj = q.getObject(qgame, objectName);
 
 		if (!obj) {
-			await interaction.reply({ content: `No such object ("${objectName}")!`, flags: 64 });
+			await q.msg(`No such object ("${objectName}")!`);
 			return;
 		}
 		if (obj.loc !== pov.loc && obj.loc !== pov.name) {
-			await interaction.reply({ content: q.template.cantSee(obj.name), flags: 64 });
+			await q.msg(q.template.cantSee(obj.name));
 			return;
 		}
 		if (obj.name !== 'Bob') {
-			await interaction.reply({ content: `You can't revive ${q.GetDisplayName(obj)}.`, flags: 64 });
+			await q.msg(`You can't revive ${q.GetDisplayName(obj)}.`);
 			return;
 		}
 		if (q.GetObject('defibrillator').loc !== pov.name) {
-			await interaction.reply({ content: 'You don\'t have a way to do that!', flags: 64 });
+			await q.msg('You don\'t have a way to do that!');
 			return;
 		}
 		// console.log('Reviving Bob...');

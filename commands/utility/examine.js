@@ -32,13 +32,19 @@ module.exports = {
 			const s = q.template.defaultLook;
 			await q.msg(s);
 		}
-		else if (typeof obj.look == 'string') {
+
+		const { type, attr } = q.getAttribute(obj, 'look');
+		if (typeof type == 'undefined') {
+			const s = q.template.defaultLook;
+			await q.msg(s);
+		}
+		else if (type == 'string') {
 			await q.msg(obj.look);
 		}
-		else if (typeof obj.look.type !== 'undefined' && obj.look.type == 'script') {
+		else if (type == 'script') {
 			// eslint-disable-next-line prefer-const
 			let replyString = '';
-			await eval (obj.look.attr);
+			await eval (attr);
 			await q.msg(replyString || q.defaultLook);
 		}
 		else {

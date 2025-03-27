@@ -401,13 +401,19 @@ module.exports.doGo = async (qgame, pov, loc, exitName, interaction) => {
 	}
 };
 
-module.exports.GetDisplayName = (obj) => {
+module.exports.GetDisplayName = (obj, definite = false) => {
 	if (typeof obj === 'string') {
 		obj = this.GetObject(obj);
 	}
 	let n = '';
 	if (obj.prefix) {
-		n += obj.prefix + ' ';
+		let prefix = obj.prefix || '';
+		if (definite) {
+			prefix = obj.prefix || '';
+			if (obj.prefix && obj.prefix === 'a') prefix = 'the';
+			if (prefix !== '') prefix += ' ';
+		}
+		n += prefix + ' ';
 	}
 	n += obj.alias || obj.name;
 	if (obj.suffix) {
@@ -853,7 +859,8 @@ module.exports.getGamePov = async () => {
 	const povName = interaction.user.username;
 	if (Object.keys(qgame.players).indexOf(povName) < 0) {
 		await this.msg(this.template.mustStartGame);
-		return;
+		console.log('Player not found in game:', povName);
+		return {};
 	}
 	const pov = qgame.players[povName];
 	global.pov = pov;

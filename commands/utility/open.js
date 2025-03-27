@@ -14,25 +14,25 @@ module.exports = {
 		if (!pov) return;
 		const object = interaction.options.getString('object');
 		if (!object) {
-			await interaction.reply('\'object\' not defined.');
+			await q.msg('\'object\' not defined.');
 			return;
 		}
 		const obj = q.getObject(qgame, object);
 		// Check if the object exists
 		if (!obj) {
-			await interaction.reply({ content: `No such object ("${object}")!`, flags: 64 });
+			await q.msg(`No such object ("${object}")!`);
 			return;
 		}
 
 		// Check if the object is visible to the player
-		if ((obj.loc !== pov.loc && obj.loc !== pov.name) || obj.visible === false) {
-			await interaction.reply({ content: q.template.cantSee(q.GetDisplayName(obj)), flags: 64 });
+		if (!q.inScope(obj)) {
+			await q.msg(q.template.cantSee(q.GetDisplayName(obj)));
 			return;
 		}
 
 		// Check if the object is already open
 		if (obj.isOpen === true) {
-			await interaction.reply({ content: q.template.alreadyOpen(q.GetDisplayName(obj)), flags: 64 });
+			await q.msg(q.template.alreadyOpen(q.GetDisplayName(obj)));
 			return;
 		}
 
@@ -42,7 +42,7 @@ module.exports = {
 
 			// Send the appropriate open message
 			if (typeof obj.openMsg === 'string') {
-				await interaction.reply({ content: obj.openMsg, flags: 64 });
+				await q.msg(obj.openMsg);
 			}
 			else {
 				let prefix = obj.prefix || '';
@@ -50,12 +50,12 @@ module.exports = {
 				if (prefix !== '') prefix += ' ';
 				const name = obj.alias || obj.name;
 				const displayName = prefix + name;
-				await interaction.reply({ content: q.template.defaultOpen(displayName), flags: 64 });
+				await q.msg(q.template.defaultOpen(displayName));
 			}
 
 			// Send any follow-up messages
 			if (typeof obj.afterOpeningMsg === 'string') {
-				await interaction.followUp({ content: obj.afterOpeningMsg, flags: 64 });
+				await q.msg(obj.afterOpeningMsg);
 			}
 
 			// Execute any scripts after opening
@@ -65,7 +65,7 @@ module.exports = {
 				}
 				catch (err) {
 					console.error(`Error in ${obj.name} afterOpening script:`, err);
-					await interaction.followUp({ content: 'Error in afterOpening script.', flags: 64 });
+					await q.msg('Error in afterOpening script.');
 				}
 			}
 
@@ -89,17 +89,12 @@ module.exports = {
 			}
 			catch (err) {
 				console.error('Error saving game data:', err);
-				await interaction.followUp({ content: 'Failed to save game data.', flags: 64 });
+				await q.msg('Failed to save game data.');
 			}
 			return;
 		}
 
 		// If the object cannot be opened
-		let prefix = obj.prefix || '';
-		if (obj.prefix && obj.prefix === 'a') prefix = 'the';
-		if (prefix !== '') prefix += ' ';
-		const name = obj.alias || obj.name;
-		const displayName = prefix + name;
-		await interaction.reply({ content: q.template.cantOpenOrClose(displayName), flags: 64 });
+		await q.msg(q.template.cantOpenOrClose(q.GetDisplayName(obj, true)));
 	},
 };

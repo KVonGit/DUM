@@ -19,25 +19,25 @@ module.exports = {
 
 		const object1Name = interaction.options.getString('object1');
 		if (!object1Name) {
-			await interaction.reply({ content: '\'object\' not defined.', flags: 64 });
+			await q.msg('\'object\' not defined.');
 			return;
 		}
 
 		const obj1 = q.getObject(qgame, object1Name);
 		if (!obj1) {
-			await interaction.reply({ content: `No such object ("${object1Name}")!`, flags: 64 });
+			await q.msg(`No such object ("${object1Name}")!`);
 			return;
 		}
 
 		const object2Name = interaction.options.getString('object2');
 		if (!object2Name) {
-			await interaction.reply({ content: '\'' + object + '\' not defined.', flags: 64 });
+			await q.msg('\'' + object + '\' not defined.');
 			return;
 		}
 
 		const obj2 = q.getObject(qgame, object2Name);
 		if (!obj2) {
-			await interaction.reply({ content: `No such object ("${object2Name}")!`, flags: 64 });
+			await q.msg(`No such object ("${object2Name}")!`);
 			return;
 		}
 
@@ -59,14 +59,14 @@ module.exports = {
 					wasDropped = true;
 				}
 				else {
-					await interaction.reply({ content: q.template.containerClosed(obj2.name), flags: 64 });
+					await q.msg(q.template.containerClosed(obj2.name));
 				}
 			}
 		}
 		else {
 			switch (obj1.drop.type) {
 			case 'string':
-				await interaction.reply({ content: obj1.drop.attr, flags: 64 });
+				await q.msg(obj1.drop.attr);
 				break;
 			case 'boolean':
 				if (obj1.drop.attr) {
@@ -74,7 +74,7 @@ module.exports = {
 					obj1.loc = obj2.name;
 				}
 				else {
-					await interaction.reply({ content: q.template.cantDrop(obj1.name), flags: 64 });
+					await q.msg(q.template.cantDrop(obj1.name));
 				}
 				break;
 			case 'script':
@@ -89,14 +89,14 @@ module.exports = {
 		}
 
 		if (wasDropped) {
-			await interaction.reply(`${pov.alias} dropped ${obj1.alias || obj1.name} in ${pov.loc}.`);
-			await interaction.followUp({ content: 'Done.', flags: 64 });
+			await q.msg(`${pov.alias} dropped ${q.GetDisplayName(obj1, true)} in ${pov.loc}.`, false, false);
+			await q.msg('Done.');
 			try {
 				await q.saveGame('./game.json', qgame);
 			}
 			catch (err) {
 				console.error('Error saving game data:', err);
-				await interaction.followUp({ content: 'Failed to save game data.', flags: 64 });
+				await q.msg('Failed to save game data.');
 			}
 		}
 	},

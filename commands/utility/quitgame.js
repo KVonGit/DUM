@@ -6,6 +6,7 @@ module.exports = {
 		.setName('quitgame')
 		.setDescription('Quit playing the game.'),
 	async execute(interaction) {
+		global.interaction = interaction;
 		const { qgame, pov } = await q.getGamePov();
 		if (!pov) {
 			console.warning('no pov returned to quitgame.js');
@@ -16,22 +17,22 @@ module.exports = {
 			// get inventory and drop it in the location of the player
 			const items = q.getInventory(qgame, pov);
 			for (const i in items) {
-				console.log('Dropping', items[i]);
+				// console.log('Dropping', items[i]);
 				qgame.objects[items[i]].loc = pov.loc;
 			}
 			delete qgame.players[pov.name];
-			await interaction.reply(`${alias} has left the game!`);
-			await interaction.followUp({ content: '...and so ends the adventure. :grin:', flags: 64 });
+			await q.msg(`${alias} has left the game!`);
+			await q.msg('...and so ends the adventure. :grin:');
 			try {
 				await q.saveGame('./game.json', qgame);
 			}
 			catch (err) {
 				console.error('Error saving game data:', err);
-				await interaction.followUp({ content: 'Failed to save game data.', flags: 64 });
+				await q.msg('Failed to save game data.');
 			}
 		}
 		else {
-			await interaction.reply({ content: template.notPlaying, flags: 64 });
+			await q.msg(template.notPlaying);
 		}
 	},
 };

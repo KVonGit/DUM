@@ -19,15 +19,15 @@ module.exports = {
 		}
 		const obj = q.getObject(qgame, object);
 		if (typeof obj === 'undefined') {
-			await interaction.reply({ content: 'No such object ("' + object + '")!', flags: 64 });
+			await q.msg('No such object ("' + object + '")!');
 			return;
 		}
-		if ((obj.loc !== pov.loc && obj.loc !== pov.name) || obj.visible === false) {
-			await interaction.reply({ content: q.template.cantSee(q.GetDisplayName(obj)), flags: 64 });
+		if (!q.inScope(obj)) {
+			await q.msg(q.template.cantSee(q.GetDisplayName(obj)));
 			return;
 		}
 		if (obj.switchedOn === false) {
-			await interaction.reply({ content: q.template.alreadyOff(q.GetDisplayName(obj)), flags: 64 });
+			await q.msg(q.template.alreadyOff(q.GetDisplayName(obj)));
 			return;
 		}
 		if (obj.inherit && obj.inherit.indexOf('switchable') >= 0) {
@@ -35,13 +35,13 @@ module.exports = {
 				obj.switchedOn = false;
 			}
 			else if (obj.canSwitchOff === false) {
-				await interaction.reply({ content: q.template.cantSwitch(q.GetDisplayName(obj)), flags: 64 });
+				await q.msg(q.template.cantSwitch(q.GetDisplayName(obj)));
 				return;
 			}
 			else if (obj.switchOff.type) {
 				switch (obj.switchOff.type) {
 				case 'string':
-					await interaction.reply({ content: obj.switchOff.attr, flags: 64 });
+					await q.msg(obj.switchOff.attr);
 					break;
 				case 'script':
 					await eval(obj.switchOff.attr);
@@ -50,7 +50,7 @@ module.exports = {
 					obj.switchedOn = false;
 					break;
 				default:
-					await interaction.reply({ content: 'There was an error in the switchOff property.', flags: 64 });
+					await q.msg('There was an error in the switchOff property.');
 				}
 
 			}
@@ -58,13 +58,13 @@ module.exports = {
 				obj.switchedOn = false;
 			}
 			if (typeof obj.switchedOffMsg === 'string') {
-				await interaction.reply({ content: obj.switchedOffMsg, flags: 64 });
+				await q.msg(obj.switchedOffMsg);
 			}
 			else {
-				await interaction.reply({ content: 'You switch ' + q.GetDisplayName(obj) + ' off.', flags: 64 });
+				await q.msg('You switch ' + q.GetDisplayName(obj) + ' off.');
 			}
 			if (typeof obj.afterSwitchingOffMsg === 'string') {
-				await interaction.followUp({ content: obj.afterSwitchingOffMsg, flags: 64 });
+				await q.msg(obj.afterSwitchingOffMsg, true, false);
 			}
 			if (obj.afterSwitchingOff) {
 				try {
@@ -72,7 +72,7 @@ module.exports = {
 				}
 				catch {
 					console.error('Error in ' + obj.name + ' afterSwitchingOff script.');
-					await interaction.followUp({ content: 'Error in afterSwitchingOff script.', flags: 64 });
+					await q.msg('Error in afterSwitchingOff script.', true, false);
 				}
 			}
 			try {
@@ -80,10 +80,10 @@ module.exports = {
 			}
 			catch (err) {
 				console.error('Error saving game data:', err);
-				await interaction.followUp({ content: 'Failed to save game data.', flags: 64 });
+				await q.msg('Failed to save game data.', true, false);
 			}
 			return;
 		}
-		await interaction.reply({ content: q.template.cantSwitch(q.GetDisplayName(obj)), flags: 64 });
+		await q.msg(q.template.cantSwitch(q.GetDisplayName(obj)));
 	},
 };
