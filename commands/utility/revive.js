@@ -35,7 +35,7 @@ module.exports = {
 			await interaction.reply({ content: 'You don\'t have a way to do that!', flags: 64 });
 			return;
 		}
-		console.log('Reviving Bob...');
+		// console.log('Reviving Bob...');
 		global.pov = pov;
 		await q.reviveBobProc();
 	},

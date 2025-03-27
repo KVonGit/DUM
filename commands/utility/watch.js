@@ -12,10 +12,6 @@ module.exports = {
 	async execute(interaction) {
 		const { qgame, pov } = await q.getGamePov();
 		if (!pov) return;
-		if (Object.keys(qgame.players).indexOf(povName) < 0) {
-			await interaction.reply({ content: q.template.mustStartGame, flags: 64 });
-			return 3;
-		}
 		const object = interaction.options.getString('object');
 		if (typeof object == 'undefined') {
 			await interaction.reply('\'object\' not defined.');

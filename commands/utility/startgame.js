@@ -39,6 +39,7 @@ module.exports = {
 
 			s += q.getLocationDescription(qgame, pov);
 			await interaction.reply({ content: `${alias} has joined the game!` });
+			await q.addToTranscriptChannel(`${alias} has joined the game!`);
 			await interaction.followUp({ content: s, flags: 64 });
 
 			try {

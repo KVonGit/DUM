@@ -6,9 +6,10 @@ module.exports = {
 		.setName('look')
 		.setDescription('Look at your surroundings.'),
 	async execute(interaction) {
+		global.interaction = interaction;
 		const { qgame, pov } = await q.getGamePov();
 		if (!pov) return;
 		const s = q.getLocationDescription(qgame, pov);
-		await interaction.reply({ content: s, flags: 64 });
+		await q.msg(s);
 	},
 };

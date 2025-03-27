@@ -15,6 +15,8 @@
             "newspaper": {
                 "name": "newspaper",
                 "prefix": "a",
+                "definiteArticle": "the",
+                "indefiniteArticle": "a",
                 "inherit": [
                     "container"
                 ],
@@ -25,7 +27,7 @@
                 "takemsg": "You fold the newspaper and place it neatly under your arm.",
                 "read": "There's no time for reading the paper.",
                 "look": "It's yesterday's edition, but there's an article about Quest Viva in it.",
-                "loc": "Lounge",
+                "loc": "kv_online",
                 "alt": [
                     "paper"
                 ]
@@ -39,7 +41,7 @@
                     "attr": "replyString = \"A wooden table, probably made of oak.\"; replyString += q.getObject(qgame, \"newspaper\").loc === \"table\" ? \" There is a newspaper on it.\" : \"\";"
                 },
                 "take": {
-                    "type": "script",
+                    "type": "string",
                     "attr": "It's too heavy to take."
                 },
                 "inherit": [
@@ -125,7 +127,7 @@
                     "container",
                     "closedcontainer"
                 ],
-                "isOpen": false,
+                "isOpen": true,
                 "open": true,
                 "close": false,
                 "listChildren": true
@@ -133,13 +135,13 @@
             "defibrillator": {
                 "name": "defibrillator",
                 "prefix": "a",
-                "loc": "box",
+                "loc": "kv_online",
                 "look": "An ordinary defibrillator.",
                 "take": true
             },
             "hammer": {
                 "name": "hammer",
-                "loc": "Kitchen",
+                "loc": "pertex1",
                 "look": "It's a mini war hammer.",
                 "take": true
             },
@@ -358,13 +360,30 @@
                 "description": "You are nowhere. You should probably go somewhere."
             }
         },
-        "players": {},
+        "players": {
+            "kv_online": {
+                "name": "kv_online",
+                "alias": "KV",
+                "userName": "kv_online",
+                "dateJoined": 1743027438634,
+                "commandHistory": [],
+                "loc": "Kitchen"
+            },
+            "pertex1": {
+                "name": "pertex1",
+                "alias": "Pertex",
+                "userName": "pertex1",
+                "dateJoined": 1743029210827,
+                "commandHistory": [],
+                "loc": "Lounge"
+            }
+        },
         "timers": {},
         "turnScripts": {
             "busyBee": {
                 "type": "script",
                 "enabled": true,
-                "attr": "if (qgame.players[interaction.user.username].loc == qgame.objects[\"bee\"].loc) { interaction.followUp ({ content: \"The bee buzzes past you. Pesky bee.\", flags: 64 }); }"
+                "attr": "if (qgame.players[interaction.user.username].loc == qgame.objects[\"bee\"].loc) { q.msg(\"The bee buzzes past you. Pesky bee.\", true, true); }"
             }
         }
     }

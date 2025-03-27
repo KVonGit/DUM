@@ -27,8 +27,6 @@ for (const folder of commandFolders) {
 	}
 }
 
-global.Log = console.log;
-
 Object.defineProperty(String.prototype, 'capFirst', {
 	value: function() {
 	  return this.charAt(0).toUpperCase() + this.slice(1);
@@ -64,10 +62,10 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 	try {
 		await command.execute(interaction);
-		if (typeof qgame !== 'undefined' && typeof pov !== 'undefined') require('./engine/q').runTurnScripts();
+		if (typeof qgame !== 'undefined' && typeof pov !== 'undefined' && qgame.suppressTurnScripts === false) await require('./engine/q').runTurnScripts();
 	}
 	catch (error) {
-		console.error(error);
+		console.error('eRror', error);
 		if (interaction.replied || interaction.deferred) {
 			await interaction.followUp({ content: 'There was an error while executing this command!', flags: 64 });
 		}

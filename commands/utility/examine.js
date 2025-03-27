@@ -15,40 +15,40 @@ module.exports = {
 		if (!pov) return;
 		const object = interaction.options.getString('object');
 		if (typeof object == 'undefined') {
-			await interaction.reply('\'object\' not defined.');
+			await q.msg('\'object\' not defined.');
 			return;
 		}
 		const obj = q.getObject(qgame, object);;
 		if (obj == 'undefined') {
-			await interaction.reply({ content: 'No such object ("' + object + '")!', flags: 64 });
+			await q.msg('No such object ("' + object + '")!');
 			return;
 		}
 		if ((obj.loc != pov.loc && obj.loc != pov.name) || (typeof obj.visible != 'undefined' && obj.visible == false)) {
-			await interaction.reply({ content: q.template.cantSee(obj.alias || obj.name), flags: 64 });
+			await q.msg(q.template.cantSee(obj.alias || obj.name));
 		}
 		else if (typeof obj.look == 'undefined') {
 			const s = q.template.defaultLook;
-			await interaction.reply({ content: s, flags: 64 });
+			await q.msg(s);
 		}
 		else if (typeof obj.look == 'string') {
-			await interaction.reply({ content:obj.look, flags: 64 });
+			await q.msg(obj.look);
 		}
 		else if (typeof obj.look.type !== 'undefined' && obj.look.type == 'script') {
 			// eslint-disable-next-line prefer-const
 			let replyString = '';
 			await eval (obj.look.attr);
-			await interaction.reply({ content: replyString || q.defaultLook, flags: 64 });
+			await q.msg(replyString || q.defaultLook);
 		}
 		else {
 			const s = q.template.defaultLook;
-			await interaction.reply({ content: s, flags: 64 });
+			await q.msg(s);
 		}
 		if (typeof obj.switchedOn != 'undefined') {
 			if (obj.switchedOn && typeof obj.switchedondesc == 'string') {
-				await interaction.followUp({ content: obj.switchedondesc, flags: 64 });
+				await q.msg(obj.switchedondesc, true, true);
 			}
 			else if (!obj.switchedOn && obj.switchedoffdesc == 'string') {
-				await interaction.followUp({ content: obj.switchedoffdesc, flags: 64 });
+				await q.msg(obj.switchedoffdesc, true, true);
 			}
 		}
 		// TODO: Also check for listChildren for surfaces/containers that are isOpen

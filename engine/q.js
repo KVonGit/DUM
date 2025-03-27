@@ -122,25 +122,62 @@ module.exports.GetObject = (objName) => {
 };
 
 module.exports.msg = async (s, isPrivate = true, isFollowUp = false) => {
-	// console.log('msg:', s);
+	if (interaction.replied) {
+		isFollowUp = true;
+	}
+	else {
+		isFollowUp = false;
+	}
 	if (!isPrivate && !isFollowUp) {
-		console.log('msg: not private or follow up');
+		// console.log('msg: not private or follow up');
 		await interaction.reply(s);
 	}
 	else if (!isPrivate && isFollowUp) {
-		console.log('msg: not private but is follow up');
+		// console.log('msg: not private but is follow up');
 		// await interaction.user.send(s);
 		await interaction.followUp(s);
 	}
 	else if (isPrivate && !isFollowUp) {
-		console.log('msg: private but not follow up');
+		// console.log('msg: private but not follow up');
 		await interaction.reply({ content: s, flags: 64 });
 	}
 	else {
 		// await interaction.user.send({content: s, flags: 64});
-		console.log('msg: private follow up');
+		// console.log('msg: private follow up');
 		await interaction.followUp({ content: s, flags: 64 });
 	}
+	console.log(this.thisCommand(interaction));
+	// const sBuilder = [];
+	// sBuilder.push(this.GetDisplayName(pov) + ' > ' + interaction.message.content + '\n' + s);
+	// await this.addToTranscriptChannel(sBuilder.join(''));
+};
+
+module.exports.addToTranscriptChannel = async (s, channelId) => {
+	const { ChannelType } = require('discord.js');
+
+	async function handleInteraction(interaction) {
+		if (!interaction.isCommand()) return;
+
+		if (typeof channelId == 'undefined') channelId = '1354201798029606974';
+
+		try {
+			const channel = await interaction.client.channels.fetch(channelId);
+
+			if (channel && channel.type === ChannelType.GuildText) {
+				if (typeof s != 'string') s = { embeds: [s] };
+				await channel.send(s);
+			}
+			else {
+				console.log('Target channel is not a text channel.');
+			}
+		}
+		catch (error) {
+			console.error('Error sending message to another channel:', error);
+		}
+
+		// await interaction.followUp({ content: 'Message sent to another channel!', ephemeral: true });
+	}
+	await handleInteraction(interaction);
 };
 
 module.exports.sendDM = async (s) => {
@@ -163,14 +200,14 @@ module.exports.getInventoryAsString = (qgame, pov) => {
 	for (const element in qgame.objects) {
 		const obj = qgame.objects[element];
 		if (obj.loc == pov.name) {
-			inv.push(obj.name);
+			inv.push(this.GetDisplayName(obj));
 		}
 	}
-	let s = 'You are carrying';
+	let s = 'You are carrying:';
 	if (inv.length > 0) {
 		// list stuff
 		inv.forEach(element => {
-			s += ':\r\n\- ' + element;
+			s += '\r\n\- ' + element;
 		});
 	}
 	else {
@@ -294,7 +331,7 @@ module.exports.SendDM = async (s) => {
 
 module.exports.doGo = async (qgame, pov, loc, exitName, interaction) => {
 	if (!loc.exits) {
-		await interaction.reply({ content: 'There are no exits!', flags: 64 });
+		await this.msg('There are no exits!');
 		return;
 	}
 
@@ -319,16 +356,16 @@ module.exports.doGo = async (qgame, pov, loc, exitName, interaction) => {
 
 	const exit = loc.exits[exitName];
 	if (!exit) {
-		await interaction.reply({ content: this.template.cantGo(exitName), flags: 64 });
+		await this.msg(this.template.cantGo(exitName));
 		return;
 	}
 
 	if (exit.locked) {
-		await interaction.reply({ content: this.template.lockedExit(exitName), flags: 64 });
+		await this.msg(this.template.lockedExit(exitName));
 		return;
 	}
 	if (typeof exit.visible != 'undefined' && exit.visible === false) {
-		await interaction.reply({ content: this.template.cantGo(exitName), flags: 64 });
+		await this.msg(this.template.cantGo(exitName));
 		return;
 	}
 
@@ -347,8 +384,12 @@ module.exports.doGo = async (qgame, pov, loc, exitName, interaction) => {
 
 	// Get the location description and respond
 	const locationDescription = this.getLocationDescription(qgame, pov);
-	await interaction.reply(`${pov.alias || pov.name} goes ${exitName}.`);
-	await interaction.followUp({ content: locationDescription, flags: 64 });
+	await this.msg(`${pov.alias || pov.name} goes ${exitName}.`, false, true);
+	// await this.addToTranscriptChannel(`${pov.alias || pov.name} goes ${exitName}, to ${this.GetDisplayName(qgame.locations[pov.loc])}.`);
+	// await this.addToTranscriptChannel(this.thisCommand);
+	await this.addThisCommandToTranscriptAsEmbed(interaction);
+	await this.addToTranscriptChannel(`${pov.alias || pov.name} goes ${exitName}, to ${this.GetDisplayName(qgame.locations[pov.loc])}.`);
+	await this.msg(locationDescription);
 
 	// Save the game state
 	try {
@@ -356,7 +397,7 @@ module.exports.doGo = async (qgame, pov, loc, exitName, interaction) => {
 	}
 	catch (err) {
 		console.error('Error saving game data:', err);
-		await interaction.followUp({ content: 'Failed to save game data.', flags: 64 });
+		await this.msg('Failed to save game data.', true, true);
 	}
 };
 
@@ -654,7 +695,7 @@ function resolveTypeInheritance(type) {
 	return { ...inheritedDefaults, ...typeDef };
 }
 
-module.exports.runTurnScripts = () => {
+module.exports.runTurnScripts = async () => {
 	const allScripts = Object.keys(qgame.turnScripts) || [];
 	if (allScripts.length === 0) {
 		return;
@@ -666,7 +707,8 @@ module.exports.runTurnScripts = () => {
 	for (const script of enabled) {
 		const scriptObj = qgame.turnScripts[script];
 		if (scriptObj.attr) {
-			eval(scriptObj.attr);
+			global.q = this;
+			await eval(scriptObj.attr);
 		}
 	}
 };
@@ -699,7 +741,7 @@ module.exports.reviveBobProc = async () => {
 					const channel = await interaction.client.channels.fetch(channelId);
 
 					if (channel && channel.type === ChannelType.GuildText) {
-						await channel.send('This is a message sent to another channel!');
+						await channel.send('Bob has been revived by ' + (interaction.user.globalName || interaction.user.username) + '!');
 					}
 					else {
 						console.log('Target channel is not a text channel.');
@@ -709,7 +751,7 @@ module.exports.reviveBobProc = async () => {
 					console.error('Error sending message to another channel:', error);
 				}
 
-				await interaction.followUp({ content: 'Message sent to another channel!', ephemeral: true });
+				// await interaction.followUp({ content: 'Message sent to another channel!', ephemeral: true });
 			}
 			await handleInteraction(interaction);
 
@@ -727,24 +769,29 @@ module.exports.reviveBobProc = async () => {
 	}
 };
 
-module.exports.scopeVisible = () => {
+module.exports.scopeVisible = (pov) => {
 	const visibleObjects = [];
 
 	// Check if obj has a location
-	if (!obj.loc) return visibleObjects;
+	if (typeof pov.loc == 'undefined') return visibleObjects;
 
 	// Get objects in the same location
-	const everything = qgame.objects + qgame.players;
-	for (const key in Object.keys(everything)) {
-		const item = everything[key];
+	const everything = Object.keys(qgame.objects).concat(Object.keys(qgame.players));
+	console.log('everything:', everything);
+	for (const key of everything) {
+		console.log('key:', key);
+		const item = this.GetObject(key);
+		console.log('item:', item);
+		console.log('pov', pov);
 		if ((item.loc === pov.loc || (item.loc === pov.name)) && (item.visible === undefined || item.visible)) {
 			visibleObjects.push(item);
 		}
 	}
 
+	console.log('Checking for things in open containers and surfaces...');
 	// Include items in open containers and on surfaces
-	for (const key in everything) {
-		const item = everything[key];
+	for (const key of everything) {
+		const item = this.GetObject(key);
 		if (visibleObjects.includes(item.loc)) {
 			if (item.isOpen === true && (item.visible === undefined || item.visible)) {
 				visibleObjects.push(item);
@@ -758,6 +805,10 @@ module.exports.scopeVisible = () => {
 	return visibleObjects;
 };
 
+module.exports.inScope = (obj) => {
+	return this.scopeVisible(pov || qgame.players[interaction.user.username]).includes(obj);
+};
+
 module.exports.scopeVisibleNotHeld = () => {
 	const visibleObjects = this.scopeVisible();
 	const heldObjects = this.getInventory(qgame, pov);
@@ -765,22 +816,26 @@ module.exports.scopeVisibleNotHeld = () => {
 };
 
 module.exports.scopeInventory = () => {
-	const visibleObjects = this.scopeVisible();
+	const visibleObjects = this.scopeVisible(pov);
 	const heldObjects = this.getInventory(qgame, pov);
 	return visibleObjects.filter(obj => heldObjects.includes(obj.name));
 };
 
-module.exports.getAttribute = async (obj, attr) => {
+module.exports.getAttribute = (obj, attr) => {
 	const objAttr = {};
-	if (obj[attr]) {
+	// console.log('getAttribute: obj:', obj);
+	// console.log('getAttribute: attr:', attr);
+	if (typeof obj[attr] != 'undefined') {
 		objAttr.type = typeof obj[attr];
+		// console.log('objAttr.type:', objAttr.type);
 		if (objAttr.type === 'object') {
 			objAttr.type = obj[attr].type;
-			objAttr.attr = obj[attr].attr;
+			objAttr.attr = obj[attr]['attr'];
 		}
 		else {
 			objAttr.attr = obj[attr];
 		}
+		// console.log('objAttr:', objAttr);
 		return objAttr;
 	}
 	return null;
@@ -788,12 +843,58 @@ module.exports.getAttribute = async (obj, attr) => {
 
 module.exports.getGamePov = async () => {
 	const qgame = await this.loadGame('./game.json', interaction);
+	global.qgame = qgame;
 	console.log('interaction.user.username', interaction.user.username);
 	const povName = interaction.user.username;
 	if (Object.keys(qgame.players).indexOf(povName) < 0) {
-		await interaction.reply({ content: this.template.mustStartGame, flags: 64 });
+		await this.msg(this.template.mustStartGame);
 		return;
 	}
 	const pov = qgame.players[povName];
+	global.pov = pov;
 	return { qgame: qgame, pov: pov };
+};
+
+module.exports.thisCommand = async (interaction) => {
+	const povName = interaction.user.globalName || interaction.user.username;
+	const commandName = interaction.commandName;
+
+	// Extract options dynamically, handling 0-2 options with arbitrary names
+	const optionsString = interaction.options.data
+		.map(option => `**${option.name}:** ${option.value}`)
+		.join(' ');
+
+	// Construct the final string
+	const commandString = `### ${povName}\n**>** \`/${commandName}\` ${optionsString}`.trim();
+
+	// console.log(commandString);
+	return commandString;
+};
+
+const { EmbedBuilder } = require('discord.js');
+
+module.exports.addThisCommandToTranscriptAsEmbed = async (interaction, transcriptChannel) => {
+	if (typeof transcriptChannel == 'undefined') transcriptChannel = '1354201798029606974';
+	const povName = interaction.user.globalName || interaction.user.username;
+	const commandName = interaction.commandName;
+
+	const optionsString = interaction.options.data
+		.map(option => `**${option.name}:** ${option.value}`)
+		.join(' ');
+
+	const commandString = `**>** \`/${commandName}\` ${optionsString}`.trim();
+	const userProfileURL = `https://discord.com/users/${interaction.user.id}`;
+
+	// Create the embed
+	const embed = new EmbedBuilder()
+		.setAuthor({ name: povName, iconURL: interaction.user.displayAvatarURL(), url: userProfileURL })
+		.setDescription(commandString)
+		.setColor(0x00AE86)
+		.setTimestamp()
+		.setFooter({ text: 'Command processed by: DUM Parser 🤖' });
+
+	// Send embed to the interaction channel
+	// await interaction.followUp({ embeds: [embed] });
+
+	await this.addToTranscriptChannel(embed);
 };

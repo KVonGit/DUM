@@ -24,6 +24,9 @@ module.exports = {
 			return;
 		}
 
+		console.log('q.scopeVisible', q.scopeVisible(pov));
+		console.log('q.scopeInventory', q.scopeInventory(pov));
+		console.log('q.inScope(obj)', q.inScope(obj));
 		if ((obj.loc != pov.loc && obj.loc != pov.name) || obj.visible === false) {
 			await interaction.reply({ content: q.template.cantSee(q.GetDisplayName(obj)), flags: 64 });
 			return;

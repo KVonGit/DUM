@@ -30,57 +30,62 @@ module.exports = {
 			return;
 		}
 
-		let wasTaken = false;
-		// TODO: Handle scope!
+		const visibleObjects = q.scopeVisible(pov);
+		// console.log('visibleObjects:', visibleObjects);
+		if (!visibleObjects.includes(obj)) {
+			await interaction.reply({ content: q.template.cantSee(obj.name), flags: 64 });
+			return;
+		}
 
-		// Handle object-specific take logic
-		if (obj.takescript) {
-			eval(obj.takescript);
-			wasTaken = obj.loc === pov.name;
+		let wasTaken = false;
+
+		const { type, attr } = q.getAttribute(obj, 'take');
+		// console.log('type:', type);
+		// console.log('attr:', attr);
+		if (typeof type == 'undefined') {
+			// console.log('take: type is undefined');
+			await interaction.reply({ content: q.template.cantTake(obj.name), flags: 64 });
+			return;
 		}
-		else if (obj.take === true) {
-			obj.loc = pov.name;
-			wasTaken = true;
-		}
-		else if (obj.take?.type) {
-			switch (obj.take.type) {
-			case 'string':
-				await interaction.reply({ content: obj.take.attr, flags: 64 });
-				break;
-			case 'boolean':
-				if (obj.take.attr) {
-					obj.loc = pov.name;
-					wasTaken = true;
-				}
-				else {
-					await interaction.reply({ content: q.template.cantTake(obj.name), flags: 64 });
-				}
-				break;
-			case 'script':
-				eval(obj.take.attr);
-				wasTaken = obj.loc === pov.name;
-				break;
-			default:
-				await interaction.reply({ content: q.template.cantTake(obj.name), flags: 64 });
-				break;
+		if (type === 'boolean') {
+			if (attr) {
+				obj.loc = pov.name;
+				wasTaken = true;
+			}
+			else {
+				await q.msg(q.template.cantTake(obj.name));
+				return;
 			}
 		}
+		else if (type === 'string') {
+			await q.msg(attr);
+			return;
+		}
+		else if (type === 'script') {
+			// eslint-disable-next-line prefer-const
+			let replyString = '';
+			await eval(attr);
+			await q.msg(replyString || q.template.cantTake(obj.name));
+			return;
+		}
 		else {
-			await interaction.reply({ content: q.template.cantTake(obj.name), flags: 64 });
+			await q.msg(q.template.cantTake(obj.name));
+			return;
 		}
 
 		// Handle successful take
-		if (wasTaken) {
-			await interaction.reply(`${pov.alias} took ${obj.name}.`);
+		if (wasTaken && !interaction.replied) {
+			// console.log('take: wasTaken and !interaction.replied');
+			await q.msg(`${pov.alias} took ${obj.name}.`, false, false);
 			const successMessage = obj.takemsg || q.template.taken;
-			await interaction.followUp({ content: successMessage, flags: 64 });
+			await q.msg(successMessage);
 
 			try {
 				await q.saveGame('./game.json', qgame);
 			}
 			catch (err) {
 				console.error('Error saving game data:', err);
-				await interaction.followUp({ content: 'Failed to save game data.', flags: 64 });
+				await q.msg('Failed to save game data.');
 			}
 		}
 	},
