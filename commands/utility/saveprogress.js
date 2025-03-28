@@ -11,6 +11,6 @@ module.exports = {
 		if (!pov) return;
 		global.qgame = qgame;
 		const s = q.template.noSave;
-		await msg(s);
+		await q.msg(s);
 	},
 };
