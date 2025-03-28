@@ -5,6 +5,8 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('west')
 		.setDescription('Go west'),
+	aliases: ['w'],
+	usage: '/west',
 	async execute(interaction) {
 		const { qgame, pov } = await q.getGamePov();
 		if (!pov) return;

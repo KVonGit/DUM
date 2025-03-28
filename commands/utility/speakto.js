@@ -5,10 +5,10 @@ const q = require('../../engine/q');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('speakto')
-		.setDescription('Speakto someone (or something?)')
+		.setDescription('Speak to someone (or something?)')
 		.addStringOption(option =>
 			option.setName('npc')
-				.setDescription('The npc you wish to which you wish to speak')
+				.setDescription('The npc with which you wish to speak')
 				.setRequired(true)),
 	async execute(interaction) {
 		const { qgame, pov } = await q.getGamePov();

@@ -3,11 +3,11 @@ const q = require('../../engine/q');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('revive')
-		.setDescription('Revive someone!')
+		.setName('weigh')
+		.setDescription('Weigh something')
 		.addStringOption(option =>
-			option.setName('npc')
-				.setDescription('The npc you wish to revive')
+			option.setName('object')
+				.setDescription('The object you wish to weigh')
 				.setRequired(true)),
 	async execute(interaction) {
 		const { qgame, pov } = await q.getGamePov();
@@ -23,20 +23,18 @@ module.exports = {
 			await q.msg(`No such object ("${objectName}")!`);
 			return;
 		}
-		if (obj.loc !== pov.loc && obj.loc !== pov.name) {
+		if (!q.inScope(obj)) {
 			await q.msg(q.template.cantSee(obj.name));
 			return;
 		}
-		if (obj.name !== 'Bob') {
-			await q.msg(`You can't revive ${q.GetDisplayName(obj)}.`);
+		if (typeof obj.weight !== 'number') {
+			await q.msg(q.GetDisplayName(obj, true) + ' is not something you can weigh.');
 			return;
 		}
-		if (q.GetObject('defibrillator').loc !== pov.name) {
-			await q.msg('You don\'t have a way to do that!');
-			return;
-		}
-		// console.log('Reviving Bob...');
-		global.pov = pov;
-		await q.reviveBobProc();
+		let s = q.GetDisplayName(obj, true) + ' weigh';
+		s += obj.plural !== true ? '' : 's';
+		s += ' ' + obj.weight + '.';
+		await q.msg(s);
+
 	},
 };

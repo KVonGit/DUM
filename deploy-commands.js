@@ -18,6 +18,13 @@ for (const folder of commandFolders) {
 		const command = require(filePath);
 		if ('data' in command && 'execute' in command) {
 			commands.push(command.data.toJSON());
+			// Handle aliases by creating additional commands for each alias
+			if (command.aliases) {
+				for (const alias of command.aliases) {
+					const aliasCommand = command.data.setName(alias).toJSON();
+					commands.push(aliasCommand);
+				}
+			}
 		}
 		else {
 			console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);

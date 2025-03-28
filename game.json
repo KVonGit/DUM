@@ -22,12 +22,12 @@
                 ],
                 "take": {
                     "type": "script",
-                    "attr": "obj.loc = pov.name; console.log(obj.name + \" TAKEN\");"
+                    "attr": "replyString  = 'You pick up the paper and fold it underneath your arm.'; obj.loc = pov.name; console.log(obj.name + \" TAKEN\");"
                 },
                 "takemsg": "You fold the newspaper and place it neatly under your arm.",
                 "read": "There's no time for reading the paper.",
                 "look": "It's yesterday's edition, but there's an article about Quest Viva in it.",
-                "loc": "Kitchen",
+                "loc": "kv_online",
                 "alt": [
                     "paper"
                 ]
@@ -369,6 +369,14 @@
                 "dateJoined": 1743029210827,
                 "commandHistory": [],
                 "loc": "Lounge"
+            },
+            "kv_online": {
+                "name": "kv_online",
+                "alias": "KV",
+                "userName": "kv_online",
+                "dateJoined": 1743129287007,
+                "commandHistory": [],
+                "loc": "Kitchen"
             }
         },
         "timers": {},

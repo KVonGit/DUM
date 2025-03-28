@@ -9,6 +9,7 @@ module.exports = {
 			option.setName('object')
 				.setDescription('The object you wish to take')
 				.setRequired(true)),
+	aliases: ['get'],
 	async execute(interaction) {
 		const { qgame, pov } = await q.getGamePov();
 		if (!pov) return;
@@ -40,8 +41,8 @@ module.exports = {
 		const { type, attr } = q.getAttribute(obj, 'take');
 		// console.log('type:', type);
 		// console.log('attr:', attr);
-		if (!type) {
-			// console.log('take: type is undefined');
+		if (typeof type === 'undefined') {
+			 console.log('take: type is undefined');
 			await q.msg(obj.takemsg || q.template.cantTake(q.GetDisplayName(obj)));
 			return;
 		}
@@ -63,7 +64,11 @@ module.exports = {
 			// eslint-disable-next-line prefer-const
 			let replyString = '';
 			await eval(attr);
-			await q.msg(replyString || q.template.cantTake(q.GetDisplayName(obj)));
+			if (obj.loc === pov.name) {
+				await q.msg(q.GetDisplayName(pov) + ' took ' + q.GetDisplayName(obj) + '.', false, false);
+			}
+			await q.msg(replyString || q.template.cantTake(q.GetDisplayName(obj)), true, true);
+			await q.saveGame('./game.json', qgame);
 			return;
 		}
 		else {
@@ -77,7 +82,6 @@ module.exports = {
 			await q.msg(`${pov.alias} took ${q.GetDisplayName(obj)}.`, false, false);
 			const successMessage = obj.takemsg || q.template.taken;
 			await q.msg(successMessage);
-
 			try {
 				await q.saveGame('./game.json', qgame);
 			}

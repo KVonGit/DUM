@@ -10,6 +10,7 @@ module.exports = {
 			option.setName('object')
 				.setDescription('The object you wish to examine')
 				.setRequired(true)),
+	aliases: ['lookat', 'x'],
 	async execute(interaction) {
 		const { qgame, pov } = await q.getGamePov();
 		if (!pov) return;

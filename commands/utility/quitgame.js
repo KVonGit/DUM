@@ -5,6 +5,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('quitgame')
 		.setDescription('Quit playing the game.'),
+	aliases: ['quit', 'q', 'leavegame', 'exitgame'],
 	async execute(interaction) {
 		global.interaction = interaction;
 		const { qgame, pov } = await q.getGamePov();

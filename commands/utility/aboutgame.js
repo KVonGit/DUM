@@ -5,6 +5,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('aboutgame')
 		.setDescription('Get information about the game.'),
+	aliases: ['info', 'about', 'gameinfo', 'version'],
 	async execute(interaction) {
 		const { qgame, pov } = await q.getGamePov();
 		if (!pov) return;
