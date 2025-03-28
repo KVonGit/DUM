@@ -4,7 +4,7 @@ const q = require('../../engine/q');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('hint')
-		.setDescription('DM me!'),
+		.setDescription('Help me!'),
 	async execute(interaction) {
 		global.interaction = interaction;
 		const { qgame, pov } = await q.getGamePov();
