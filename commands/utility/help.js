@@ -13,6 +13,6 @@ module.exports = {
 		global.qgame = qgame;
 		global.pov = pov;
 		const s = 'Enter `/` to see a list of available commands.';
-		await msg(s);
+		await q.msg(s);
 	},
 };
