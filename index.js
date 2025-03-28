@@ -68,7 +68,7 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 	try {
 		await command.execute(interaction);
-		if (typeof qgame !== 'undefined' && typeof pov !== 'undefined' && qgame.suppressTurnScripts !== false) await require('./engine/q').runTurnScripts();
+		if (interaction.commandName != 'quitgame' && typeof qgame != 'undefined' && typeof pov != 'undefined' && qgame.suppressTurnScripts !== false) await require('./engine/q').runTurnScripts();
 	}
 	catch (error) {
 		console.error('eRror', error);
