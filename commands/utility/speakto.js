@@ -11,8 +11,6 @@ module.exports = {
 				.setDescription('The npc with which you wish to speak')
 				.setRequired(true)),
 	async execute(interaction) {
-		const { qgame, pov } = await q.getGamePov();
-		if (!pov) return;
 		const npc = interaction.options.getString('npc');
 		if (typeof npc == 'undefined') {
 			await q.msg('\'' + npc + '\' not defined.');

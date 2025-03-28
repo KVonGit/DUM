@@ -8,11 +8,6 @@ module.exports = {
 	aliases: ['quit', 'q', 'leavegame', 'exitgame'],
 	async execute(interaction) {
 		global.interaction = interaction;
-		const { qgame, pov } = await q.getGamePov();
-		if (!pov) {
-			console.warning('no pov returned to quitgame.js');
-			return;
-		}
 		const alias = pov.alias;
 		if (Object.keys(qgame.players).indexOf(pov.name) > -1) {
 			// get inventory and drop it in the location of the player

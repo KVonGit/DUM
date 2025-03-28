@@ -8,10 +8,6 @@ module.exports = {
 	aliases: ['z'],
 	async execute(interaction) {
 		global.interaction = interaction;
-		const { qgame, pov } = await q.getGamePov();
-		if (!pov) return;
-		global.qgame = qgame;
-		global.pov = pov;
 		const s = 'Time passes.';
 		await q.msg(s);
 	},

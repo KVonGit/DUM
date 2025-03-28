@@ -7,8 +7,7 @@ module.exports = {
 		.setDescription('See the current active players in the game.'),
 	async execute(interaction) {
 		global.interaction = interaction;
-		const { qgame, pov } = await q.getGamePov();
-		if (!pov) return;
+		// TODO: List location, too?
 		const s = '### Now Playing:\n' + q.GetObjectListAsString(q.AllPlayers(qgame));
 		await q.msg(s);
 	},

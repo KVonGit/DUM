@@ -8,8 +8,6 @@ module.exports = {
 	aliases: ['w'],
 	usage: '/west',
 	async execute(interaction) {
-		const { qgame, pov } = await q.getGamePov();
-		if (!pov) return;
 		const exitName = 'west';
 		// console.log('exitName:', exitName);
 		const loc = qgame.locations[pov.loc];

@@ -7,8 +7,6 @@ module.exports = {
 		.setDescription('??????'),
 	async execute(interaction) {
 		global.interaction = interaction;
-		const { qgame, pov } = await q.getGamePov();
-		if (!pov) return;
 		global.qgame = qgame;
 		if (pov.loc === 'nowhere') {
 			pov.loc = 'Lounge';

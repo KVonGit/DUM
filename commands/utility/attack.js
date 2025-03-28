@@ -12,8 +12,6 @@ module.exports = {
 				.setDescription('The target you wish to attack')
 				.setRequired(true)),
 	async execute(interaction) {
-		const { qgame, pov } = await q.getGamePov();
-		if (!pov) return;
 		const object = interaction.options.getString('target');
 		if (typeof object == 'undefined') {
 			await q.msg('\'' + object + '\' not defined.');

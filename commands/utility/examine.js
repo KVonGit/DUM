@@ -12,8 +12,6 @@ module.exports = {
 				.setRequired(true)),
 	aliases: ['lookat', 'x'],
 	async execute(interaction) {
-		const { qgame, pov } = await q.getGamePov();
-		if (!pov) return;
 		const object = interaction.options.getString('object');
 		if (typeof object == 'undefined') {
 			await q.msg('\'object\' not defined.');

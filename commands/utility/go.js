@@ -10,8 +10,6 @@ module.exports = {
 				.setDescription('The direction (or location to which) you wish to go')
 				.setRequired(true)),
 	async execute(interaction) {
-		const { qgame, pov } = await q.getGamePov();
-		if (!pov) return;
 		const exitName = interaction.options.getString('direction');
 		if (!exitName) {
 			await q.msg('\'direction\' not defined.');

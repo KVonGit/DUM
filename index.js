@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 const { token } = require('./config.json');
+const q = require('./engine/q');
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -44,6 +45,7 @@ Object.defineProperty(String.prototype, 'capFirst', {
 // The distinction between `client: Client<boolean>` and `readyClient: Client<true>` is important for TypeScript developers.
 // It makes some properties non-nullable.
 client.once(Events.ClientReady, readyClient => {
+	global.dumEmoji = client.emojis.cache.get('1355249879101870282');
 	console.log(`Ready! Logged in as ${readyClient.user.tag}`);
 });
 
@@ -59,7 +61,7 @@ client.on(Events.InteractionCreate, async interaction => {
 		await interaction.reply({ content: 'Please use this command in the #game channel.', flags: 64 });
 		return;
 	}
-	global.interaction = interaction;
+
 	const command = interaction.client.commands.get(interaction.commandName);
 
 	if (!command) {
@@ -67,7 +69,18 @@ client.on(Events.InteractionCreate, async interaction => {
 		return;
 	}
 	try {
+		global.interaction = interaction;
+		if (interaction.commandName == 'startgame') {
+			await command.execute(interaction);
+			return;
+		}
+		const { qgame, pov } = await q.getGamePov();
+		if (!pov) return;
+		await q.addThisCommandToTranscriptAsEmbed(interaction);
 		await command.execute(interaction);
+		// console.log('toAdd:', q.thisCommand(interaction));
+		// await q.addToTranscriptChannel(q.thisCommand(interaction));
+		// await q.addThisCommandToTranscriptAsEmbed(interaction);
 		if (interaction.commandName != 'quitgame' && typeof qgame != 'undefined' && typeof pov != 'undefined' && qgame.suppressTurnScripts !== false) await require('./engine/q').runTurnScripts();
 	}
 	catch (error) {
@@ -81,7 +94,7 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 });
 
-
+/*
 const { Partials } = require('discord.js');
 
 const clientSetterUpper = new Client({
@@ -184,3 +197,4 @@ clientSetterUpper.on('messageReactionRemove', async (reaction, user) => {
 });
 
 clientSetterUpper.login(token);
+*/

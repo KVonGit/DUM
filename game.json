@@ -127,7 +127,7 @@
                     "container",
                     "closedcontainer"
                 ],
-                "isOpen": false,
+                "isOpen": true,
                 "open": true,
                 "close": false,
                 "listChildren": true
@@ -135,7 +135,7 @@
             "defibrillator": {
                 "name": "defibrillator",
                 "prefix": "a",
-                "loc": "box",
+                "loc": "kv_online",
                 "look": "An ordinary defibrillator.",
                 "take": true
             },
@@ -148,7 +148,7 @@
             "banana": {
                 "name": "banana",
                 "prefix": "a",
-                "loc": "table",
+                "loc": "kv_online",
                 "look": "It's a banana.",
                 "take": true,
                 "inherit": [
@@ -267,7 +267,7 @@
                 ],
                 "listChildren": true,
                 "listchildrenprefix": "In the fridge you find ",
-                "isOpen": false,
+                "isOpen": true,
                 "close": true,
                 "open": true,
                 "loc": "Kitchen",
@@ -376,7 +376,7 @@
                 "userName": "kv_online",
                 "dateJoined": 1743129287007,
                 "commandHistory": [],
-                "loc": "Kitchen"
+                "loc": "Lounge"
             }
         },
         "timers": {},

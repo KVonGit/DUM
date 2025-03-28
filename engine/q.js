@@ -146,7 +146,7 @@ module.exports.msg = async (s, isPrivate = true, isFollowUp = false) => {
 		// console.log('msg: private follow up');
 		await interaction.followUp({ content: s, flags: 64 });
 	}
-	console.log(this.thisCommand(interaction));
+	// console.log(this.thisCommand(interaction));
 	// const sBuilder = [];
 	// sBuilder.push(this.GetDisplayName(pov) + ' > ' + interaction.message.content + '\n' + s);
 	// await this.addToTranscriptChannel(sBuilder.join(''));
@@ -384,11 +384,11 @@ module.exports.doGo = async (qgame, pov, loc, exitName, interaction) => {
 
 	// Get the location description and respond
 	const locationDescription = this.getLocationDescription(qgame, pov);
-	await this.msg(`${pov.alias || pov.name} goes ${exitName}.`, false, true);
+	await this.msg(`${this.GetDisplayName(pov)} goes ${exitName}, to ${this.GetDisplayName(qgame.locations[pov.loc])}.`, false, true);
 	// await this.addToTranscriptChannel(`${pov.alias || pov.name} goes ${exitName}, to ${this.GetDisplayName(qgame.locations[pov.loc])}.`);
 	// await this.addToTranscriptChannel(this.thisCommand);
-	await this.addThisCommandToTranscriptAsEmbed(interaction);
-	await this.addToTranscriptChannel(`${pov.alias || pov.name} goes ${exitName}, to ${this.GetDisplayName(qgame.locations[pov.loc])}.`);
+	// await this.addThisCommandToTranscriptAsEmbed(interaction);
+	await this.addToTranscriptChannel(`> ${this.GetDisplayName(pov)} goes ${exitName}, to ${this.GetDisplayName(qgame.locations[pov.loc])}.`);
 	await this.msg(locationDescription);
 
 	// Save the game state
@@ -789,7 +789,7 @@ module.exports.scopeVisible = (pov) => {
 		const item = this.GetObject(key);
 		// console.log('item:', item);
 		// console.log('pov', pov);
-		if ((item.loc === pov.loc || item.loc === pov.name) && (typeof item.visible === 'undefined' || item.visible === true)) {
+		if ((item.loc === pov.loc || item.loc === pov.name) && item.visible !== false) {
 			// console.log('item is visible:', item.name);
 			visibleObjects.push(item);
 		}
@@ -800,11 +800,11 @@ module.exports.scopeVisible = (pov) => {
 	for (const key of everything) {
 		const obj = this.GetObject(key);
 		if (visibleObjects.includes(this.GetObject(obj.loc))) {
-			if (this.GetObject(obj.loc).isOpen === true && (typeof obj.visible === 'undefined' || obj.visible === true)) {
+			if (this.GetObject(obj.loc).isOpen === true && obj.visible !== false) {
 				// console.log('obj is visible:', obj.name);
 				visibleObjects.push(obj);
 			}
-			if (obj.inherit?.indexOf('surface') >= 0 && (typeof obj.visible === 'undefined' || obj.visible === true)) {
+			if (this.GetObject(obj.loc).inherit?.indexOf('surface') >= 0 && obj.visible !== false) {
 				// console.log('obj is visible:', obj.name);
 				visibleObjects.push(obj);
 			}
@@ -867,7 +867,7 @@ module.exports.getGamePov = async () => {
 	return { qgame: qgame, pov: pov };
 };
 
-module.exports.thisCommand = async (interaction) => {
+module.exports.thisCommand = (interaction) => {
 	const povName = interaction.user.username;
 	const commandName = interaction.commandName;
 
@@ -877,9 +877,9 @@ module.exports.thisCommand = async (interaction) => {
 		.join(' ');
 
 	// Construct the final string
-	const commandString = `${povName} @ ${new Date()}\n> /${commandName} ${optionsString}`.trim();
+	const commandString = povName + ' @ ' + new Date() + '\n> /' + commandName + ' ' + optionsString + ''.trim();
 
-	// console.log(commandString);
+	console.log('thisCommand:', commandString);
 	return commandString;
 };
 
@@ -903,7 +903,9 @@ module.exports.addThisCommandToTranscriptAsEmbed = async (interaction, transcrip
 		.setDescription(commandString)
 		.setColor(0x00AE86)
 		.setTimestamp()
-		.setFooter({ text: 'Command processed by: DUM Parser 🤖' });
+		// .setFooter({ text: 'Command processed by: DUM Parser 🤖' });
+		// .setFooter({ text: 'Command processed by: DUM Parser', iconURL: 'https://cdn.discordapp.com/emojis/1355249879101870282.png' });
+		.setFooter({ text: 'Command processed by: DUM Parser' });
 
 	// Send embed to the interaction channel
 	// await interaction.followUp({ embeds: [embed] });

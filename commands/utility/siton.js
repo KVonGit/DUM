@@ -11,8 +11,6 @@ module.exports = {
 				.setDescription('The object on which you wish to sit')
 				.setRequired(true)),
 	async execute(interaction) {
-		const { qgame, pov } = await q.getGamePov();
-		if (!pov) return;
 		const object = interaction.options.getString('object');
 		if (typeof object == 'undefined') {
 			await q.msg('\'object\' not defined.');
