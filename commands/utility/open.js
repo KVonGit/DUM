@@ -37,7 +37,7 @@ module.exports = {
 		}
 
 		// Handle objects that can be opened
-		if (obj.open === true || (obj.inherit && obj.inherit.indexOf('openable') >= 0)) {
+		if (obj.open === true || (obj.inherit && obj.inherit.indexOf('openable') >= 0 && typeof obj.open === 'undefined')) {
 			obj.isOpen = true;
 
 			// Send the appropriate open message
