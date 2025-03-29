@@ -70,17 +70,19 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 	try {
 		global.interaction = interaction;
+		global.gameResponseForTranscript = [];
 		if (interaction.commandName == 'startgame') {
 			await command.execute(interaction);
+			if (interaction.commandName != 'revive') await q.addThisCommandToTranscriptAsEmbed(interaction);
 			return;
 		}
 		const { qgame, pov } = await q.getGamePov();
 		if (!pov) return;
-		await q.addThisCommandToTranscriptAsEmbed(interaction);
+		// await q.addThisCommandToTranscriptAsEmbed(interaction);
 		await command.execute(interaction);
 		// console.log('toAdd:', q.thisCommand(interaction));
 		// await q.addToTranscriptChannel(q.thisCommand(interaction));
-		// await q.addThisCommandToTranscriptAsEmbed(interaction);
+		await q.addThisCommandToTranscriptAsEmbed(interaction);
 		if (interaction.commandName != 'quitgame' && typeof qgame != 'undefined' && typeof pov != 'undefined' && qgame.suppressTurnScripts !== false) await require('./engine/q').runTurnScripts();
 	}
 	catch (error) {

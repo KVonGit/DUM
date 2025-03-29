@@ -10,7 +10,7 @@ module.exports = {
 				.setDescription('The object you wish to weigh')
 				.setRequired(true)),
 	async execute(interaction) {
-		const objectName = interaction.options.getString('npc');
+		const objectName = interaction.options.getString('object');
 		if (!objectName) {
 			await q.msg('\'object\' not defined.');
 			return;
@@ -29,9 +29,9 @@ module.exports = {
 			await q.msg(q.GetDisplayName(obj, true) + ' is not something you can weigh.');
 			return;
 		}
-		let s = q.GetDisplayName(obj, true) + ' weigh';
-		s += obj.plural !== true ? '' : 's';
-		s += ' ' + obj.weight + '.';
+		let s = q.GetDisplayName(obj, true).capFirst() + ' weigh';
+		s += obj.plural === true ? '' : 's';
+		s += ' ' + obj.weight + ' grams.';
 		await q.msg(s);
 
 	},
