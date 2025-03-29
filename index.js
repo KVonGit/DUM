@@ -95,7 +95,7 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 });
 
-/*
+
 const { Partials } = require('discord.js');
 
 const clientSetterUpper = new Client({
@@ -198,4 +198,3 @@ clientSetterUpper.on('messageReactionRemove', async (reaction, user) => {
 });
 
 clientSetterUpper.login(token);
-*/
