@@ -16,7 +16,7 @@ module.exports = {
 			await q.msg('\'object\' not defined.');
 			return;
 		}
-		const obj = q.getObject(qgame, object);
+		const obj = q.GetObject(object);
 		if (obj == 'undefined') {
 			await q.msg('No such object ("' + object + '")!');
 			return;
@@ -25,32 +25,32 @@ module.exports = {
 			await q.msg(q.template.dontHave(q.GetDisplayName(obj)));
 			return;
 		}
+
 		if (typeof obj.use == 'undefined') {
-			const s = 'You can\'t do that.';
+			const s = 'You can\'t use ' + q.GetDisplayName(obj, true) + ' that way.';
 			await q.msg(s);
 			return;
 		}
-		const thisAttr = q.getAttribute(obj.use);
-		if (!thisAttr) {
-			const s = 'You can\'t do that.';
+		const { type, attr } = q.getAttribute(obj.use);
+		if (!type) {
+			const s = 'You can\'t use ' + q.GetDisplayName(obj, true) + ' that way.';
 			await q.msg(s);
 			return;
 		}
-		if (thisAttr.attr === true) {
-			obj.loc = 'nowhere';
+		if (attr === true) {
 			await q.msg('You use it, but nothing seems to happen.');
 		}
-		else if (thisAttr.type == 'string') {
-			await q.msg(thisAttr.attr);
+		else if (type == 'string') {
+			await q.msg(attr);
 		}
-		else if (thisAttr.type == 'script') {
+		else if (type == 'script') {
 			// eslint-disable-next-line prefer-const
 			let replyString = '';
-			await eval (thisAttr.attr);
-			await q.msg(replyString || 'You can\'t do that.');
+			await eval (attr);
+			await q.msg(replyString || 'ERROR: replyString is empty!');
 		}
 		else {
-			const s = 'You can\'t do that.';
+			const s = 'You can\'t use ' + q.GetDisplayName(obj, true) + ' that way.';
 			await q.msg(s);
 		}
 		await q.saveGame('./game.json', qgame);

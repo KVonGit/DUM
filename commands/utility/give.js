@@ -42,6 +42,10 @@ module.exports = {
 			await q.msg(q.template.dontHave(q.GetDisplayName(obj1)));
 			return;
 		}
+		if (obj2.name === pov.name || obj1.name === obj1.name || obj2.name === obj1.name) {
+			await q.msg('You can\'t do that.');
+			return;
+		}
 		if (typeof obj2.give !== 'undefined') {
 			// It's a "dictionary"
 			if (typeof obj2.give[obj1.name] !== 'undefined') {
@@ -68,6 +72,7 @@ module.exports = {
 		}
 		if (typeof obj2.userName !== 'undefined') {
 			// It's another player
+			await q.msg(q.GetDisplayName(pov).capFirst() + ' gives ' + q.GetDisplayName(obj1, true) + ' to ' + q.GetDisplayName(obj2, true) + '.', false, false);;
 			await q.msg('You give ' + q.GetDisplayName(obj1, true) + ' to ' + q.GetDisplayName(obj2, true) + '.');
 			obj1.loc = obj2.name;
 			await q.saveGame();

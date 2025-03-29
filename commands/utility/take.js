@@ -64,7 +64,7 @@ module.exports = {
 			let replyString = '';
 			await eval(attr);
 			if (obj.loc === pov.name) {
-				await q.msg(q.GetDisplayName(pov) + ' took ' + q.GetDisplayName(obj) + '.', false, false);
+				await q.msg(q.GetDisplayName(pov) + ' took ' + q.GetDisplayName(obj, true) + '.', false, false);
 			}
 			await q.msg(replyString || q.template.cantTake(q.GetDisplayName(obj)), true, true);
 			await q.saveGame('./game.json', qgame);

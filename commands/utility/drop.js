@@ -66,7 +66,7 @@ module.exports = {
 
 		async function finishUp(printMsg = false) {
 			if (printMsg) {
-				await q.msg(`${q.GetDisplayName(pov)} dropped ${q.GetDisplayName(obj)} in ${pov.loc}.`, false, false);
+				await q.msg(`${q.GetDisplayName(pov)} dropped ${q.GetDisplayName(obj, true)} in: **${pov.loc}**.`, false, false);
 				await q.msg(obj.dropmsg || q.template.dropped);
 			}
 			try {

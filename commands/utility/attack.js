@@ -14,29 +14,39 @@ module.exports = {
 	async execute(interaction) {
 		const object = interaction.options.getString('target');
 		if (typeof object == 'undefined') {
-			await q.msg('\'' + object + '\' not defined.');
+			await q.msg('\'object\' not defined.');
 			return;
 		}
-		if (typeof q.getObject(qgame, object) == 'undefined') {
+		if (typeof q.GetObject(object) == 'undefined') {
 			await q.msg('No such object ("' + object + '")!');
 			return;
 		}
-		const obj = q.getObject(qgame, object);
+		const obj = q.GetObject(object);
 		if (!q.inScope(obj)) {
 			await q.msg(q.template.cantSee(obj.name));
 			return;
 		}
 		if (typeof obj.attack == 'undefined') {
 			await q.msg(q.template.defaultAttack(q.GetDisplayName(obj)));
+			await q.saveGame('./game.json', qgame);
+			return;
 		}
-		else if (typeof obj.attack.type == 'undefined') {
+		const { type, attr } = q.getAttribute(obj, 'attack');
+		if (!type) {
 			await q.msg(q.template.defaultAttack(q.GetDisplayName(obj)));
+			await q.saveGame('./game.json', qgame);
+			return;
 		}
-		else if (obj.attack.type == 'string') {
-			await q.msg(`${pov.alias} has attacked ${q.GetDisplayName(obj)}!`, false, false);
-			await q.msg(obj.attack.attr, true, true);
+		if (attr === false) {
+			await q.msg(q.template.defaultAttack(q.GetDisplayName(obj)));
+			await q.saveGame('./game.json', qgame);
+			return;
 		}
-		else if (obj.attack.type == 'script') {
+		await q.msg(`${q.GetDisplayName(pov)} has attacked ${q.GetDisplayName(obj, true)}!`, false, false);
+		if (type == 'string') {
+			await q.msg(attr, true, true);
+		}
+		else if (type == 'script') {
 			// eslint-disable-next-line prefer-const
 			let responded = false;
 			await eval (obj.attack.attr);
@@ -48,5 +58,6 @@ module.exports = {
 			const s = q.template.defaultAttack(q.GetDisplayName(obj));
 			await q.msg(s);
 		}
+		await q.saveGame('./game.json', qgame);
 	},
 };

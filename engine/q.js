@@ -733,8 +733,9 @@ module.exports.openWindowProc = async () => {
 	await interaction.reply({ content: s, flags: 64 });
 };
 
-module.exports.reviveBobProc = async () => {
+module.exports.reviveBobProc = async (fromUseOn = false) => {
 	const Bob = this.GetObject('Bob');
+	if (fromUseOn) global.gameResponseForTranscript = [];
 	if (pov.loc === 'Lounge') {
 		if (Bob.alive !== true) {
 			await this.msg ('Using everything you\'ve learned from TV dramas, you attempt to revive Bob.\nMiraculously, the defibrillator lived up to its promise, and Bob is now alive again. He says his head feels kind of fuzzy.');
@@ -745,7 +746,7 @@ module.exports.reviveBobProc = async () => {
 			async function handleInteraction(interaction) {
 				if (!interaction.isCommand()) return;
 
-				const channelId = '1354201798029606974';
+				const channelId = '1352673869013586023';
 
 				try {
 					const channel = await interaction.client.channels.fetch(channelId);
@@ -769,14 +770,14 @@ module.exports.reviveBobProc = async () => {
 		else {
 			await this.msg ('You\'ve already revived Bob!');
 			await this.msg('...but, you decide the only thing to do in this game is to revive Bob, so you hit him with the juice again, despite his pleas.');
-			await this.msg ('...and Bob is now lying there, a little more still than before this turn!');
+			await this.msg ('...and Bob is now lying there, a lot more still than before this turn!');
 			Bob.alive = false;
 			const { ChannelType } = require('discord.js');
 
 			async function handleInteraction(interaction) {
 				if (!interaction.isCommand()) return;
 
-				const channelId = '1354201798029606974';
+				const channelId = '1352673869013586023';
 
 				try {
 					const channel = await interaction.client.channels.fetch(channelId);
@@ -801,6 +802,7 @@ module.exports.reviveBobProc = async () => {
 	else {
 		await this.msg ('Don\'t worry. The men in white coats will arrive to help you soon!');
 	}
+	await this.addThisCommandToTranscriptAsEmbed(interaction);
 };
 
 module.exports.scopeVisible = (pov) => {

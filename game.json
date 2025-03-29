@@ -149,7 +149,7 @@
                     "container",
                     "closedcontainer"
                 ],
-                "isOpen": true,
+                "isOpen": false,
                 "open": true,
                 "close": false,
                 "listChildren": true
@@ -157,9 +157,12 @@
             "defibrillator": {
                 "name": "defibrillator",
                 "prefix": "a",
-                "loc": "kv_online",
+                "loc": "box",
                 "look": "An ordinary defibrillator.",
-                "take": true
+                "take": true,
+                "alt": [
+                    "defib"
+                ]
             },
             "hammer": {
                 "name": "hammer",
@@ -170,7 +173,7 @@
             "banana": {
                 "name": "banana",
                 "prefix": "a",
-                "loc": "pertex1",
+                "loc": "table",
                 "look": "It's a banana.",
                 "take": true,
                 "inherit": [
@@ -201,7 +204,13 @@
                     "male"
                 ],
                 "useDefaultPrefix": false,
-                "alive": false
+                "alive": true,
+                "use": {
+                    "defibrillator": {
+                        "type": "script",
+                        "attr": "q.reviveBobProc(true); responded = true; "
+                    }
+                }
             },
             "TV": {
                 "name": "TV",
@@ -363,7 +372,7 @@
             "apple": {
                 "name": "apple",
                 "prefix": "an",
-                "loc": "cupboard",
+                "loc": "table",
                 "look": "It's a red apple.",
                 "take": true,
                 "inherit": [
@@ -489,6 +498,7 @@
                 "enabled": true,
                 "attr": "if (qgame.players[interaction.user.username].loc == qgame.objects[\"bee\"].loc) { q.msg(\"The bee buzzes past you. Pesky bee.\", true, true); }"
             }
-        }
+        },
+        "suppressTurnScripts": false
     }
 }
