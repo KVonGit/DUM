@@ -22,12 +22,11 @@
                 ],
                 "take": {
                     "type": "script",
-                    "attr": "replyString  = 'You pick up the paper and fold it underneath your arm.'; obj.loc = pov.name; console.log(obj.name + \" TAKEN\");"
+                    "attr": "replyString  = 'You fold the newspaper and place it neatly under your arm.'; obj.loc = pov.name;"
                 },
-                "takemsg": "You fold the newspaper and place it neatly under your arm.",
                 "read": "There's no time for reading the paper.",
                 "look": "It's yesterday's edition, but there's an article about Quest Viva in it.",
-                "loc": "kv_online",
+                "loc": "table",
                 "alt": [
                     "paper"
                 ]
@@ -45,7 +44,8 @@
                     "attr": "It's too heavy to take."
                 },
                 "inherit": [
-                    "surface"
+                    "surface",
+                    "container"
                 ],
                 "surfacePrefix": "on",
                 "listChildren": true,
@@ -53,7 +53,7 @@
             },
             "cat": {
                 "name": "cat",
-                "loc": "table",
+                "loc": "sofa",
                 "prefix": "a",
                 "look": "It's an orange tabby cat, sitting on the table, looking right back at you.",
                 "attack": {
@@ -117,7 +117,11 @@
                     "flooring",
                     "ground"
                 ],
-                "loc": "Lounge"
+                "loc": "Lounge",
+                "take": {
+                    "type": "string",
+                    "attr": "Yeah, right. You can't take the carpet."
+                }
             },
             "wallpaper": {
                 "name": "wallpaper",
@@ -126,7 +130,11 @@
                 "look": "The wallpaper is very eye-pleasing. You could look at it repeatedly, although it would accomplish very little.",
                 "alt": [
                     "wall"
-                ]
+                ],
+                "take": {
+                    "type": "string",
+                    "attr": "You can't take the wallpaper. It's glued to the wall."
+                }
             },
             "box": {
                 "name": "box",
@@ -136,7 +144,7 @@
                     "type": "script",
                     "attr": "replyString = `It's a small box, currently ${obj.isOpen ? 'open' : 'closed'}.`;"
                 },
-                "take": true,
+                "take": "You pick it up, decide it's too awkward to carry, and put it back down.",
                 "inherit": [
                     "container",
                     "closedcontainer"
@@ -162,7 +170,7 @@
             "banana": {
                 "name": "banana",
                 "prefix": "a",
-                "loc": "kv_online",
+                "loc": "pertex1",
                 "look": "It's a banana.",
                 "take": true,
                 "inherit": [
@@ -176,6 +184,7 @@
             "Bob": {
                 "name": "Bob",
                 "loc": "Lounge",
+                "take": "Bob isn't the kind of guy you can carry around.",
                 "look": {
                     "type": "script",
                     "attr": "replyString = `Bob is ${obj.alive !== true ? 'lying on the floor, a lot more still than usual' : 'sitting up, appearing to feel somewhat under the weather'}.`;"
@@ -215,6 +224,10 @@
                 "watch": {
                     "type": "script",
                     "attr": "qOutput = (\"You watch for a few minutes\");      if (obj.isSwitchedOn) { qOutput += \". You’ve always loved watching westerns!\";    } else { qOutput += \", thinking that the latest episode of what they call ‘Star Trek’ these days is even more boring than usual. You then realise that the TV is in fact switched off.\"; }"
+                },
+                "take": {
+                    "type": "string",
+                    "attr": "You can't take the TV. It's too heavy."
                 }
             },
             "sofa": {
@@ -225,9 +238,17 @@
                     "couch"
                 ],
                 "inherit": [
-                    "surface"
+                    "surface",
+                    "container"
                 ],
-                "loc": "Lounge"
+                "loc": "Lounge",
+                "take": {
+                    "type": "string",
+                    "attr": "You can't take the sofa. It's too heavy."
+                },
+                "prefix": "a",
+                "listChildren": true,
+                "listchildrenprefix": "On it, you see"
             },
             "window": {
                 "name": "window",
@@ -241,17 +262,22 @@
                     "type": "script",
                     "attr": "q.openWindowProc();"
                 },
-                "isOpen": true,
+                "isOpen": false,
                 "close": true,
                 "inherit": [
                     "openable"
-                ]
+                ],
+                "take": {
+                    "type": "string",
+                    "attr": "That seems to be fixed in place."
+                }
             },
             "bee": {
                 "name": "bee",
                 "prefix": "the",
-                "loc": "Kitchen",
+                "loc": "nowhere",
                 "look": "It's buzzing around the room.",
+                "take": "You can't catch it!",
                 "attack": {
                     "type": "string",
                     "attr": "You can't attack the bee. It's too fast."
@@ -264,6 +290,15 @@
                 "name": "bin",
                 "scenery": true,
                 "look": "There's no time for examining trash.",
+                "take": "Eww... No.",
+                "prefix": "the",
+                "inherit": [
+                    "container"
+                ],
+                "listChildren": true,
+                "listchildrenprefix": "In the bin you find ",
+                "isOpen": true,
+                "close": false,
                 "alt": [
                     "trash can",
                     "garbage bin",
@@ -279,9 +314,13 @@
                     "closedcontainer",
                     "container"
                 ],
+                "take": {
+                    "type": "string",
+                    "attr": "You can't take the fridge. It's too heavy."
+                },
                 "listChildren": true,
                 "listchildrenprefix": "In the fridge you find ",
-                "isOpen": true,
+                "isOpen": false,
                 "close": true,
                 "open": true,
                 "loc": "Kitchen",
@@ -301,6 +340,7 @@
                     "closedcontainer",
                     "container"
                 ],
+                "take": "That's fixed in place.",
                 "isOpen:": false,
                 "open": true,
                 "close": true,
@@ -339,7 +379,7 @@
                 "usedefaultprefix": false,
                 "look": "A can of Squiffy beer, with “XanMag” written all over it.",
                 "prefix": "XanMag's",
-                "takemsg": "XanMag probably wouldn't like that.",
+                "take": "XanMag probably wouldn't like that.",
                 "loc": "fridge",
                 "open": "That belongs to XanMag!",
                 "alt": [
@@ -386,7 +426,7 @@
                 "prefix": "a",
                 "weight": 4,
                 "take": true,
-                "loc": "kv_online",
+                "loc": "cupboard",
                 "alt": [
                     "sugar",
                     "sugar packet",
@@ -433,7 +473,13 @@
                 "userName": "kv_online",
                 "dateJoined": 1743129287007,
                 "commandHistory": [],
-                "loc": "Lounge"
+                "loc": "Lounge",
+                "attack": "You attack KV. (He deserves it.)",
+                "speakto": {
+                    "type": "string",
+                    "attr": "“Hello,” says KV."
+                },
+                "look": "KV is looking right back at YOU!"
             }
         },
         "timers": {},

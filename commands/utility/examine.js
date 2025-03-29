@@ -67,7 +67,7 @@ module.exports = {
 
 			// If there are children, list them
 			let n = obj.inherit.indexOf('surface') >= 0 ? 'On ' : 'In ';
-			n += q.GetDisplayName(obj).replace(/^a /, 'the ') + ', you see ';
+			n += q.GetDisplayName(obj).replace(/^a /, 'the ') + ', you see';
 			if (obj.inherit.indexOf('container') >= 0 && (obj.isOpen === false && !obj.transparent)) {
 				return;
 			}
@@ -77,7 +77,7 @@ module.exports = {
 				if (typeof obj.listchildrenprefix === 'string') {
 					n = obj.listchildrenprefix;
 				}
-				n += q.GetDirectChildrenAsString(obj);
+				n += ' ' + q.GetDirectChildrenAsString(obj) + '.';
 				await q.msg(n, true, true);
 			}
 		}

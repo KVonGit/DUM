@@ -55,7 +55,7 @@ module.exports.loadGame = async (filePath = './game.json') => {
 	});
 };
 
-module.exports.saveGame = async (filePath = './game.json', qgame = qgame) => {
+module.exports.saveGame = async (filePath = './game.json', qgame = global.qgame) => {
 	return new Promise((resolve, reject) => {
 		fs.writeFile(filePath, JSON.stringify({ aslj: qgame }, null, 4), function(err) {
 			if (err) {
