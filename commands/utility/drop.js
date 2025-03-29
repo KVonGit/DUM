@@ -10,8 +10,6 @@ module.exports = {
 				.setDescription('The object you wish to drop')
 				.setRequired(true)),
 	async execute(interaction) {
-		const { qgame, pov } = await q.getGamePov();
-		if (!pov) return;
 		const objectName = interaction.options.getString('object');
 		if (!objectName) {
 			await q.msg('\'object\' not defined.');

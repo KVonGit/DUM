@@ -10,8 +10,6 @@ module.exports = {
 				.setDescription('The npc you wish to revive')
 				.setRequired(true)),
 	async execute(interaction) {
-		const { qgame, pov } = await q.getGamePov();
-		if (!pov) return;
 		const objectName = interaction.options.getString('npc');
 		if (!objectName) {
 			await q.msg('\'object\' not defined.');

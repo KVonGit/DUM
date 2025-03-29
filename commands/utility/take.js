@@ -11,8 +11,6 @@ module.exports = {
 				.setRequired(true)),
 	aliases: ['get'],
 	async execute(interaction) {
-		const { qgame, pov } = await q.getGamePov();
-		if (!pov) return;
 		const objectName = interaction.options.getString('object');
 		if (!objectName) {
 			await q.msg('\'object\' not defined.');
@@ -27,12 +25,13 @@ module.exports = {
 		}
 
 		if (obj.loc === pov.name) {
-			await q.msg(q.template.alreadyHave(obj.name));
+			await q.msg(q.template.alreadyHave(q.GetDisplayName(obj, true)));
 			return;
 		}
 
 		if (!q.inScope(obj)) {
-			await q.msg(q.template.cantSee(obj.name));
+			console.log('take: inScope is false', obj.loc);
+			await q.msg(q.template.cantSee(q.GetDisplayName(obj, true)));
 			return;
 		}
 

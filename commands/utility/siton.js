@@ -11,14 +11,12 @@ module.exports = {
 				.setDescription('The object on which you wish to sit')
 				.setRequired(true)),
 	async execute(interaction) {
-		const { qgame, pov } = await q.getGamePov();
-		if (!pov) return;
 		const object = interaction.options.getString('object');
 		if (typeof object == 'undefined') {
 			await q.msg('\'object\' not defined.');
 			return;
 		}
-		if (Object.keys(qgame.players).indexOf(povName) < 0) {
+		if (Object.keys(qgame.players).indexOf(pov.name) < 0) {
 			await q.msg(q.template.mustStartGame);
 			return 3;
 		}

@@ -10,8 +10,6 @@ module.exports = {
 				.setDescription('The object you wish to open')
 				.setRequired(true)),
 	async execute(interaction) {
-		const { qgame, pov } = await q.getGamePov();
-		if (!pov) return;
 		const object = interaction.options.getString('object');
 		if (!object) {
 			await q.msg('\'object\' not defined.');

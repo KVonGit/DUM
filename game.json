@@ -67,7 +67,21 @@
                 },
                 "inherit": [
                     "animal"
-                ]
+                ],
+                "pet": {
+                    "type": "string",
+                    "attr": "You pet the cat. She purrs."
+                },
+                "alt": [
+                    "tabby",
+                    "cat",
+                    "kitty",
+                    "kitten"
+                ],
+                "feed": {
+                    "type": "string",
+                    "attr": "You can't feed the cat. There are no mice in this game."
+                }
             },
             "lamp": {
                 "name": "lamp",
@@ -127,7 +141,7 @@
                     "container",
                     "closedcontainer"
                 ],
-                "isOpen": false,
+                "isOpen": true,
                 "open": true,
                 "close": false,
                 "listChildren": true
@@ -135,7 +149,7 @@
             "defibrillator": {
                 "name": "defibrillator",
                 "prefix": "a",
-                "loc": "box",
+                "loc": "kv_online",
                 "look": "An ordinary defibrillator.",
                 "take": true
             },
@@ -148,7 +162,7 @@
             "banana": {
                 "name": "banana",
                 "prefix": "a",
-                "loc": "table",
+                "loc": "kv_online",
                 "look": "It's a banana.",
                 "take": true,
                 "inherit": [
@@ -168,7 +182,7 @@
                 },
                 "attack": {
                     "type": "script",
-                    "attr": "responded = true; if (obj.alive === true) { await q.msg(\"Bob looks at you, confused, shocked, and a little bit angry. He raises his fists... then keels over, right back in the position he was in before being revived! :face_with_peeking_eye:\", true, true); obj.alive = false; } else { await q.msg(\"You try slapping him to revive him, to no avail. :laugh:\", true, true); }"
+                    "attr": "responded = true; if (obj.alive === true) { q.msg(\"Bob looks at you, confused, shocked, and a little bit angry. He raises his fists... then keels over, right back in the position he was in before being revived! :face_with_peeking_eye:\", true, true); obj.alive = false; q.msg(q.GetDisplayName(pov) + \" has killed Bob!\", false, true); } else { q.msg(\"You try slapping him to revive him, to no avail. :laughing:\", true, true); }"
                 },
                 "speakto": {
                     "type": "script",
@@ -227,7 +241,7 @@
                     "type": "script",
                     "attr": "q.openWindowProc();"
                 },
-                "isOpen": false,
+                "isOpen": true,
                 "close": true,
                 "inherit": [
                     "openable"
@@ -236,7 +250,7 @@
             "bee": {
                 "name": "bee",
                 "prefix": "the",
-                "loc": "nowhere",
+                "loc": "Kitchen",
                 "look": "It's buzzing around the room.",
                 "attack": {
                     "type": "string",
@@ -267,7 +281,7 @@
                 ],
                 "listChildren": true,
                 "listchildrenprefix": "In the fridge you find ",
-                "isOpen": false,
+                "isOpen": true,
                 "close": true,
                 "open": true,
                 "loc": "Kitchen",
@@ -296,7 +310,8 @@
                 },
                 "listChildren": true,
                 "listchildrenprefix": "The cupboard is bare except for... ",
-                "loc": "Kitchen"
+                "loc": "Kitchen",
+                "isOpen": true
             },
             "bottle opener": {
                 "name": "bottle opener",
@@ -307,7 +322,7 @@
             },
             "apple": {
                 "name": "apple",
-                "prefix": "a",
+                "prefix": "an",
                 "loc": "cupboard",
                 "look": "It's a red apple.",
                 "take": true,
@@ -335,6 +350,48 @@
                     "XM's beer"
                 ],
                 "drink": "You can't drink that. It's XanMag's."
+            },
+            "flour": {
+                "name": "sack of flour",
+                "prefix": "a",
+                "definiteArticle": "the",
+                "indefiniteArticle": "the",
+                "weight": 500,
+                "take": true,
+                "loc": "cupboard",
+                "alt": [
+                    "flour",
+                    "bag of flour",
+                    "sack of flour",
+                    "sack",
+                    "bag"
+                ]
+            },
+            "eggs": {
+                "name": "carton of eggs",
+                "prefix": "a",
+                "weight": 250,
+                "take": true,
+                "loc": "fridge",
+                "alt": [
+                    "egg",
+                    "eggs",
+                    "egg carton",
+                    "carton of eggs",
+                    "carton"
+                ]
+            },
+            "sugar": {
+                "name": "packet of sugar",
+                "prefix": "a",
+                "weight": 4,
+                "take": true,
+                "loc": "kv_online",
+                "alt": [
+                    "sugar",
+                    "sugar packet",
+                    "packet of sugar"
+                ]
             }
         },
         "locations": {
@@ -376,7 +433,7 @@
                 "userName": "kv_online",
                 "dateJoined": 1743129287007,
                 "commandHistory": [],
-                "loc": "Kitchen"
+                "loc": "Lounge"
             }
         },
         "timers": {},

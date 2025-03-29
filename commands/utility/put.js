@@ -14,9 +14,6 @@ module.exports = {
 				.setDescription('The object you wish to put something on/in')
 				.setRequired(true)),
 	async execute(interaction) {
-		const { qgame, pov } = await q.getGamePov();
-		if (!pov) return;
-
 		const object1Name = interaction.options.getString('object1');
 		if (!object1Name) {
 			await q.msg('\'object\' not defined.');

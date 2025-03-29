@@ -134,7 +134,6 @@ module.exports.msg = async (s, isPrivate = true, isFollowUp = false) => {
 	}
 	else if (!isPrivate && isFollowUp) {
 		// console.log('msg: not private but is follow up');
-		// await interaction.user.send(s);
 		await interaction.followUp(s);
 	}
 	else if (isPrivate && !isFollowUp) {
@@ -142,14 +141,14 @@ module.exports.msg = async (s, isPrivate = true, isFollowUp = false) => {
 		await interaction.reply({ content: s, flags: 64 });
 	}
 	else {
-		// await interaction.user.send({content: s, flags: 64});
 		// console.log('msg: private follow up');
 		await interaction.followUp({ content: s, flags: 64 });
 	}
-	console.log(this.thisCommand(interaction));
+	// console.log(this.thisCommand(interaction));
 	// const sBuilder = [];
 	// sBuilder.push(this.GetDisplayName(pov) + ' > ' + interaction.message.content + '\n' + s);
 	// await this.addToTranscriptChannel(sBuilder.join(''));
+	global.gameResponseForTranscript.push(s);
 };
 
 module.exports.addToTranscriptChannel = async (s, channelId) => {
@@ -235,14 +234,14 @@ module.exports.getLocationDescription = (qgame, pov) => {
 		// console.log('obj:', obj);
 		obj = qgame.objects[obj];
 		if (obj.loc == pov.loc && !obj.scenery) {
-			inRoomObjects.push(this.GetDisplayName(obj));
+			inRoomObjects.push(this.GetDisplayName(obj, false, true));
 		}
 	});
 	Object.keys(qgame.players).forEach(obj => {
 		// console.log('obj:', obj);
 		obj = qgame.players[obj];
 		if (obj.loc == pov.loc && obj.name != pov.name) {
-			inRoomObjects.push('@' + this.GetDisplayName(obj));
+			inRoomObjects.push('@' + this.GetDisplayName(obj, false, true));
 		}
 	});
 	let inTheRoom = '';
@@ -384,11 +383,11 @@ module.exports.doGo = async (qgame, pov, loc, exitName, interaction) => {
 
 	// Get the location description and respond
 	const locationDescription = this.getLocationDescription(qgame, pov);
-	await this.msg(`${pov.alias || pov.name} goes ${exitName}.`, false, true);
+	await this.msg(`${this.GetDisplayName(pov)} goes ${exitName}, to ${this.GetDisplayName(qgame.locations[pov.loc])}.`, false, true);
 	// await this.addToTranscriptChannel(`${pov.alias || pov.name} goes ${exitName}, to ${this.GetDisplayName(qgame.locations[pov.loc])}.`);
 	// await this.addToTranscriptChannel(this.thisCommand);
-	await this.addThisCommandToTranscriptAsEmbed(interaction);
-	await this.addToTranscriptChannel(`${pov.alias || pov.name} goes ${exitName}, to ${this.GetDisplayName(qgame.locations[pov.loc])}.`);
+	// await this.addThisCommandToTranscriptAsEmbed(interaction);
+	// await this.addToTranscriptChannel(`> ${this.GetDisplayName(pov)} goes ${exitName}, to ${this.GetDisplayName(qgame.locations[pov.loc])}.`);
 	await this.msg(locationDescription);
 
 	// Save the game state
@@ -401,7 +400,7 @@ module.exports.doGo = async (qgame, pov, loc, exitName, interaction) => {
 	}
 };
 
-module.exports.GetDisplayName = (obj, definite = false) => {
+module.exports.GetDisplayName = (obj, definite = false, forRoomDesc = false) => {
 	if (typeof obj === 'string') {
 		obj = this.GetObject(obj);
 	}
@@ -411,7 +410,6 @@ module.exports.GetDisplayName = (obj, definite = false) => {
 		if (definite) {
 			prefix = obj.prefix || '';
 			if (obj.prefix && obj.prefix === 'a') prefix = 'the';
-			if (prefix !== '') prefix += ' ';
 		}
 		n += prefix + ' ';
 	}
@@ -426,22 +424,28 @@ module.exports.GetDisplayName = (obj, definite = false) => {
 		// console.log('children:', children);
 
 		// If there are children, list them
-		if (obj.inherit.indexOf('container') >= 0 && (obj.isOpen === false || !obj.transparent)) {
+		if (obj.inherit.indexOf('container') >= 0 && (obj.isOpen === false && obj.transparent !== true)) {
 			// do nothing
+			n += ' (closed)';
 		}
-		else if (children.length > 0) {
-			// console.log('children:', children);
-			let preString = 'in which you see:';
-			if (obj.inherit.indexOf('surface') >= 0) {
-				preString = 'on which you see:';
+		else if (obj.inherit.indexOf('container') >= 0 && children.length > 0) {
+			if (!forRoomDesc) {
+				n += ' (open)';
 			}
-			else if (obj.inherit.indexOf('container') >= 0) {
-				preString = 'in which you see:';
+			else {
+				// console.log('children:', children);
+				let preString = 'containing:';
+				if (obj.inherit.indexOf('surface') >= 0) {
+					preString = 'on which you see:';
+				}
+				else if (obj.inherit.indexOf('container') >= 0) {
+					preString = 'containing:';
+				}
+				if (typeof obj.listChildrenPreString === 'string') {
+					preString = obj.listChildrenPreString;
+				}
+				n += ` (${preString} ${this.GetDirectChildrenAsString(obj)})`;
 			}
-			if (typeof obj.listChildrenPreString === 'string') {
-				preString = obj.listChildrenPreString;
-			}
-			n += ` (${preString} ${this.GetDirectChildrenAsString(obj)})`;
 		}
 	}
 	return n;
@@ -760,14 +764,38 @@ module.exports.reviveBobProc = async () => {
 				// await interaction.followUp({ content: 'Message sent to another channel!', ephemeral: true });
 			}
 			await handleInteraction(interaction);
-
-			// const s = `${this.GetDisplayName(pov)} has revived Bob!\n# GAME OVER\n\nEnter <code>/startgame</code> to play again.`;
-			// msg (s, false, true);
-			// const qgame = await this.loadGame('./game.json.bak', interaction);
 			await this.saveGame('./game.json', qgame);
 		}
 		else {
 			await this.msg ('You\'ve already revived Bob!');
+			await this.msg('...but, you decide the only thing to do in this game is to revive Bob, so you hit him with the juice again, despite his pleas.');
+			await this.msg ('...and Bob is now lying there, a little more still than before this turn!');
+			Bob.alive = false;
+			const { ChannelType } = require('discord.js');
+
+			async function handleInteraction(interaction) {
+				if (!interaction.isCommand()) return;
+
+				const channelId = '1354201798029606974';
+
+				try {
+					const channel = await interaction.client.channels.fetch(channelId);
+
+					if (channel && channel.type === ChannelType.GuildText) {
+						await channel.send('Bob has been killed by ' + (interaction.user.globalName || interaction.user.username) + '!');
+					}
+					else {
+						console.log('Target channel is not a text channel.');
+					}
+				}
+				catch (error) {
+					console.error('Error sending message to another channel:', error);
+				}
+
+				// await interaction.followUp({ content: 'Message sent to another channel!', ephemeral: true });
+			}
+			await handleInteraction(interaction);
+			await this.saveGame('./game.json', qgame);
 		}
 	}
 	else {
@@ -789,7 +817,7 @@ module.exports.scopeVisible = (pov) => {
 		const item = this.GetObject(key);
 		// console.log('item:', item);
 		// console.log('pov', pov);
-		if ((item.loc === pov.loc || item.loc === pov.name) && (typeof item.visible === 'undefined' || item.visible === true)) {
+		if ((item.loc === pov.loc || item.loc === pov.name) && item.visible !== false) {
 			// console.log('item is visible:', item.name);
 			visibleObjects.push(item);
 		}
@@ -800,11 +828,11 @@ module.exports.scopeVisible = (pov) => {
 	for (const key of everything) {
 		const obj = this.GetObject(key);
 		if (visibleObjects.includes(this.GetObject(obj.loc))) {
-			if (this.GetObject(obj.loc).isOpen === true && (typeof obj.visible === 'undefined' || obj.visible === true)) {
+			if (this.GetObject(obj.loc).isOpen === true && obj.visible !== false) {
 				// console.log('obj is visible:', obj.name);
 				visibleObjects.push(obj);
 			}
-			if (obj.inherit?.indexOf('surface') >= 0 && (typeof obj.visible === 'undefined' || obj.visible === true)) {
+			if (this.GetObject(obj.loc).inherit?.indexOf('surface') >= 0 && obj.visible !== false) {
 				// console.log('obj is visible:', obj.name);
 				visibleObjects.push(obj);
 			}
@@ -867,7 +895,7 @@ module.exports.getGamePov = async () => {
 	return { qgame: qgame, pov: pov };
 };
 
-module.exports.thisCommand = async (interaction) => {
+module.exports.thisCommand = (interaction) => {
 	const povName = interaction.user.username;
 	const commandName = interaction.commandName;
 
@@ -877,15 +905,15 @@ module.exports.thisCommand = async (interaction) => {
 		.join(' ');
 
 	// Construct the final string
-	const commandString = `${povName} @ ${new Date()}\n> /${commandName} ${optionsString}`.trim();
+	const commandString = povName + ' @ ' + new Date() + '\n> /' + commandName + ' ' + optionsString + ''.trim();
 
-	// console.log(commandString);
+	console.log('thisCommand:', commandString);
 	return commandString;
 };
 
 const { EmbedBuilder } = require('discord.js');
 
-module.exports.addThisCommandToTranscriptAsEmbed = async (interaction, transcriptChannel) => {
+module.exports.addThisCommandToTranscriptAsEmbed = async (interaction, transcriptChannel, color) => {
 	if (typeof transcriptChannel == 'undefined') transcriptChannel = '1354201798029606974';
 	const povName = interaction.user.globalName || interaction.user.username;
 	const commandName = interaction.commandName;
@@ -897,13 +925,48 @@ module.exports.addThisCommandToTranscriptAsEmbed = async (interaction, transcrip
 	const commandString = `**>** \`/${commandName}\` ${optionsString}`.trim();
 	const userProfileURL = `https://discord.com/users/${interaction.user.id}`;
 
+	const colors = {
+		'kv_online': 0x228B22,
+		'ajbruner77': 0x23478B,
+		'pertex1': 0x4487ec,
+		'default': 0x00AE86,
+		'red': 0xFF0000,
+		'green': 0x00FF00,
+		'blue': 0x0000FF,
+		'yellow': 0xFFFF00,
+		'purple': 0x800080,
+		'cyan': 0x00FFFF,
+		'pink': 0xFFC0CB,
+		'orange': 0xFFA500,
+		'brown': 0xA52A2A,
+		'black': 0x000000,
+		'white': 0xFFFFFF,
+		'gray': 0x808080,
+		'grey': 0x808080,
+		'gold': 0xFFD700,
+		'silver': 0xC0C0C0,
+		'bronze': 0xCD7F32,
+		'Forest Green': 0x228B22,
+		'Hunter Green': 0x355E3B,
+		'Dark Green': 0x006400,
+		'British Racing Green': 0x004225,
+		'Moss Green': 0x8A9A5B,
+		'Evergreen': 0x05472A,
+		'Pine Green': 0x01796F,
+		'Bottle Green': 0x006A4E,
+		'Brunswick Green': 0x1B4D3E,
+		'Sacramento Green': 0x043927,
+	};
+
 	// Create the embed
 	const embed = new EmbedBuilder()
 		.setAuthor({ name: povName, iconURL: interaction.user.displayAvatarURL(), url: userProfileURL })
-		.setDescription(commandString)
-		.setColor(0x00AE86)
+		.setDescription(commandString + '\n\n' + global.gameResponseForTranscript.join('\n'))
+		.setColor(color || colors[interaction.user.username] || colors['default'])
 		.setTimestamp()
-		.setFooter({ text: 'Command processed by: DUM Parser 🤖' });
+		// .setFooter({ text: 'Command processed by: DUM Parser 🤖' });
+		// .setFooter({ text: 'Command processed by: DUM Parser', iconURL: 'https://cdn.discordapp.com/emojis/1355249879101870282.png' });
+		.setFooter({ text: 'Command processed by: DUM Parser' });
 
 	// Send embed to the interaction channel
 	// await interaction.followUp({ embeds: [embed] });
