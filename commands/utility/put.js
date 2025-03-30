@@ -43,7 +43,7 @@ module.exports = {
 			return;
 		}
 
-		if (obj2.name === pov.name || obj1.name === obj1.name || obj2.name === obj1.name) {
+		if (obj2.name === pov.name || obj1.name === pov.name || obj2.name === obj1.name) {
 			await q.msg('You can\'t do that.');
 			return;
 		}
