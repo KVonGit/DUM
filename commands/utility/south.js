@@ -5,6 +5,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('south')
 		.setDescription('Go south'),
+		aliases: ['s'],
 	async execute(interaction) {
 		const exitName = 'south';
 		const loc = qgame.locations[pov.loc];
