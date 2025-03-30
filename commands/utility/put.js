@@ -20,7 +20,7 @@ module.exports = {
 			return;
 		}
 
-		const obj1 = q.getObject(qgame, object1Name);
+		const obj1 = q.GetObject(object1Name);
 		if (!obj1) {
 			await q.msg(`No such object ("${object1Name}")!`);
 			return;
@@ -32,7 +32,7 @@ module.exports = {
 			return;
 		}
 
-		const obj2 = q.getObject(qgame, object2Name);
+		const obj2 = q.GetObject(object2Name);
 		if (!obj2) {
 			await q.msg(`No such object ("${object2Name}")!`);
 			return;

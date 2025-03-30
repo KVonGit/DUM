@@ -274,51 +274,6 @@ module.exports.getLocationDescription = (qgame, pov) => {
 	return s;
 };
 
-module.exports.getObject = (qgame, objName) => {
-	const regEx = /^(a|an|the)\s+/i;
-	objName = objName.replace(regEx, '');
-	for (const key of Object.keys(qgame.objects)) {
-		// console.log('key:', key);
-		const obj = qgame.objects[key];
-		if (obj.prefix && objName.startsWith(obj.prefix.toLowerCase() + ' ')) {
-			objName = objName.slice(obj.prefix.length).trim();
-		}
-		if (obj.suffix && objName.endsWith(' ' + obj.suffix.toLowerCase())) {
-			objName = objName.slice(0, -obj.suffix.length).trim();
-		}
-		// console.log('obj:', obj);
-		objName = objName.toLowerCase().trim();
-		if (obj.name.toLowerCase() === objName || (typeof obj.alias != 'undefined' && obj.alias.toLowerCase() === objName)) {
-			return obj;
-		}
-		if (typeof obj.alt != 'undefined') {
-			for (const alt of obj.alt) {
-				if (alt.toLowerCase() === objName) {
-					return obj;
-				}
-			}
-		}
-	}
-	// Search for players by name or alias
-
-	for (const playerName of Object.keys(qgame.players)) {
-		const player = qgame.players[playerName];
-		if (player.name.toLowerCase() === objName || player.alias.toLowerCase() === objName) {
-			return player;
-		}
-		if (player.alt) {
-			for (const alt of player.alt) {
-				if (alt.toLowerCase() === objName) {
-					return player;
-				}
-			}
-		}
-	}
-
-	// If not found, return undefined
-	return undefined;
-};
-
 module.exports.allObjects = (qgame) => {
 	return Object.keys(qgame.objects).map(key => qgame.objects[key]);
 };

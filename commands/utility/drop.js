@@ -15,7 +15,7 @@ module.exports = {
 			await q.msg('\'object\' not defined.');
 			return;
 		}
-		const obj = q.getObject(qgame, objectName);
+		const obj = q.GetObject(objectName);
 		if (!obj) {
 			await q.msg(`No such object ("${objectName}")!`);
 			return;

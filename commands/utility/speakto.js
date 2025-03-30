@@ -20,7 +20,7 @@ module.exports = {
 			await q.msg(q.template.mustStartGame);
 			return 3;
 		}
-		const obj = q.getObject(qgame, npc);;
+		const obj = q.GetObject(npc);;
 		if (obj == 'undefined') {
 			await q.msg('No such object ("' + npc + '")!');
 			return;

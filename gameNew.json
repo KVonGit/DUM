@@ -37,7 +37,7 @@
                 "prefix": "a",
                 "look": {
                     "type": "script",
-                    "attr": "replyString = \"A wooden table, probably made of oak.\"; replyString += q.getObject(qgame, \"newspaper\").loc === \"table\" ? \" There is a newspaper on it.\" : \"\";"
+                    "attr": "replyString = \"A wooden table, probably made of oak.\"; replyString += q.GetObject(\"newspaper\").loc === \"table\" ? \" There is a newspaper on it.\" : \"\";"
                 },
                 "take": {
                     "type": "string",

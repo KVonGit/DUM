@@ -39,7 +39,7 @@
                 "objectPronoun": "it",
                 "look": {
                     "type": "script",
-                    "attr": "replyString = \"A wooden table, probably made of oak.\"; replyString += q.getObject(qgame, \"newspaper\").loc === \"table\" ? \" There is a newspaper on it.\" : \"\";"
+                    "attr": "replyString = \"A wooden table, probably made of oak.\"; replyString += q.GetObject(\"newspaper\").loc === \"table\" ? \" There is a newspaper on it.\" : \"\";"
                 },
                 "take": {
                     "type": "string",
@@ -550,12 +550,12 @@
                 "objectPronoun": "him",
                 "dateJoined": 1743129287007,
                 "commandHistory": [],
-                "loc": "Arena",
+                "loc": "Kitchen",
                 "attack": "You attack KV. (He deserves it.)",
                 "speakto": "“Hello,” says KV.",
                 "look": "KV is looking right back at YOU!",
                 "lastObject": {
-                    "it": "newspaper",
+                    "it": "bomb",
                     "him": "pertex1"
                 }
             },
