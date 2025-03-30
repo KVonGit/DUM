@@ -25,7 +25,7 @@ module.exports = {
 			await q.msg(`No such object ("${object1Name}")!`);
 			return;
 		}
-		pov.lastObject[obj1.objectPronoun] = obj.name;
+		pov.lastObject[obj1.objectPronoun] = obj1.name;
 		const object2Name = interaction.options.getString('object2');
 		if (!object2Name) {
 			await q.msg('\'' + object + '\' not defined.');
