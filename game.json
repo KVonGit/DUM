@@ -156,7 +156,7 @@
                     "container",
                     "closedcontainer"
                 ],
-                "isOpen": false,
+                "isOpen": true,
                 "open": true,
                 "close": false,
                 "listChildren": true
@@ -165,7 +165,7 @@
                 "name": "defibrillator",
                 "prefix": "a",
                 "objectPronoun": "it",
-                "loc": "box",
+                "loc": "ajbruner77",
                 "look": "An ordinary defibrillator.",
                 "take": true,
                 "alt": [
@@ -355,7 +355,7 @@
                 },
                 "listChildren": true,
                 "listchildrenprefix": "In the fridge you find ",
-                "isOpen": false,
+                "isOpen": true,
                 "close": true,
                 "open": true,
                 "loc": "Kitchen",
@@ -386,7 +386,8 @@
                 },
                 "listChildren": true,
                 "listchildrenprefix": "The cupboard is bare except for... ",
-                "loc": "Kitchen"
+                "loc": "Kitchen",
+                "isOpen": true
             },
             "bottle opener": {
                 "name": "bottle opener",
@@ -437,7 +438,7 @@
                 "objectPronoun": "it",
                 "weight": 500,
                 "take": true,
-                "loc": "cupboard",
+                "loc": "pertex1",
                 "alt": [
                     "flour",
                     "bag of flour",
@@ -473,6 +474,23 @@
                     "sugar packet",
                     "packet of sugar"
                 ]
+            },
+            "bomb": {
+                "name": "bomb",
+                "prefix": "a",
+                "objectPronoun": "it",
+                "loc": "Arena",
+                "alt": [
+                    "explosive",
+                    "time bomb"
+                ],
+                "armed": false,
+                "bombcount": 10,
+                "look": {
+                    "type": "script",
+                    "attr": "if (obj.armed) { replyString = `The bomb is ticking, and a red count-down display reads '${obj.bombcount}'.`; } else { replyString = (obj.loc === pov.name) ? 'You can arm this bomb by typing /arm bomb.' : 'Why not pick it up and take a closer look?'; }"
+                },
+                "take": true
             }
         },
         "locations": {
@@ -491,6 +509,18 @@
                 "exits": {
                     "west": {
                         "to": "Lounge"
+                    },
+                    "north": {
+                        "to": "Arena"
+                    }
+                }
+            },
+            "Arena": {
+                "name": "The Arena",
+                "description": "Welcome to the arena.",
+                "exits": {
+                    "south": {
+                        "to": "Kitchen"
                     }
                 }
             },
@@ -507,8 +537,11 @@
                 "objectPronoun": "him",
                 "dateJoined": 1743029210827,
                 "commandHistory": [],
-                "loc": "Lounge",
-                "lastObject": {}
+                "loc": "Kitchen",
+                "lastObject": {
+                    "it": "sack of flour"
+                },
+                "attack": "Fueled by frustration with the endless `/` commands, you lunge at Pertex in a blind rage. With the agility of a caffeinated squirrel, he sidesteps your attack effortlessly. He bursts into laughter and shouts, “Nein, danke!” in what you assume is German, but it could just be some sort of Quest function's name. You’re left questioning your life choices."
             },
             "kv_online": {
                 "name": "kv_online",
@@ -517,16 +550,36 @@
                 "objectPronoun": "him",
                 "dateJoined": 1743129287007,
                 "commandHistory": [],
-                "loc": "Lounge",
+                "loc": "Arena",
                 "attack": "You attack KV. (He deserves it.)",
                 "speakto": "“Hello,” says KV.",
                 "look": "KV is looking right back at YOU!",
                 "lastObject": {
-                    "it": "box"
+                    "it": "newspaper",
+                    "him": "pertex1"
                 }
+            },
+            "ajbruner77": {
+                "name": "ajbruner77",
+                "alias": "AJBruner77",
+                "userName": "ajbruner77",
+                "dateJoined": 1743332310672,
+                "commandHistory": [],
+                "objectPronoun": "them",
+                "lastObject": {
+                    "it": "defibrillator"
+                },
+                "loc": "Lounge"
             }
         },
-        "timers": {},
+        "timers": {
+            "bombtimer": {
+                "interval": 5,
+                "enabled": false,
+                "type": "script",
+                "attr": "if (qgame.objects.bomb.bombcount <= 0) { q.msg('BOOM! The bomb explodes!', true, true); const bombloc = qgame.objects.bomb.loc; if (Object.keys(qgame.players).includes(bombloc)) { q.msg(`${q.GetDisplayName(qgame.players[bombloc])} is blown to smithereens!`, false, true); qgame.players[bombloc].loc = 'nowhere'; } else { q.msg(`The bomb explodes in ${bombloc}!`, false, true); } qgame.objects.bomb.loc = 'nowhere'; qgame.timers.bombtimer.enabled = false; } else { qgame.objects.bomb.bombcount--; if (qgame.objects.bomb.bombcount <= 3) { q.msg(`The bomb ticks... ${qgame.objects.bomb.bombcount}`, true, true); } }"
+            }
+        },
         "turnScripts": {
             "busyBee": {
                 "type": "script",

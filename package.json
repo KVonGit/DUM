@@ -2,10 +2,6 @@
   "dependencies": {
     "discord.js": "^14.18.0"
   },
-  "devDependencies": {
-    "@eslint/js": "^9.22.0",
-    "eslint": "^9.22.0"
-  },
   "name": "dum",
   "version": "0.0.1",
   "description": "Work in progress multi-player text adventure",
@@ -14,5 +10,13 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "kv_online",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KVonGit/DUM.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KVonGit/DUM/issues"
+  },
+  "homepage": "https://github.com/KVonGit/DUM#readme"
 }

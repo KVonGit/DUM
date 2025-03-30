@@ -16,7 +16,7 @@ module.exports = {
 			await q.msg('\'object\' not defined.');
 			return;
 		}
-		if (Object.keys(qgame.players).indexOf(povName) < 0) {
+		if (Object.keys(qgame.players).indexOf(pov.name) < 0) {
 			await q.msg(q.template.mustStartGame);
 			return 3;
 		}

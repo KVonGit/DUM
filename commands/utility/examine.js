@@ -31,6 +31,7 @@ module.exports = {
 		if (typeof obj.look == 'undefined') {
 			const s = q.template.defaultLook;
 			await q.msg(s);
+			return;
 		}
 
 		const { type, attr } = q.getAttribute(obj, 'look');

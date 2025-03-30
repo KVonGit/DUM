@@ -85,12 +85,21 @@ client.on(Events.InteractionCreate, async interaction => {
 		if (interaction.commandName != 'quitgame' && typeof qgame != 'undefined' && typeof pov != 'undefined' && qgame.suppressTurnScripts !== false) await require('./engine/q').runTurnScripts();
 	}
 	catch (error) {
-		console.error('eRror', error);
+		// Get user and command details for better error logging
+		const username = interaction.user.username;
+		const commandName = interaction.commandName;
+		const options = interaction.options.data.map(opt => `${opt.name}:${opt.value}`).join(', ');
+
+		console.error(`Error [${new Date().toLocaleString()}] for user "${username}": /${commandName} ${options}`);
+		console.error(error);
+
+		const errorMessage = 'There was an error while executing this command!';
+
 		if (interaction.replied || interaction.deferred) {
-			await interaction.followUp({ content: 'There was an error while executing this command!', flags: 64 });
+			await interaction.followUp({ content: errorMessage, flags: 64 });
 		}
 		else {
-			await interaction.reply({ content: 'There was an error while executing this command!', flags: 64 });
+			await interaction.reply({ content: errorMessage, flags: 64 });
 		}
 	}
 });
