@@ -57,8 +57,8 @@ module.exports = {
 							delete qgame.players[qgame.players[bombloc].name];
                         }
                         else {
-                            await gameChannel.send(`The bomb explodes in ${qgame.players[bombloc].loc}!`);
-						    await q.addToTranscriptChannel(`The bomb explodes in ${qgame.players[bombloc].loc}!`);
+                            await gameChannel.send(`The bomb explodes in ${qgame.objects.bomb.loc}!`);
+						    await q.addToTranscriptChannel(`The bomb explodes in ${qgame.objects.bomb.loc}!`);
                         }
                         qgame.objects.bomb.loc = 'nowhere';
 						console.log('Bomb exploded!');
@@ -67,7 +67,9 @@ module.exports = {
                     } else {
                         qgame.objects.bomb.bombcount--;
                         if (qgame.objects.bomb.bombcount <= 3) {
-                            await gameChannel.send(`The bomb ticks... ${qgame.objects.bomb.bombcount}`);
+                            if (Object.keys(qgame.players).includes(bombloc)) {
+                                await gameChannel.send(`The bomb ticks... ${qgame.objects.bomb.bombcount}`);
+                            }
 							await q.addToTranscriptChannel(`The bomb ticks... ${qgame.objects.bomb.bombcount}`);
                         }
                         
