@@ -138,7 +138,7 @@
             },
             "box": {
                 "name": "box",
-                "loc": "Lounge",
+                "loc": "table",
                 "prefix": "a",
                 "look": {
                     "type": "script",
@@ -204,7 +204,7 @@
                     "male"
                 ],
                 "useDefaultPrefix": false,
-                "alive": true,
+                "alive": false,
                 "use": {
                     "defibrillator": {
                         "type": "script",
@@ -359,8 +359,7 @@
                 },
                 "listChildren": true,
                 "listchildrenprefix": "The cupboard is bare except for... ",
-                "loc": "Kitchen",
-                "isOpen": true
+                "loc": "Kitchen"
             },
             "bottle opener": {
                 "name": "bottle opener",
@@ -484,10 +483,7 @@
                 "commandHistory": [],
                 "loc": "Lounge",
                 "attack": "You attack KV. (He deserves it.)",
-                "speakto": {
-                    "type": "string",
-                    "attr": "“Hello,” says KV."
-                },
+                "speakto":  "“Hello,” says KV.",
                 "look": "KV is looking right back at YOU!"
             }
         },
