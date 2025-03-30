@@ -17,16 +17,17 @@ module.exports = {
 			await q.msg('\'object\' not defined.');
 			return;
 		}
-		const obj = q.getObject(qgame, object);;
+		const obj = q.GetObject(object);;
 		if (obj == 'undefined') {
 			await q.msg('No such object ("' + object + '")!');
 			return;
 		}
 		if (!q.inScope(obj)) {
 			console.log('q.inScope("' + obj.name + '")', q.inScope(obj));
-			await q.msg(q.template.cantSee(obj.alias || obj.name));
+			await q.msg(q.template.cantSee(q.GetDisplayName(obj, false, false, true)));
 			return;
 		}
+		pov.lastObject[obj.objectPronoun] = obj.name;
 		if (typeof obj.look == 'undefined') {
 			const s = q.template.defaultLook;
 			await q.msg(s);

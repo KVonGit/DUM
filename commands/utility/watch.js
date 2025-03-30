@@ -15,17 +15,19 @@ module.exports = {
 			await q.msg('\'object\' not defined.');
 			return;
 		}
-		const obj = q.getObject(qgame, object);;
+		const obj = q.GetObject(object);;
 		if (obj == 'undefined') {
 			await q.msg('No such object ("' + object + '")!');
 			return;
 		}
 
 		if (!q.inScope(obj)) {
-			await q.msg(q.template.cantSee(obj.alias || obj.name));
+			await q.msg(q.template.cantSee(q.GetDisplayName(obj, false, false, true)));
+			return;
 		}
-		else if (typeof obj.watch == 'undefined') {
-			const s = `You can't watch ${q.GetDisplayName(obj, true)}.`;
+		pov.lastObject[obj.objectPronoun] = obj.name;
+		if (typeof obj.watch == 'undefined') {
+			const s = `You can't watch ${q.GetDisplayName(obj, true, false, true)}.`;
 			await q.msg(s);
 		}
 		else if (typeof obj.watch == 'string') {
@@ -34,10 +36,10 @@ module.exports = {
 		else if (typeof obj.watch.type !== 'undefined' && obj.watch.type == 'script') {
 			let qOutput;
 			await eval (obj.watch.attr);
-			await q.msg(qOutput || `You can't watch ${q.GetDisplayName(obj, true)}.`);
+			await q.msg(qOutput || `You can't watch ${q.GetDisplayName(obj, true, false, true)}.`);
 		}
 		else {
-			const s = `You can't watch ${q.GetDisplayName(obj, true)}.`;
+			const s = `You can't watch ${q.GetDisplayName(obj, true, false, true)}.`;
 			await q.msg(s);
 		}
 	},

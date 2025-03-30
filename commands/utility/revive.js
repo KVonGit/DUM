@@ -21,12 +21,13 @@ module.exports = {
 			await q.msg(`No such object ("${objectName}")!`);
 			return;
 		}
-		if (obj.loc !== pov.loc && obj.loc !== pov.name) {
-			await q.msg(q.template.cantSee(obj.name));
+		if (!q.inScope(obj)) {
+			await q.msg(q.template.cantSee(q.GetDisplayName(obj, false, false, true)));
 			return;
 		}
+		pov.lastObject[obj.objectPronoun] = obj.name;
 		if (obj.name !== 'Bob') {
-			await q.msg(`You can't revive ${q.GetDisplayName(obj)}.`);
+			await q.msg(`You can't revive ${q.GetDisplayName(obj, true, false, true)}.`);
 			return;
 		}
 		if (q.GetObject('defibrillator').loc !== pov.name) {

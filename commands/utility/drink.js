@@ -16,15 +16,16 @@ module.exports = {
 			await q.msg('\'object\' not defined.');
 			return;
 		}
-		const obj = q.getObject(qgame, object);;
+		const obj = q.GetObject(object);;
 		if (obj == 'undefined') {
 			await q.msg('No such object ("' + object + '")!');
 			return;
 		}
 		if (!q.inScope(obj)) {
-			await q.msg(q.template.cantSee(obj.name));
+			await q.msg(q.template.cantSee(q.GetDisplayName(obj, false, false, true)));
 			return;
 		}
+		pov.lastObject[obj.objectPronoun] = obj.name;
 		if (typeof obj.drink == 'undefined') {
 			const s = 'You can\'t do that.';
 			await q.msg(s);

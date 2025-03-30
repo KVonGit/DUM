@@ -15,17 +15,18 @@ module.exports = {
 			await q.msg('\'' + object + '\' not defined.');
 			return;
 		}
-		const obj = q.getObject(qgame, object);
+		const obj = q.GetObject(object);
 		if (typeof obj === 'undefined') {
 			await q.msg('No such object ("' + object + '")!');
 			return;
 		}
 		if (!q.inScope(obj)) {
-			await q.msg(q.template.cantSee(q.GetDisplayName(obj)));
+			await q.msg(q.template.cantSee(q.GetDisplayName(obj, false, false, true)));
 			return;
 		}
+		pov.lastObject[obj.objectPronoun] = obj.name;
 		if (obj.switchedOn === true) {
-			await q.msg(q.template.alreadyOn(q.GetDisplayName(obj)));
+			await q.msg(q.template.alreadyOn(q.GetDisplayName(obj, true, false, true)));
 			return;
 		}
 		if (obj.inherit && obj.inherit.indexOf('switchable') >= 0) {
@@ -33,7 +34,7 @@ module.exports = {
 				obj.switchedOn = true;
 			}
 			else if (obj.canSwitchOn === false) {
-				await q.msg(q.template.cantSwitch(q.GetDisplayName(obj)));
+				await q.msg(q.template.cantSwitch(q.GetDisplayName(obj, true, false, true)));
 				return;
 			}
 			else if (obj.switchOn.type) {
@@ -59,7 +60,7 @@ module.exports = {
 				await q.msg(obj.switchedOnMsg);
 			}
 			else {
-				await q.msg('You switch ' + q.GetDisplayName(obj) + ' on.');
+				await q.msg('You switch ' + q.GetDisplayName(obj, true, false, true) + ' on.');
 			}
 			if (typeof obj.afterSwitchingOnMsg === 'string') {
 				await q.msg(obj.afterSwitchingOnMsg, true, true);
@@ -82,6 +83,6 @@ module.exports = {
 			}
 			return;
 		}
-		await q.msg(q.template.cantSwitch(q.GetDisplayName(obj)));
+		await q.msg(q.template.cantSwitch(q.GetDisplayName(obj, true, false, true)));
 	},
 };

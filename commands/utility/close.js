@@ -15,19 +15,24 @@ module.exports = {
 			await interaction.reply('\'object\' not defined.');
 			return;
 		}
-		const obj = q.getObject(qgame, object);
+		const obj = q.GetObject(object);
 		if (typeof obj == 'undefined') {
 			await q.msg('No such object ("' + object + '")!');
 			return;
 		}
 
 		if (!q.inScope(obj)) {
-			await q.msg(q.template.cantSee(q.GetDisplayName(obj)));
+			await q.msg(q.template.cantSee(q.GetDisplayName(obj, false, false, true)));
 			return;
 		}
+		console.log('pov', pov);
+		console.log('obj', obj);
+		console.log('pov.lastObject', pov.lastObject);
+		pov.lastObject[obj.objectPronoun] = obj.name;
 
 		if (obj.isOpen === false) {
-			await q.msg(q.template.alreadyClosed(q.GetDisplayName(obj)));
+			await q.msg(q.template.alreadyClosed(q.GetDisplayName(obj, true, false, true)));
+			await finishUp();
 			return;
 		}
 		let { type, attr } = q.getAttribute(obj, 'close');
@@ -37,7 +42,7 @@ module.exports = {
 				attr = true;
 			}
 			else {
-			    await q.msg(q.template.cantOpenOrClose(q.GetDisplayName(obj)));
+			    await q.msg(q.template.cantOpenOrClose(q.GetDisplayName(obj, true, false, true)));
 			    await finishUp();
 			    return;
 			}
@@ -54,7 +59,7 @@ module.exports = {
 					await q.msg(obj.closeMsg);
 				}
 				else {
-					await q.msg(q.template.defaultClose(q.GetDisplayName(obj)));
+					await q.msg(q.template.defaultClose(q.GetDisplayName(obj, true, false, true)));
 				}
 				if (typeof obj.afterClosingMsg == 'string') {
 					await q.msg(obj.afterClosingMsg);
@@ -73,7 +78,7 @@ module.exports = {
 				return;
 			}
 		}
-		await q.msg(q.template.cantOpenOrClose(q.GetDisplayName(obj, true)));
+		await q.msg(q.template.cantOpenOrClose(q.GetDisplayName(obj, true, false, true)));
 
 		async function finishUp() {
 			try {

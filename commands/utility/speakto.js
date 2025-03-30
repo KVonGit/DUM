@@ -25,13 +25,15 @@ module.exports = {
 			await q.msg('No such object ("' + npc + '")!');
 			return;
 		}
-		if (obj.loc != pov.loc || (typeof obj.visible != 'undefined' && obj.visible == false)) {
-			await q.msg(q.template.cantSee(obj.alias || obj.name));
+		if (!q.inScope(obj)) {
+			await q.msg(q.template.cantSee(q.GetDisplayName(obj, false, false, true)));
+			return;
 		}
-		else if (typeof obj.speakto == 'undefined') {
-			const s = q.template.defaultSpeakTo(obj.alias || obj.name);
+		pov.lastObject[obj.objectPronoun] = obj.name;
+		if (typeof obj.speakto == 'undefined') {
+			const s = q.template.defaultSpeakTo(q.GetDisplayName(obj, true, false, true));
 			if (typeof obj.userName != 'undefined') {
-				await q.msg(`${pov.alias} speaks to ${obj.alias || obj.name}.`, false, false);
+				await q.msg(`${q.GetDisplayName(pov)} speaks to ${q.GetDisplayName(obj, true, false, true)}.`, false, false);
 				await q.msg(s, true, true);
 			}
 			else {
@@ -39,12 +41,12 @@ module.exports = {
 			}
 		}
 		else if (typeof obj.speakto == 'string') {
-			await q.msg(`${pov.alias} speaks to ${obj.alias || obj.name}.`, false, false);
+			await q.msg(`${q.GetDisplayName(pov)} speaks to ${q.GetDisplayName(obj, true, false, true)}.`, false, false);
 			await q.msg(obj.speakto, true, true);
 		}
 		else if (typeof obj.speakto.type !== 'undefined') {
 			if (obj.speakto.type == 'string') {
-				await q.msg(`${pov.alias} speaks to ${obj.alias || obj.name}.`, false, false);
+				await q.msg(`${q.GetDisplayName(pov)} speaks to ${q.GetDisplayName(obj, true, false, true)}.`, false, false);
 				await q.msg(obj.speakto.attr);
 			}
 			else if (obj.speakto.type == 'script') {
@@ -54,7 +56,7 @@ module.exports = {
 					// eslint-disable-next-line prefer-const
 					let replyString = '';
 				    await eval (obj.speakto.attr);
-					await q.msg(replyString || q.template.defaultSpeakTo(obj.alias || obj.name));
+					await q.msg(replyString || q.template.defaultSpeakTo(q.GetDisplayName(obj, true, false, true)));
 				}
 				catch {
 				  console.error('Error in ' + obj.name + ' speakto script.');
@@ -62,14 +64,14 @@ module.exports = {
 				}
 			}
 			else {
-				await q.msg(`${pov.alias} speaks to ${obj.alias || obj.name}.`, false, false);
-				const s = q.template.defaultSpeakTo(obj.alias || obj.name);
+				await q.msg(`${q.GetDisplayName(pov)} speaks to ${q.GetDisplayName(obj, true, false, true)}.`, false, false);
+				const s = q.template.defaultSpeakTo(q.GetDisplayName(obj, true, false, true));
 				await q.msg(s);
 			}
 		}
 		else {
-			await q.msg(`${pov.alias} speaks to ${obj.alias || obj.name}.`, false, false);
-			const s = q.template.defaultSpeakTo(obj.alias || obj.name);
+			await q.msg(`${q.GetDisplayName(pov)} speaks to ${q.GetDisplayName(obj, true, false, true)}.`, false, false);
+			const s = q.template.defaultSpeakTo(q.GetDisplayName(obj, true, false, true));
 			await q.msg(s);
 		}
 		await q.saveGame('./game.json', qgame);

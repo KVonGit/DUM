@@ -21,19 +21,20 @@ module.exports = {
 			await q.msg('No such object ("' + object + '")!');
 			return;
 		}
+		pov.lastObject[obj.objectPronoun] = obj.name;
 		if (obj.loc != pov.name || (typeof obj.visible != 'undefined' && obj.visible == false)) {
-			await q.msg(q.template.dontHave(q.GetDisplayName(obj)));
+			await q.msg(q.template.dontHave(q.GetDisplayName(obj, false, false, true)));
 			return;
 		}
 
 		if (typeof obj.use == 'undefined') {
-			const s = 'You can\'t use ' + q.GetDisplayName(obj, true) + ' that way.';
+			const s = 'You can\'t use ' + q.GetDisplayName(obj, true, false, true) + ' that way.';
 			await q.msg(s);
 			return;
 		}
 		const { type, attr } = q.getAttribute(obj.use);
 		if (!type) {
-			const s = 'You can\'t use ' + q.GetDisplayName(obj, true) + ' that way.';
+			const s = 'You can\'t use ' + q.GetDisplayName(obj, true, false, true) + ' that way.';
 			await q.msg(s);
 			return;
 		}
@@ -50,7 +51,7 @@ module.exports = {
 			await q.msg(replyString || 'ERROR: replyString is empty!');
 		}
 		else {
-			const s = 'You can\'t use ' + q.GetDisplayName(obj, true) + ' that way.';
+			const s = 'You can\'t use ' + q.GetDisplayName(obj, true, false, true) + ' that way.';
 			await q.msg(s);
 		}
 		await q.saveGame('./game.json', qgame);

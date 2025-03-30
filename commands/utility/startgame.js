@@ -19,9 +19,11 @@ module.exports = {
 				'userName': interaction.user.username,
 				'dateJoined': Date.now(),
 				'commandHistory': [],
+				'objectPronoun': 'them',
+				'lastObject': {},
 			};
 			pov = qgame.players[povName];
-			// TODO: Allow the player to add a color for their transcipt entries' embeds, text when someone looks at them, text when someone speaks to them, text when someone attacks them, and if they want other players to be able to GIVE them items or not. All are optional.
+			// TODO: Allow the player to add their objectPronoun (default to "them"), a color for their transcipt entries' embeds, text when someone looks at them, text when someone speaks to them, text when someone attacks them, and if they want other players to be able to GIVE them items or not. All are optional.
 
 			if (typeof pov.loc === 'undefined') {
 				pov.loc = qgame.game.startingLocation || 'Lounge';

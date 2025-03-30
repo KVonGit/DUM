@@ -26,10 +26,10 @@ module.exports = {
 			return;
 		}
 		if (obj.loc != pov.name || (typeof obj.visible != 'undefined' && obj.visible == false)) {
-			await q.msg(q.template.dontHave(q.GetDisplayName(obj)));
+			await q.msg(q.template.dontHave(q.GetDisplayName(obj, false, false, true)));
 			return;
 		}
-
+		pov.lastObject[obj.objectPronoun] = obj.name;
 		const object2 = interaction.options.getString('object2');
 		if (typeof object2 == 'undefined' || object2 === null) {
 			await q.msg('No such object ("' + object2 + '")!');
@@ -43,7 +43,7 @@ module.exports = {
 			return;
 		}
 		if (!q.inScope(obj2)) {
-			await q.msg(q.template.cantSee(q.GetDisplayName(obj2)));
+			await q.msg(q.template.cantSee(q.GetDisplayName(obj2, false, false, true)));
 			return;
 		}
 		if (typeof obj2.use == 'undefined') {
@@ -56,7 +56,7 @@ module.exports = {
 			const { type: obj2Type, attr: obj2Attr } = q.getAttribute(obj2.use, obj.name);
 			if (obj2Type == 'boolean') {
 				if (!obj2Attr) {
-					await q.msg('You can\'t use ' + q.GetDisplayName(obj, true) + ' on ' + q.GetDisplayName(obj2, true) + '.');
+					await q.msg('You can\'t use ' + q.GetDisplayName(obj, true, false, true) + ' on ' + q.GetDisplayName(obj2, true, false, true) + '.');
 					await q.saveGame('./game.json', qgame);
 					return;
 				}
@@ -91,18 +91,18 @@ module.exports = {
 
 
 		if (typeof obj.use == 'undefined' || typeof obj.use[obj2.name] == 'undefined') {
-			const s = 'You can\'t use ' + q.GetDisplayName(obj, true) + ' on ' + q.GetDisplayName(obj2, true) + '.';
+			const s = 'You can\'t use ' + q.GetDisplayName(obj, true, false, true) + ' on ' + q.GetDisplayName(obj2, true, false, true) + '.';
 			await q.msg(s);
 			return;
 		}
 		const { type, attr } = q.getAttribute(obj.use[obj2.name]);
 		if (!type) {
-			const s = 'You can\'t use ' + q.GetDisplayName(obj, true) + ' on ' + q.GetDisplayName(obj2, true) + '.';
+			const s = 'You can\'t use ' + q.GetDisplayName(obj, true, false, true) + ' on ' + q.GetDisplayName(obj2, true, false, true) + '.';
 			await q.msg(s);
 			return;
 		}
 		if (attr === false) {
-			await q.msg('You can\'t use ' + q.GetDisplayName(obj, true) + ' on ' + q.GetDisplayName(obj2, true) + '.');
+			await q.msg('You can\'t use ' + q.GetDisplayName(obj, true, false, true) + ' on ' + q.GetDisplayName(obj2, true, false, true) + '.');
 		}
 		else if (type == 'string') {
 			await q.msg(attr);
@@ -114,7 +114,7 @@ module.exports = {
 			await q.msg(replyString || 'ERROR: replyString is empty!');
 		}
 		else {
-			const s = 'You can\'t use ' + q.GetDisplayName(obj, true) + ' on ' + q.GetDisplayName(obj2, true) + '.';
+			const s = 'You can\'t use ' + q.GetDisplayName(obj, true, false, true) + ' on ' + q.GetDisplayName(obj2, true, false, true) + '.';
 			await q.msg(s);
 		}
 		await q.saveGame('./game.json', qgame);

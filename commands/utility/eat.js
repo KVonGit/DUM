@@ -16,22 +16,23 @@ module.exports = {
 			await q.msg('\'object\' not defined.');
 			return;
 		}
-		const obj = q.getObject(qgame, object);;
+		const obj = q.GetObject(object);;
 		if (obj == 'undefined') {
 			await q.msg('No such object ("' + object + '")!');
 			return;
 		}
 		if (!q.inScope(obj)) {
-			await q.msg(q.template.cantSee(q.GetDisplayName(obj)));
+			await q.msg(q.template.cantSee(q.GetDisplayName(obj, false, false, true)));
 			return;
 		}
+		pov.lastObject[obj.objectPronoun] = obj.name;
 		if (typeof obj.eat == 'undefined') {
-			const s = 'You can\'t eat ' + q.GetDisplayName(obj, true) + '.';
+			const s = 'You can\'t eat ' + q.GetDisplayName(obj, true, false, true) + '.';
 			await q.msg(s);
 		}
 		else if (obj.eat === true) {
 			obj.loc = 'nowhere';
-			await q.msg('You eat ' + q.GetDisplayName(obj, true) + '.');
+			await q.msg('You eat ' + q.GetDisplayName(obj, true, false, true) + '.');
 		}
 		else if (typeof obj.eat == 'string') {
 			await q.msg(obj.eat);
@@ -40,10 +41,10 @@ module.exports = {
 			// eslint-disable-next-line prefer-const
 			let replyString = '';
 			await eval (obj.eat.attr);
-			await q.msg(replyString || 'You can\'t eat ' + q.GetDisplayName(obj, true) + '.');
+			await q.msg(replyString || 'You can\'t eat ' + q.GetDisplayName(obj, true, false, true) + '.');
 		}
 		else {
-			const s = 'You can\'t eat ' + q.GetDisplayName(obj, true) + '.';
+			const s = 'You can\'t eat ' + q.GetDisplayName(obj, true, false, true) + '.';
 			await q.msg(s);
 		}
 		await q.saveGame('./game.json', qgame);

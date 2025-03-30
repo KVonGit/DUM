@@ -25,16 +25,16 @@ module.exports = {
 		}
 
 		if (obj.loc === pov.name) {
-			await q.msg(q.template.alreadyHave(q.GetDisplayName(obj, true)));
+			await q.msg(q.template.alreadyHave(q.GetDisplayName(obj, true, false, true)));
 			return;
 		}
 
 		if (!q.inScope(obj)) {
 			console.log('take: inScope is false', obj.loc);
-			await q.msg(q.template.cantSee(q.GetDisplayName(obj, true)));
+			await q.msg(q.template.cantSee(q.GetDisplayName(obj, false, false, true)));
 			return;
 		}
-
+		pov.lastObject[obj.objectPronoun] = obj.name;
 		let wasTaken = false;
 
 		const { type, attr } = q.getAttribute(obj, 'take');
@@ -42,7 +42,7 @@ module.exports = {
 		// console.log('attr:', attr);
 		if (typeof type === 'undefined') {
 			 console.log('take: type is undefined');
-			await q.msg(obj.takemsg || q.template.cantTake(q.GetDisplayName(obj)));
+			await q.msg(obj.takemsg || q.template.cantTake(q.GetDisplayName(obj, true, false, true)));
 			return;
 		}
 		if (type === 'boolean') {
@@ -51,7 +51,7 @@ module.exports = {
 				wasTaken = true;
 			}
 			else {
-				await q.msg(q.template.cantTake(q.GetDisplayName(obj)));
+				await q.msg(q.template.cantTake(q.GetDisplayName(obj, true, false, true)));
 				return;
 			}
 		}
@@ -64,21 +64,21 @@ module.exports = {
 			let replyString = '';
 			await eval(attr);
 			if (obj.loc === pov.name) {
-				await q.msg(q.GetDisplayName(pov) + ' took ' + q.GetDisplayName(obj, true) + '.', false, false);
+				await q.msg(q.GetDisplayName(pov) + ' took ' + q.GetDisplayName(obj, true, false, true) + '.', false, false);
 			}
-			await q.msg(replyString || q.template.cantTake(q.GetDisplayName(obj)), true, true);
+			await q.msg(replyString || q.template.cantTake(q.GetDisplayName(obj, true, false, true)), true, true);
 			await q.saveGame('./game.json', qgame);
 			return;
 		}
 		else {
-			await q.msg(q.template.cantTake(q.GetDisplayName(obj)));
+			await q.msg(q.template.cantTake(q.GetDisplayName(obj, true, false, true)));
 			return;
 		}
 
 		// Handle successful take
 		if (wasTaken && !interaction.replied) {
 			// console.log('take: wasTaken and !interaction.replied');
-			await q.msg(`${pov.alias} took ${q.GetDisplayName(obj)}.`, false, false);
+			await q.msg(`${q.GetDisplayName(pov)} took ${q.GetDisplayName(obj, true, false, true)}.`, false, false);
 			const successMessage = obj.takemsg || q.template.taken;
 			await q.msg(successMessage);
 			try {

@@ -22,17 +22,17 @@ module.exports = {
 			return;
 		}
 		if (!q.inScope(obj)) {
-			await q.msg(q.template.cantSee(obj.name));
+			await q.msg(q.template.cantSee(q.GetDisplayName(obj, false, false, true)));
 			return;
 		}
+		pov.lastObject[obj.objectPronoun] = obj.name;
 		if (typeof obj.weight !== 'number') {
-			await q.msg(q.GetDisplayName(obj, true) + ' is not something you can weigh.');
+			await q.msg(q.GetDisplayName(obj, true, false, true).capFirst() + ' is not something you can weigh.');
 			return;
 		}
-		let s = q.GetDisplayName(obj, true).capFirst() + ' weigh';
+		let s = q.GetDisplayName(obj, true, false, true).capFirst() + ' weigh';
 		s += obj.plural === true ? '' : 's';
 		s += ' ' + obj.weight + ' grams.';
 		await q.msg(s);
-
 	},
 };

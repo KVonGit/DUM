@@ -20,15 +20,16 @@ module.exports = {
 			await q.msg(q.template.mustStartGame);
 			return 3;
 		}
-		const obj = q.getObject(qgame, object);;
+		const obj = q.GetObject(object);;
 		if (obj == 'undefined') {
 			await q.msg('No such object ("' + object + '")!');
 			return;
 		}
 		if (!q.inScope(obj)) {
-			await q.msg(q.template.cantSee(q.GetDisplayName(obj)));
+			await q.msg(q.template.cantSee(q.GetDisplayName(obj, true, false, true)));
 			return;
 		}
+		pov.lastObject[obj.objectPronoun] = obj.name;
 		if (typeof obj.read == 'undefined') {
 			const s = 'You can\'t do that.';
 			await q.msg(s);

@@ -85,6 +85,15 @@ module.exports.All = () => {
 };
 
 module.exports.GetObject = (objName) => {
+	if (objName === 'me' || objName === 'myself') {
+		objName = qgame.pov.name;
+	}
+	else if (objName === 'it' || objName === 'them' || objName === 'him' || objName === 'her') {
+		// Check last objects for the pov!
+		if (typeof pov.lastObject != 'undefined') {
+			objName = pov.lastObject[objName] || objName;
+		}
+	}
 	for (const key of Object.keys(qgame.objects)) {
 		// console.log('key:', key);
 		const obj = qgame.objects[key];
@@ -400,7 +409,7 @@ module.exports.doGo = async (qgame, pov, loc, exitName, interaction) => {
 	}
 };
 
-module.exports.GetDisplayName = (obj, definite = false, forRoomDesc = false) => {
+module.exports.GetDisplayName = (obj, definite = false, forRoomDesc = false, omitOpenClosed = false) => {
 	if (typeof obj === 'string') {
 		obj = this.GetObject(obj);
 	}
@@ -417,7 +426,7 @@ module.exports.GetDisplayName = (obj, definite = false, forRoomDesc = false) => 
 	if (obj.suffix) {
 		n += ' ' + obj.suffix;
 	}
-	if (obj.listChildren) {
+	if (obj.listChildren && !omitOpenClosed) {
 		// console.log('obj says listChildren:', obj);
 		// Get the direct children of the object
 		const children = this.GetDirectChildren(obj);

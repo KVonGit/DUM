@@ -15,7 +15,7 @@ module.exports = {
 			await q.msg('\'object\' not defined.');
 			return;
 		}
-		const obj = q.getObject(qgame, object);
+		const obj = q.GetObject(object);
 		// Check if the object exists
 		if (!obj) {
 			await q.msg(`No such object ("${object}")!`);
@@ -24,13 +24,13 @@ module.exports = {
 
 		// Check if the object is visible to the player
 		if (!q.inScope(obj)) {
-			await q.msg(q.template.cantSee(q.GetDisplayName(obj)));
+			await q.msg(q.template.cantSee(q.GetDisplayName(obj, false, false, true)));
 			return;
 		}
-
+		pov.lastObject[obj.objectPronoun] = obj.name;
 		// Check if the object is already open
 		if (obj.isOpen === true) {
-			await q.msg(q.template.alreadyOpen(q.GetDisplayName(obj)));
+			await q.msg(q.template.alreadyOpen(q.GetDisplayName(obj, true, false, true)));
 			return;
 		}
 
@@ -43,12 +43,7 @@ module.exports = {
 				await q.msg(obj.openMsg);
 			}
 			else {
-				let prefix = obj.prefix || '';
-				if (obj.prefix && obj.prefix === 'a') prefix = 'the';
-				if (prefix !== '') prefix += ' ';
-				const name = obj.alias || obj.name;
-				const displayName = prefix + name;
-				await q.msg(q.template.defaultOpen(displayName));
+				await q.msg(q.template.defaultOpen(q.GetDisplayName(obj, true, false, true)));
 			}
 
 			// Send any follow-up messages
@@ -72,7 +67,7 @@ module.exports = {
 				const children = q.GetDirectChildren(obj);
 				if (children.length > 0) {
 					let n = obj.inherit.indexOf('surface') >= 0 ? 'On ' : 'In ';
-					n += q.GetDisplayName(obj).replace(/^a /, 'the ') + ', you see ';
+					n += q.GetDisplayName(obj, true, false, true).replace(/^a /, 'the ') + ', you see ';
 					if (typeof obj.listchildrenprefix === 'string') {
 						n = obj.listchildrenprefix;
 					}
@@ -101,7 +96,7 @@ module.exports = {
 				await q.msg(replyString || 'No replyString sent from open script.');
 			}
 			else {
-				await q.msg(q.template.defaultOpen(q.GetDisplayName(obj)));
+				await q.msg(q.template.defaultOpen(q.GetDisplayName(obj, true, false, true)));
 			}
 			try {
 				await q.saveGame('./game.json', qgame);
@@ -114,6 +109,6 @@ module.exports = {
 		}
 
 		// If the object cannot be opened
-		await q.msg(q.template.cantOpenOrClose(q.GetDisplayName(obj, true)));
+		await q.msg(q.template.cantOpenOrClose(q.GetDisplayName(obj, true, false, true)));
 	},
 };

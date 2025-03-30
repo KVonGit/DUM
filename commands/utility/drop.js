@@ -22,12 +22,12 @@ module.exports = {
 		}
 
 		if (!q.inScope(obj)) {
-			await q.msg(q.template.cantSee(obj.name));
+			await q.msg(q.template.cantSee(q.GetDisplayName(obj, false, false, true)));
 			return;
 		}
-
+		pov.lastObject[obj.objectPronoun] = obj.name;
 		if (obj.loc !== pov.name) {
-			await q.msg(q.template.dontHave(obj.name));
+			await q.msg(q.template.dontHave(q.GetDisplayName(obj, false, false, true)));
 			return;
 		}
 
@@ -44,7 +44,7 @@ module.exports = {
 				await finishUp(true);
 			}
 			else {
-				await q.msg(q.template.cantDrop(q.GetDisplayName(obj)));
+				await q.msg(q.template.cantDrop(q.GetDisplayName(obj, true, false, true)));
 				await finishUp();
 			}
 		}
@@ -66,7 +66,7 @@ module.exports = {
 
 		async function finishUp(printMsg = false) {
 			if (printMsg) {
-				await q.msg(`${q.GetDisplayName(pov)} dropped ${q.GetDisplayName(obj, true)} in: **${pov.loc}**.`, false, false);
+				await q.msg(`${q.GetDisplayName(pov)} dropped ${q.GetDisplayName(obj, true, false, true)} in: **${pov.loc}**.`, false, false);
 				await q.msg(obj.dropmsg || q.template.dropped);
 			}
 			try {

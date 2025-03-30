@@ -25,7 +25,7 @@ module.exports = {
 			await q.msg(`No such object ("${object1Name}")!`);
 			return;
 		}
-
+		pov.lastObject[obj1.objectPronoun] = obj.name;
 		const object2Name = interaction.options.getString('object2');
 		if (!object2Name) {
 			await q.msg('\'' + object + '\' not defined.');
@@ -39,7 +39,7 @@ module.exports = {
 		}
 
 		if (obj1.loc !== pov.name) {
-			await q.msg(q.template.dontHave(q.GetDisplayName(obj1)));
+			await q.msg(q.template.dontHave(q.GetDisplayName(obj1, false, false, true)));
 			return;
 		}
 
@@ -61,7 +61,7 @@ module.exports = {
 					wasDropped = true;
 				}
 				else {
-					await q.msg(q.template.containerClosed(obj2.name));
+					await q.msg(q.template.containerClosed(q.GetDisplayName(obj2, true, false, true)));
 				}
 			}
 		}
@@ -76,7 +76,7 @@ module.exports = {
 					obj1.loc = obj2.name;
 				}
 				else {
-					await q.msg(q.template.cantDrop(obj1.name));
+					await q.msg(q.template.cantDrop(q.GetDisplayName(obj1, true, false, true)));
 				}
 				break;
 			case 'script':
@@ -91,7 +91,7 @@ module.exports = {
 		}
 
 		if (wasDropped) {
-			await q.msg(`${pov.alias} dropped ${q.GetDisplayName(obj1, true)} in ${pov.loc}.`, false, false);
+			await q.msg(`${q.GetDisplayName(pov)} dropped ${q.GetDisplayName(obj1, true, false, true)} in: **${pov.loc}**.`, false, false);
 			await q.msg('Done.');
 			try {
 				await q.saveGame('./game.json', qgame);
