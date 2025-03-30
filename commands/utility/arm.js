@@ -57,7 +57,7 @@ module.exports = {
 							delete qgame.players[qgame.players[bombloc].name];
                         }
                         else {
-                            await gameChannel.send(`The bomb explodes in ${qgame.objects.bomb.loc}!`);
+                            // await gameChannel.send(`The bomb explodes in ${qgame.objects.bomb.loc}!`);
 						    await q.addToTranscriptChannel(`The bomb explodes in ${qgame.objects.bomb.loc}!`);
                         }
                         qgame.objects.bomb.loc = 'nowhere';
