@@ -46,23 +46,20 @@ module.exports = {
                     const gameChannel = await global.bombTimerClient.channels.fetch(global.bombTimerChannelId);
                     if (qgame.objects.bomb.bombcount <= 0) {
 						const bombloc = qgame.objects.bomb.loc;
-                        await gameChannel.send(`The bomb explodes in ${qgame.players[bombloc].loc}!`);
-						await q.addToTranscriptChannel(`The bomb explodes in ${qgame.players[bombloc].loc}!`);
-                        
-                        
                         if (Object.keys(qgame.players).includes(bombloc)) {
                             await gameChannel.send(`${q.GetDisplayName(qgame.players[bombloc])} is blown to smithereens!`);
 							await q.addToTranscriptChannel(`${q.GetDisplayName(qgame.players[bombloc])} is blown to smithereens!`);
-							// run the /quitgame command script to kill the player
-							// get inventory and drop it in the location of the player
-							const items = q.getInventory(qgame, qgame.players[bombloc]);
+                            const items = q.getInventory(qgame, qgame.players[bombloc]);
 							for (const i in items) {
 								// console.log('Dropping', items[i]);
 								qgame.objects[items[i]].loc = qgame.players[bombloc].loc;
 							}
 							delete qgame.players[qgame.players[bombloc].name];
                         }
-                        
+                        else {
+                            await gameChannel.send(`The bomb explodes in ${qgame.players[bombloc].loc}!`);
+						    await q.addToTranscriptChannel(`The bomb explodes in ${qgame.players[bombloc].loc}!`);
+                        }
                         qgame.objects.bomb.loc = 'nowhere';
 						console.log('Bomb exploded!');
                         clearInterval(global.bombTimer);
