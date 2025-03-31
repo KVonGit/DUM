@@ -24,7 +24,7 @@ module.exports = {
         }
         
         if (obj.loc !== pov.name) {
-            await q.msg(`You don't have ${q.GetDisplayName(obj)}.`);
+            await q.msg(`You don't have ${q.GetDisplayName(obj, true, false, true)}.`);
             return;
         }
         
