@@ -156,7 +156,7 @@
                     "container",
                     "closedcontainer"
                 ],
-                "isOpen": true,
+                "isOpen": false,
                 "open": true,
                 "close": false,
                 "listChildren": true
@@ -165,7 +165,7 @@
                 "name": "defibrillator",
                 "prefix": "a",
                 "objectPronoun": "it",
-                "loc": "ajbruner77",
+                "loc": "box",
                 "look": "An ordinary defibrillator.",
                 "take": true,
                 "alt": [
@@ -331,7 +331,7 @@
                 "objectPronoun": "it",
                 "listChildren": true,
                 "listchildrenprefix": "In the bin you find ",
-                "isOpen": true,
+                "isOpen": false,
                 "close": false,
                 "alt": [
                     "trash can",
@@ -355,7 +355,7 @@
                 },
                 "listChildren": true,
                 "listchildrenprefix": "In the fridge you find ",
-                "isOpen": true,
+                "isOpen": false,
                 "close": true,
                 "open": true,
                 "loc": "Kitchen",
@@ -386,8 +386,7 @@
                 },
                 "listChildren": true,
                 "listchildrenprefix": "The cupboard is bare except for... ",
-                "loc": "Kitchen",
-                "isOpen": true
+                "loc": "Kitchen"
             },
             "bottle opener": {
                 "name": "bottle opener",
@@ -438,7 +437,7 @@
                 "objectPronoun": "it",
                 "weight": 500,
                 "take": true,
-                "loc": "pertex1",
+                "loc": "cupboard",
                 "alt": [
                     "flour",
                     "bag of flour",
@@ -537,10 +536,8 @@
                 "objectPronoun": "him",
                 "dateJoined": 1743029210827,
                 "commandHistory": [],
-                "loc": "Kitchen",
-                "lastObject": {
-                    "it": "sack of flour"
-                },
+                "loc": "Lounge",
+                "lastObject": {},
                 "attack": "Fueled by frustration with the endless `/` commands, you lunge at Pertex in a blind rage. With the agility of a caffeinated squirrel, he sidesteps your attack effortlessly. He bursts into laughter and shouts, “Nein, danke!” in what you assume is German, but it could just be some sort of Quest function's name. You’re left questioning your life choices."
             },
             "kv_online": {
@@ -550,14 +547,11 @@
                 "objectPronoun": "him",
                 "dateJoined": 1743129287007,
                 "commandHistory": [],
-                "loc": "Kitchen",
+                "loc": "Lounge",
                 "attack": "You attack KV. (He deserves it.)",
                 "speakto": "“Hello,” says KV.",
                 "look": "KV is looking right back at YOU!",
-                "lastObject": {
-                    "it": "bomb",
-                    "him": "pertex1"
-                }
+                "lastObject": {}
             },
             "ajbruner77": {
                 "name": "ajbruner77",
@@ -565,10 +559,8 @@
                 "userName": "ajbruner77",
                 "dateJoined": 1743332310672,
                 "commandHistory": [],
-                "objectPronoun": "them",
-                "lastObject": {
-                    "it": "defibrillator"
-                },
+                "objectPronoun": "him",
+                "lastObject": {,
                 "loc": "Lounge"
             }
         },
