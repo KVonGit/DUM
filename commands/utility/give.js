@@ -14,6 +14,8 @@ module.exports = {
 				.setDescription('The person to which you wish to give the object')
 				.setRequired(true)),
 	async execute(interaction) {
+		console.log('Give command executed!');
+		console.log('interaction', interaction);
 		const object1Name = interaction.options.getString('object');
 		if (!object1Name) {
 			await q.msg('\'object\' not defined.');
@@ -25,7 +27,7 @@ module.exports = {
 			await q.msg(`No such object ("${object1Name}")!`);
 			return;
 		}
-		pov.lastObject[obj1.objectPronoun] = obj.name;
+		pov.lastObject[obj1.objectPronoun] = obj1.name;
 		const object2Name = interaction.options.getString('person');
 		if (!object2Name) {
 			await q.msg('\'' + object + '\' not defined.');
@@ -50,7 +52,7 @@ module.exports = {
 			await q.msg(q.template.cantSee(q.GetDisplayName(obj2, false, false, true)));
 			return;
 		}
-		pov.lastObject[obj2.objectPronoun] = obj.name;
+		pov.lastObject[obj2.objectPronoun] = obj1.name;
 		if (typeof obj2.give !== 'undefined') {
 			// It's a "dictionary"
 			if (typeof obj2.give[obj1.name] !== 'undefined') {
