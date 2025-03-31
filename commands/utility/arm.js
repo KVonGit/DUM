@@ -51,7 +51,9 @@ module.exports = {
 							await q.addToTranscriptChannel(`${q.GetDisplayName(qgame.players[bombloc])} is blown to smithereens!`);
                             const items = q.getInventory(qgame, qgame.players[bombloc]);
 							for (const i in items) {
-								// console.log('Dropping', items[i]);
+								console.log('Dropping', items[i]);
+                                console.log(`qgame.objects[items[i]].loc: ${qgame.objects[items[i]].loc}`);
+                                console.log(`qgame.players[bombloc].loc: ${qgame.players[bombloc].loc}`);
 								qgame.objects[items[i]].loc = qgame.players[bombloc].loc;
 							}
 							delete qgame.players[qgame.players[bombloc].name];

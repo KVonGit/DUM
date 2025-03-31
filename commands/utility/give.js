@@ -44,7 +44,7 @@ module.exports = {
 			await q.msg(q.template.dontHave(q.GetDisplayName(obj1, false, false, true)));
 			return;
 		}
-		if (obj2.name === pov.name || obj1.name === obj1.name || obj2.name === obj1.name) {
+		if (obj2.name === pov.name || obj1.name === pov.name || obj2.name === obj1.name) {
 			await q.msg('You can\'t do that.');
 			return;
 		}

@@ -430,7 +430,7 @@
                 ],
                 "drink": "You can't drink that. It's XanMag's."
             },
-            "flour": {
+            "sack of flour": {
                 "name": "sack of flour",
                 "prefix": "a",
                 "definiteArticle": "the",
@@ -447,7 +447,7 @@
                     "bag"
                 ]
             },
-            "eggs": {
+            "carton of eggs": {
                 "name": "carton of eggs",
                 "prefix": "a",
                 "objectPronoun": "it",
@@ -462,7 +462,7 @@
                     "carton"
                 ]
             },
-            "sugar": {
+            "packet of sugar": {
                 "name": "packet of sugar",
                 "prefix": "a",
                 "objectPronoun": "it",
