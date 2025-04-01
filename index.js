@@ -72,7 +72,8 @@ client.once(Events.ClientReady, readyClient => {
  * This handles all interactions (slash commands) sent to the bot.
  */
 client.on(Events.InteractionCreate, async interaction => {
-	if (!interaction.isButton() && !interaction.isStringSelectMenu()) return;
+	console.log('interaction', interaction);
+
     
     const { guild, member } = interaction;
     

@@ -10,6 +10,7 @@ module.exports = {
                 .setRequired(true)),
     
     async execute(interaction) {
+		console.log('DUM-Admin setting up class selector..');
 		if (interaction.user.id !== interaction.guild.ownerId) {
 			return await interaction.reply({ content: "You don't have permission to use this command!", flags: 64 });
 		}
