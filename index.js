@@ -72,7 +72,7 @@ client.once(Events.ClientReady, readyClient => {
  * This handles all interactions (slash commands) sent to the bot.
  */
 client.on(Events.InteractionCreate, async interaction => {
-	console.log('interaction', interaction);
+	// console.log('interaction', interaction);
 
     
     const { guild, member } = interaction;
@@ -227,13 +227,13 @@ client.on('ready', (c) => {
   });
   
 client.on('messageCreate', async (message) => {
-	console.log('Raw message received:', message.content);
-	console.log('Message event received:', {
+	// console.log('Raw message received:', message.content);
+	/*console.log('Message event received:', {
 	  author: message.author.tag,
 	  content: message.content,
 	  isDM: !message.guild,
 	  channel: message.channel.type
-	});
+	});*/
 	
 	if (message.author.bot || message.author === 'DUM Parser#8815') return;
 	
