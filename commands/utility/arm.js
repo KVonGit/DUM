@@ -71,11 +71,9 @@ module.exports = {
                         await q.saveGame();
                     } else {
                         qgame.objects.bomb.bombcount--;
-                        if (qgame.objects.bomb.bombcount <= 3) {
-                            if (Object.keys(qgame.players).includes(qgame.objects.bomb.loc) || Object.keys(qgame.players).includes(qgame.objects[qgame.objects.bomb.loc].loc)) {
-                                await gameChannel.send(`The bomb ticks... ${qgame.objects.bomb.bombcount}`);
-                            }
-							await q.addToTranscriptChannel(`The bomb ticks... ${qgame.objects.bomb.bombcount}`);
+                        if (qgame.objects.bomb.bombcount <= 5) {
+                            await gameChannel.send(`The bomb (in ${qgame.objects.bomb.loc}) ticks... ${qgame.objects.bomb.bombcount}`);
+							await q.addToTranscriptChannel(`The bomb (in ${qgame.objects.bomb.loc}) ticks... ${qgame.objects.bomb.bombcount}`);
                         }
                         
                     }
