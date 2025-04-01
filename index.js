@@ -7,11 +7,10 @@ const q = require('./engine/q');
 const client = new Client({
   intents: [
 	GatewayIntentBits.Guilds,
-    IntentsBitField.Flags.Guilds,
-    IntentsBitField.Flags.GuildMembers,
-    IntentsBitField.Flags.GuildMessages,
-    IntentsBitField.Flags.MessageContent,
-    IntentsBitField.Flags.GuildMessageReactions,
+	GatewayIntentBits.GuildMessages,
+	GatewayIntentBits.MessageContent,
+	GatewayIntentBits.GuildMessageReactions,
+	GatewayIntentBits.GuildMembers,
     IntentsBitField.Flags.DirectMessages, 
     IntentsBitField.Flags.DirectMessageTyping,
     IntentsBitField.Flags.DirectMessageReactions
@@ -68,6 +67,99 @@ client.once(Events.ClientReady, readyClient => {
  * This handles all interactions (slash commands) sent to the bot.
  */
 client.on(Events.InteractionCreate, async interaction => {
+	if (!interaction.isButton() && !interaction.isStringSelectMenu()) return;
+    
+    const { guild, member } = interaction;
+    
+    // For dropdown menu
+    if (interaction.isStringSelectMenu() && interaction.customId === 'class-selector') {
+        // Remove all class roles first
+        const classRoles = ['Adventurer', 'Guardian', 'Magic wielder'];
+        for (const roleName of classRoles) {
+            const role = guild.roles.cache.find(r => r.name === roleName);
+            if (role && member.roles.cache.has(role.id)) {
+                await member.roles.remove(role);
+            }
+        }
+        
+        // Add the selected role
+        if (interaction.values.length > 0) {
+            const selectedRole = guild.roles.cache.find(r => r.name === interaction.values[0]);
+            if (selectedRole) {
+                await member.roles.add(selectedRole);
+                await interaction.reply({ 
+                    content: `You have chosen: ${interaction.values[0]}!`, 
+                    flags: 64 
+                });
+            }
+        } else {
+            await interaction.reply({ 
+                content: `You have removed your class role.`, 
+                flags: 64 
+            });
+        }
+    }
+    
+    // For buttons
+    if (interaction.isButton() && interaction.customId.startsWith('role-')) {
+        const roleName = interaction.customId === 'role-adventurer' ? 'Adventurer' :
+                        interaction.customId === 'role-guardian' ? 'Guardian' :
+                        interaction.customId === 'role-mage' ? 'Magic wielder' : null;
+        
+        if (!roleName) return;
+        
+        const role = guild.roles.cache.find(r => r.name === roleName);
+        const hasRole = member.roles.cache.has(role.id);
+        
+        if (hasRole) {
+            await member.roles.remove(role);
+            await interaction.reply({ 
+                content: `You are no longer a ${roleName}.`, 
+                flags: 64 
+            });
+        } else {
+            // Remove other class roles first
+            const classRoles = ['Adventurer', 'Guardian', 'Magic wielder'];
+            for (const r of classRoles) {
+                const classRole = guild.roles.cache.find(role => role.name === r);
+                if (classRole && member.roles.cache.has(classRole.id)) {
+                    await member.roles.remove(classRole);
+                }
+            }
+            
+            await member.roles.add(role);
+            await interaction.reply({ 
+                content: `You have chosen: ${roleName}!`, 
+                flags: 64 
+            });
+        }
+    }
+    
+    // For terms agreement button
+    if (interaction.isButton() && interaction.customId === 'agree-terms') {
+        const { guild, member } = interaction;
+        const role = guild.roles.cache.find(r => r.name === 'Player');
+        
+        if (role && !member.roles.cache.has(role.id)) {
+            await member.roles.add(role);
+            await interaction.reply({ 
+                content: 'Thank you for agreeing to the terms! You now have access to the game channels.', 
+                flags: 64 
+            });
+            console.log(`Added Player role to ${member.user.tag}`);
+        } else if (role && member.roles.cache.has(role.id)) {
+            await interaction.reply({ 
+                content: 'You have already agreed to the terms and have access to the game channels.', 
+                flags: 64 
+            });
+        } else {
+            await interaction.reply({ 
+                content: 'There was an error assigning the Player role. Please contact an administrator.', 
+                flags: 64 
+            });
+        }
+    }
+	
 	// console.log('interaction', interaction);
 	if (!interaction.isChatInputCommand()) return;
 	// console.log(interaction);
