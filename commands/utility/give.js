@@ -10,7 +10,7 @@ module.exports = {
 				.setDescription('The object you wish to give')
 				.setRequired(true))
 		.addStringOption(option =>
-			option.setName('person')
+			option.setName('to')
 				.setDescription('The person to which you wish to give the object')
 				.setRequired(true)),
 	async execute(interaction) {
@@ -28,7 +28,7 @@ module.exports = {
 			return;
 		}
 		pov.lastObject[obj1.objectPronoun] = obj1.name;
-		const object2Name = interaction.options.getString('person');
+		const object2Name = interaction.options.getString('to');
 		if (!object2Name) {
 			await q.msg('\'object\' not defined.');
 			return;
@@ -52,7 +52,7 @@ module.exports = {
 			await q.msg(q.template.cantSee(q.GetDisplayName(obj2, false, false, true)));
 			return;
 		}
-		pov.lastObject[obj2.objectPronoun] = obj1.name;
+		pov.lastObject[obj2.objectPronoun] = obj2.name;
 		if (typeof obj2.give !== 'undefined') {
 			// It's a "dictionary"
 			if (typeof obj2.give[obj1.name] !== 'undefined') {
