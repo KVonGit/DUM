@@ -72,8 +72,8 @@ module.exports = {
                     } else {
                         qgame.objects.bomb.bombcount--;
                         if (qgame.objects.bomb.bombcount <= 5) {
-                            await gameChannel.send(`The bomb (${typeof qgame.players[qgame.object.bomb.loc] != 'undefined' ? 'held by ' + q.GetDisplayName(q.GetObject(qgame.object.bomb.loc)) : 'in ' + qgame.objects.bomb.loc}) ticks... ${qgame.objects.bomb.bombcount}`);
-							await q.addToTranscriptChannel(`The bomb (${typeof qgame.players[qgame.object.bomb.loc] != 'undefined' ? 'held by ' + q.GetDisplayName(q.GetObject(qgame.object.bomb.loc)) : 'in ' + qgame.objects.bomb.loc}) ticks... ${qgame.objects.bomb.bombcount}`);
+                            await gameChannel.send(`The bomb (${typeof qgame.players[qgame.objects.bomb.loc] != 'undefined' ? 'held by ' + q.GetDisplayName(q.GetObject(qgame.objects.bomb.loc)) : 'in ' + qgame.objects.bomb.loc}) ticks... ${qgame.objects.bomb.bombcount}`);
+							await q.addToTranscriptChannel(`The bomb (${typeof qgame.players[qgame.objects.bomb.loc] != 'undefined' ? 'held by ' + q.GetDisplayName(q.GetObject(qgame.objects.bomb.loc)) : 'in ' + qgame.objects.bomb.loc}) ticks... ${qgame.objects.bomb.bombcount}`);
                         }
                         
                     }
