@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const q = require('../../engine/q');
 
 module.exports = {
@@ -46,9 +46,19 @@ module.exports = {
                     const gameChannel = await global.bombTimerClient.channels.fetch(global.bombTimerChannelId);
                     if (qgame.objects.bomb.bombcount <= 0) {
 						const bombloc = qgame.objects.bomb.loc;
+                        const victim = q.GetDisplayName(qgame.players[bombloc]);
                         if (Object.keys(qgame.players).includes(bombloc)) {
-                            await gameChannel.send(`${q.GetDisplayName(qgame.players[bombloc])} is blown to Smithereens!`);
-							await q.addToTranscriptChannel(`${q.GetDisplayName(qgame.players[bombloc])} is blown to Smithereens!`);
+                            await gameChannel.send(`**💥 BOOM! THE BOMB EXPLODES IN ${qgame.players[bombloc].loc}!💥**\n\n${q.GetDisplayName(qgame.players[bombloc])} is blown to Smithereens!`);
+                            // Create a custom embed for the transcript
+                            const embed = new EmbedBuilder()
+                            .setAuthor({ name: 'DUM Parser', iconURL: global.bombTimerClient.user.displayAvatarURL() })
+                            .setDescription(`**💥 BOOM! THE BOMB EXPLODES IN ${qgame.players[bombloc].loc}!💥**\n\n${victim} is blown to Smithereens!`)
+                            .setColor(0xFF0000)
+                            .setTimestamp()
+                            .setFooter({ text: 'Event processed by: DUM Parser' });
+                                
+                            await q.addToTranscriptChannel(embed);
+							// await q.addToTranscriptChannel(`${q.GetDisplayName(qgame.players[bombloc])} is blown to Smithereens!`);
                             const items = q.getInventory(qgame, qgame.players[bombloc]) || [];
 							for (const i in items) {
 								// console.log('Dropping', items[i]);
@@ -60,9 +70,17 @@ module.exports = {
                             qgame.players[bombloc].loc = 'Smithereens';
                         }
                         else {
-                            // Don't print the game channel if no on is in the location to "see" it
-                            await gameChannel.send(`The bomb explodes in ${qgame.objects.bomb.loc}!`);
-						    await q.addToTranscriptChannel(`The bomb explodes in ${qgame.objects.bomb.loc}!`);
+                            await gameChannel.send(`# 💥 BOOM! THE BOMB EXPLODES IN  ${qgame.objects.bomb.loc}!💥`);
+                            // Create a custom embed for the transcript
+                            const embed = new EmbedBuilder()
+                            .setAuthor({ name: 'DUM Parser', iconURL: global.bombTimerClient.user.displayAvatarURL() })
+                            .setDescription(`**💥 BOOM! THE BOMB EXPLODES IN ${qgame.objects.bomb.loc}!💥**`)
+                            .setColor(0xFF0000)
+                            .setTimestamp()
+                            .setFooter({ text: 'Event processed by: DUM Parser' });
+                                
+                            await q.addToTranscriptChannel(embed);
+						    // await q.addToTranscriptChannel(`The bomb explodes in ${qgame.objects.bomb.loc}!`);
                         }
                         qgame.objects.bomb.loc = 'Arena';
                         qgame.objects.bomb.armed = false;
@@ -73,8 +91,31 @@ module.exports = {
                     } else {
                         qgame.objects.bomb.bombcount--;
                         if (qgame.objects.bomb.bombcount <= 5) {
+                            
                             await gameChannel.send(`The bomb (${typeof qgame.players[qgame.objects.bomb.loc] != 'undefined' ? 'held by ' + q.GetDisplayName(q.GetObject(qgame.objects.bomb.loc)) : 'in ' + qgame.objects.bomb.loc}) ticks... ${qgame.objects.bomb.bombcount}`);
-							await q.addToTranscriptChannel(`The bomb (${typeof qgame.players[qgame.objects.bomb.loc] != 'undefined' ? 'held by ' + q.GetDisplayName(q.GetObject(qgame.objects.bomb.loc)) : 'in ' + qgame.objects.bomb.loc}) ticks... ${qgame.objects.bomb.bombcount}`);
+                            // The above works.
+
+                            let s = '';
+                            if (typeof qgame.players[qgame.objects.bomb.loc] != 'undefined') {
+                                s = 'held by ';
+                            }
+                            else {
+                              s = 'in';
+                            }
+                            s += q.GetDisplayName(q.GetObject(qgame.objects.bomb.loc));
+                            const myDesc = 'The bomb (' + s  + ') ticks... ' + qgame.objects.bomb.bombcount.toString();
+                            // Create a custom embed for the transcript
+                            const embed2 = new EmbedBuilder()
+                            .setAuthor({ name: 'DUM Parser', iconURL: global.bombTimerClient.user.displayAvatarURL() })
+                            .setDescription(myDesc)
+                            .setColor(0xFF0000)
+                            .setTimestamp()
+                            .setFooter({ text: 'Event processed by: DUM Parser' });
+                                
+                            await q.addToTranscriptChannel(embed2); // this is where the error occurs
+
+                            // Next line is old code
+							// await q.addToTranscriptChannel(`The bomb (${typeof qgame.players[qgame.objects.bomb.loc] != 'undefined' ? 'held by ' + q.GetDisplayName(q.GetObject(qgame.objects.bomb.loc)) : 'in ' + qgame.objects.bomb.loc}) ticks... ${qgame.objects.bomb.bombcount}`);
                         }
                         
                     }

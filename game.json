@@ -538,11 +538,11 @@
             },
             "Smithereens": {
                 "name": "Smithereens",
-                "description": "You are in smithereens. You should probably go somewhere else."
+                "description": "You have been blown to Smithereens. You should probably find a command that will get you out of here."
             },
             "nowhere": {
                 "name": "nowhere",
-                "description": "You are nowhere. You should probably go somewhere."
+                "description": "You are nowhere. You shouldn't be here. You will have to quitgame to get out of here. Please report this bug using the /bug command."
             }
         },
         "players": {
@@ -564,12 +564,12 @@
                 "objectPronoun": "him",
                 "dateJoined": 1743129287007,
                 "commandHistory": [],
-                "loc": "Kitchen",
+                "loc": "Smithereens",
                 "attack": "You attack KV. (He deserves it.)",
                 "speakto": "“Hello,” says KV.",
                 "look": "KV is looking right back at YOU!",
                 "lastObject": {
-                    "it": "packet of sugar",
+                    "it": "bomb",
                     "him": "bomb"
                 }
             },

@@ -17,6 +17,7 @@
                 "prefix": "a",
                 "definiteArticle": "the",
                 "indefiniteArticle": "a",
+                "objectPronoun": "it",
                 "inherit": [
                     "container"
                 ],
@@ -26,7 +27,7 @@
                 },
                 "read": "There's no time for reading the paper.",
                 "look": "It's yesterday's edition, but there's an article about Quest Viva in it.",
-                "loc": "table",
+                "loc": "ajbruner77",
                 "alt": [
                     "paper"
                 ]
@@ -35,6 +36,7 @@
                 "name": "table",
                 "loc": "Lounge",
                 "prefix": "a",
+                "objectPronoun": "it",
                 "look": {
                     "type": "script",
                     "attr": "replyString = \"A wooden table, probably made of oak.\"; replyString += q.GetObject(\"newspaper\").loc === \"table\" ? \" There is a newspaper on it.\" : \"\";"
@@ -55,6 +57,7 @@
                 "name": "cat",
                 "loc": "sofa",
                 "prefix": "a",
+                "objectPronoun": "her",
                 "look": "It's an orange tabby cat, sitting on the table, looking right back at you.",
                 "attack": {
                     "type": "string",
@@ -86,6 +89,7 @@
             "lamp": {
                 "name": "lamp",
                 "prefix": "a",
+                "objectPronoun": "it",
                 "alt": [
                     "antique lamp",
                     "old lamp",
@@ -117,6 +121,7 @@
                     "flooring",
                     "ground"
                 ],
+                "objectPronoun": "it",
                 "loc": "Lounge",
                 "take": {
                     "type": "string",
@@ -134,12 +139,14 @@
                 "take": {
                     "type": "string",
                     "attr": "You can't take the wallpaper. It's glued to the wall."
-                }
+                },
+                "objectPronoun": "it"
             },
             "box": {
                 "name": "box",
                 "loc": "table",
                 "prefix": "a",
+                "objectPronoun": "it",
                 "look": {
                     "type": "script",
                     "attr": "replyString = `It's a small box, currently ${obj.isOpen ? 'open' : 'closed'}.`;"
@@ -149,7 +156,7 @@
                     "container",
                     "closedcontainer"
                 ],
-                "isOpen": false,
+                "isOpen": true,
                 "open": true,
                 "close": false,
                 "listChildren": true
@@ -157,7 +164,8 @@
             "defibrillator": {
                 "name": "defibrillator",
                 "prefix": "a",
-                "loc": "box",
+                "objectPronoun": "it",
+                "loc": "ajbruner77",
                 "look": "An ordinary defibrillator.",
                 "take": true,
                 "alt": [
@@ -166,6 +174,16 @@
             },
             "hammer": {
                 "name": "hammer",
+                "objectPronoun": "it",
+                "prefix": "a",
+                "inherit": [
+                    "weapon"
+                ],
+                "alt": [
+                    "war hammer",
+                    "mini war hammer",
+                    "mini hammer"
+                ],
                 "loc": "pertex1",
                 "look": "It's a mini war hammer.",
                 "take": true
@@ -173,7 +191,8 @@
             "banana": {
                 "name": "banana",
                 "prefix": "a",
-                "loc": "table",
+                "objectPronoun": "it",
+                "loc": "nowhere",
                 "look": "It's a banana.",
                 "take": true,
                 "inherit": [
@@ -188,6 +207,7 @@
                 "name": "Bob",
                 "loc": "Lounge",
                 "take": "Bob isn't the kind of guy you can carry around.",
+                "objectPronoun": "him",
                 "look": {
                     "type": "script",
                     "attr": "replyString = `Bob is ${obj.alive !== true ? 'lying on the floor, a lot more still than usual' : 'sitting up, appearing to feel somewhat under the weather'}.`;"
@@ -223,6 +243,7 @@
                     "telly",
                     "tube"
                 ],
+                "objectPronoun": "it",
                 "loc": "Lounge",
                 "look": "The TV is an old model, possibly 20 years old.",
                 "switchedondesc": "It is currently showing an old western.",
@@ -246,6 +267,7 @@
                 "alt": [
                     "couch"
                 ],
+                "objectPronoun": "it",
                 "inherit": [
                     "surface",
                     "container"
@@ -263,6 +285,7 @@
                 "name": "window",
                 "prefix": "the",
                 "loc": "Kitchen",
+                "objectPronoun": "it",
                 "look": {
                     "type": "script",
                     "attr": "if (qgame.objects[\"window\"].isOpen) { replyString = \"The window is open.\"; } else { replyString = \"The window is closed.\"; }"
@@ -287,6 +310,7 @@
                 "loc": "nowhere",
                 "look": "It's buzzing around the room.",
                 "take": "You can't catch it!",
+                "objectPronoun": "it",
                 "attack": {
                     "type": "string",
                     "attr": "You can't attack the bee. It's too fast."
@@ -304,9 +328,10 @@
                 "inherit": [
                     "container"
                 ],
+                "objectPronoun": "it",
                 "listChildren": true,
                 "listchildrenprefix": "In the bin you find ",
-                "isOpen": true,
+                "isOpen": false,
                 "close": false,
                 "alt": [
                     "trash can",
@@ -319,6 +344,7 @@
             "fridge": {
                 "name": "fridge",
                 "prefix": "the",
+                "objectPronoun": "it",
                 "inherit": [
                     "closedcontainer",
                     "container"
@@ -353,25 +379,29 @@
                 "isOpen:": false,
                 "open": true,
                 "close": true,
+                "objectPronoun": "it",
                 "look": {
                     "type": "script",
                     "attr": "replyString = `The cupboard is currently ${qgame.objects['cupboard'].isOpen === true ? 'open' : 'closed'}.`;"
                 },
                 "listChildren": true,
                 "listchildrenprefix": "The cupboard is bare except for... ",
-                "loc": "Kitchen"
+                "loc": "Kitchen",
+                "isOpen": true
             },
             "bottle opener": {
                 "name": "bottle opener",
                 "prefix": "a",
                 "take": true,
                 "loc": "cupboard",
+                "objectPronoun": "it",
                 "look": "It's a bottle opener. You can't use it on the **can** of beer, though. :rofl:"
             },
             "apple": {
                 "name": "apple",
                 "prefix": "an",
-                "loc": "table",
+                "objectPronoun": "it",
+                "loc": "nowhere",
                 "look": "It's a red apple.",
                 "take": true,
                 "inherit": [
@@ -385,6 +415,7 @@
             "beer": {
                 "name": "beer",
                 "usedefaultprefix": false,
+                "objectPronoun": "it",
                 "look": "A can of Squiffy beer, with “XanMag” written all over it.",
                 "prefix": "XanMag's",
                 "take": "XanMag probably wouldn't like that.",
@@ -399,11 +430,12 @@
                 ],
                 "drink": "You can't drink that. It's XanMag's."
             },
-            "flour": {
+            "sack of flour": {
                 "name": "sack of flour",
                 "prefix": "a",
                 "definiteArticle": "the",
                 "indefiniteArticle": "the",
+                "objectPronoun": "it",
                 "weight": 500,
                 "take": true,
                 "loc": "cupboard",
@@ -415,9 +447,10 @@
                     "bag"
                 ]
             },
-            "eggs": {
+            "carton of eggs": {
                 "name": "carton of eggs",
                 "prefix": "a",
+                "objectPronoun": "it",
                 "weight": 250,
                 "take": true,
                 "loc": "fridge",
@@ -429,17 +462,43 @@
                     "carton"
                 ]
             },
-            "sugar": {
+            "packet of sugar": {
                 "name": "packet of sugar",
                 "prefix": "a",
+                "objectPronoun": "it",
                 "weight": 4,
                 "take": true,
-                "loc": "cupboard",
+                "loc": "Kitchen",
                 "alt": [
                     "sugar",
                     "sugar packet",
                     "packet of sugar"
                 ]
+            },
+            "bomb": {
+                "name": "bomb",
+                "prefix": "a",
+                "objectPronoun": "it",
+                "loc": "Arena",
+                "alt": [
+                    "explosive",
+                    "time bomb"
+                ],
+                "armed": false,
+                "bombcount": 10,
+                "look": {
+                    "type": "script",
+                    "attr": "if (obj.armed) { replyString = `The bomb is ticking, and a red count-down display reads '${obj.bombcount}'.`; } else { replyString = (obj.loc === pov.name) ? 'You can arm this bomb by typing /arm bomb.' : 'Why not pick it up and take a closer look?'; }"
+                },
+                "take": true
+            },
+            "fish": {
+                "name": "fish",
+                "prefix": "a",
+                "objectPronoun": "it",
+                "loc": "ajbruner77",
+                "look": "It's a fish.",
+                "take": true
             }
         },
         "locations": {
@@ -458,36 +517,67 @@
                 "exits": {
                     "west": {
                         "to": "Lounge"
+                    },
+                    "north": {
+                        "to": "Arena"
                     }
                 }
             },
+            "Arena": {
+                "name": "The Arena",
+                "description": "Welcome to the arena.",
+                "exits": {
+                    "south": {
+                        "to": "Kitchen"
+                    }
+                },
+                "beforeLeaving": {
+                    "type": "script",
+                    "attr": "replyString = 'You exit the Arena.'; if (qgame.objects.bomb.loc === pov.name) { replyString = 'You can\\'t leave this area while carrying the bomb!'; canLeave = false;}"
+                }
+            },
+            "Smithereens": {
+                "name": "Smithereens",
+                "description": "You have been blown to Smithereens. You should probably find a command that will get you out of here."
+            },
             "nowhere": {
                 "name": "nowhere",
-                "description": "You are nowhere. You should probably go somewhere."
+                "description": "You are nowhere. You shouldn't be here. You will have to quitgame to get out of here. Please report this bug using the /bug command."
             }
         },
         "players": {
-            "pertex1": {
-                "name": "pertex1",
-                "alias": "Pertex",
-                "userName": "pertex1",
-                "dateJoined": 1743029210827,
-                "commandHistory": [],
-                "loc": "Lounge"
-            },
             "kv_online": {
                 "name": "kv_online",
                 "alias": "KV",
+                "id": "1279879910109872189",
+                "avatar": "https://cdn.discordapp.com/avatars/1279879910109872189/b84560ec282e1f44d77cae1fca45dc63.webp",
                 "userName": "kv_online",
+                "objectPronoun": "him",
                 "dateJoined": 1743129287007,
                 "commandHistory": [],
-                "loc": "Lounge",
+                "loc": "Kitchen",
                 "attack": "You attack KV. (He deserves it.)",
-                "speakto":  "“Hello,” says KV.",
-                "look": "KV is looking right back at YOU!"
+                "speakto": "“Hello,” says KV.",
+                "look": "KV is looking right back at YOU!",
+                "give": {
+                    "bomb": {
+                        "type": "script",
+                        "attr": "replyString = 'KV refuses to take the bomb.';"
+                    }
+                },
+                "lastObject": {
+                }
+            }
+            
+        },
+        "timers": {
+            "bombtimer": {
+                "interval": 5,
+                "enabled": false,
+                "type": "script",
+                "attr": "if (qgame.objects.bomb.bombcount <= 0) { q.msg('BOOM! The bomb explodes!', true, true); const bombloc = qgame.objects.bomb.loc; if (Object.keys(qgame.players).includes(bombloc)) { q.msg(`${q.GetDisplayName(qgame.players[bombloc])} is blown to smithereens!`, false, true); qgame.players[bombloc].loc = 'nowhere'; } else { q.msg(`The bomb explodes in ${bombloc}!`, false, true); } qgame.objects.bomb.loc = 'nowhere'; qgame.timers.bombtimer.enabled = false; } else { qgame.objects.bomb.bombcount--; if (qgame.objects.bomb.bombcount <= 3) { q.msg(`The bomb ticks... ${qgame.objects.bomb.bombcount}`, true, true); } }"
             }
         },
-        "timers": {},
         "turnScripts": {
             "busyBee": {
                 "type": "script",
