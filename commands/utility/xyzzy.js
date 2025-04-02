@@ -8,7 +8,7 @@ module.exports = {
 	async execute(interaction) {
 		global.interaction = interaction;
 		global.qgame = qgame;
-		if (pov.loc === 'nowhere') {
+		if (pov.loc === 'nowhere' || pov.loc === 'Smithereens') {
 			pov.loc = 'Lounge';
 			await q.msg(q.getLocationDescription(qgame, pov));
 			await q.saveGame('./game.json', qgame, interaction);

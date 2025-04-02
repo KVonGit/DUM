@@ -47,8 +47,8 @@ module.exports = {
                     if (qgame.objects.bomb.bombcount <= 0) {
 						const bombloc = qgame.objects.bomb.loc;
                         if (Object.keys(qgame.players).includes(bombloc)) {
-                            await gameChannel.send(`${q.GetDisplayName(qgame.players[bombloc])} is blown to smithereens!`);
-							await q.addToTranscriptChannel(`${q.GetDisplayName(qgame.players[bombloc])} is blown to smithereens!`);
+                            await gameChannel.send(`${q.GetDisplayName(qgame.players[bombloc])} is blown to Smithereens!`);
+							await q.addToTranscriptChannel(`${q.GetDisplayName(qgame.players[bombloc])} is blown to Smithereens!`);
                             const items = q.getInventory(qgame, qgame.players[bombloc]) || [];
 							for (const i in items) {
 								console.log('Dropping', items[i]);
@@ -56,7 +56,8 @@ module.exports = {
                                 console.log(`qgame.players[bombloc].loc: ${qgame.players[bombloc].loc}`);
 								qgame.objects[items[i]].loc = qgame.players[bombloc].loc;
 							}
-							delete qgame.players[qgame.players[bombloc].name];
+							// delete qgame.players[qgame.players[bombloc].name];
+                            qgame.players[bombloc].loc = 'Smithereens';
                         }
                         else {
                             // Don't print the game channel if no on is in the location to "see" it

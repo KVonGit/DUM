@@ -16,6 +16,8 @@ module.exports = {
 			qgame.players[povName] = {
 				'name': povName,
 				'alias': alias,
+				'id': interaction.user.id,
+				'avatar': interaction.user.displayAvatarURL(),
 				'userName': interaction.user.username,
 				'dateJoined': Date.now(),
 				'commandHistory': [],

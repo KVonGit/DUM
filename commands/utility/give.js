@@ -30,7 +30,7 @@ module.exports = {
 		pov.lastObject[obj1.objectPronoun] = obj1.name;
 		const object2Name = interaction.options.getString('person');
 		if (!object2Name) {
-			await q.msg('\'' + object + '\' not defined.');
+			await q.msg('\'object\' not defined.');
 			return;
 		}
 
