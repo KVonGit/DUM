@@ -36,7 +36,7 @@ module.exports = {
 			return;
 		}
 
-		console.log('object2', object2);
+		// console.log('object2', object2);
 		const obj2 = q.GetObject(object2);
 		if (obj2 == 'undefined') {
 			await q.msg('No such object ("' + object2 + '")!');
@@ -47,11 +47,11 @@ module.exports = {
 			return;
 		}
 		if (typeof obj2.use == 'undefined') {
-			console.log('No use att for obj2');
+			// console.log('No use att for obj2');
 		}
 		else {
 			if (typeof obj2.use[obj.name] == 'undefined') {
-				console.log ('No item for obj1 in obj2 use dictionary');
+				// console.log ('No item for obj1 in obj2 use dictionary');
 			}
 			const { type: obj2Type, attr: obj2Attr } = q.getAttribute(obj2.use, obj.name);
 			if (obj2Type == 'boolean') {

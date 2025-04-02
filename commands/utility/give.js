@@ -14,8 +14,8 @@ module.exports = {
 				.setDescription('The person to which you wish to give the object')
 				.setRequired(true)),
 	async execute(interaction) {
-		console.log('Give command executed!');
-		console.log('interaction', interaction);
+		// console.log('Give command executed!');
+		// console.log('interaction', interaction);
 		const object1Name = interaction.options.getString('object');
 		if (!object1Name) {
 			await q.msg('\'object\' not defined.');

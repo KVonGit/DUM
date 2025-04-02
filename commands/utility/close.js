@@ -25,9 +25,9 @@ module.exports = {
 			await q.msg(q.template.cantSee(q.GetDisplayName(obj, false, false, true)));
 			return;
 		}
-		console.log('pov', pov);
-		console.log('obj', obj);
-		console.log('pov.lastObject', pov.lastObject);
+		// console.log('pov', pov);
+		// console.log('obj', obj);
+		// console.log('pov.lastObject', pov.lastObject);
 		pov.lastObject[obj.objectPronoun] = obj.name;
 
 		if (obj.isOpen === false) {

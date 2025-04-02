@@ -9,6 +9,7 @@ module.exports = {
 			option.setName('object')
 				.setDescription('The object you wish to drop')
 				.setRequired(true)),
+	aliases: ['discard', 'throw'],
 	async execute(interaction) {
 		const objectName = interaction.options.getString('object');
 		if (!objectName) {

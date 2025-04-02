@@ -333,8 +333,22 @@ module.exports.doGo = async (qgame, pov, loc, exitName, interaction) => {
 	}
 
 	// Execute "before leaving" scripts
-	if (loc.beforeLeavingScript) {
-		eval(loc.beforeLeavingScript);
+	if (loc.beforeLeaving) {
+		let canLeave = true;
+		let replyString = '';
+		await eval(loc.beforeLeaving.attr);
+		if (!canLeave) {
+			if (replyString.length > 0) {
+				await this.msg(replyString);
+			}
+			else {
+				await this.msg('You can\'t go ' + exitName + '.');
+			}
+			return;
+		}
+		else if (replyString.length > 0) {
+			await this.msg(replyString);
+		}
 	}
 
 	// Update the player's location
@@ -873,7 +887,7 @@ module.exports.thisCommand = (interaction) => {
 	// Construct the final string
 	const commandString = povName + ' @ ' + new Date() + '\n> /' + commandName + ' ' + optionsString + ''.trim();
 
-	console.log('thisCommand:', commandString);
+	// console.log('thisCommand:', commandString);
 	return commandString;
 };
 

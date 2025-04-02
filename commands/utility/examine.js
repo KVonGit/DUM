@@ -23,7 +23,7 @@ module.exports = {
 			return;
 		}
 		if (!q.inScope(obj)) {
-			console.log('q.inScope("' + obj.name + '")', q.inScope(obj));
+			// console.log('q.inScope("' + obj.name + '")', q.inScope(obj));
 			await q.msg(q.template.cantSee(q.GetDisplayName(obj, false, false, true)));
 			return;
 		}

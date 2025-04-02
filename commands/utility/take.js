@@ -30,7 +30,7 @@ module.exports = {
 		}
 
 		if (!q.inScope(obj)) {
-			console.log('take: inScope is false', obj.loc);
+			// console.log('take: inScope is false', obj.loc);
 			await q.msg(q.template.cantSee(q.GetDisplayName(obj, false, false, true)));
 			return;
 		}
@@ -41,7 +41,7 @@ module.exports = {
 		// console.log('type:', type);
 		// console.log('attr:', attr);
 		if (typeof type === 'undefined') {
-			 console.log('take: type is undefined');
+			 // console.log('take: type is undefined');
 			await q.msg(obj.takemsg || q.template.cantTake(q.GetDisplayName(obj, true, false, true)));
 			return;
 		}

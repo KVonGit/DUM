@@ -51,9 +51,9 @@ module.exports = {
 							await q.addToTranscriptChannel(`${q.GetDisplayName(qgame.players[bombloc])} is blown to Smithereens!`);
                             const items = q.getInventory(qgame, qgame.players[bombloc]) || [];
 							for (const i in items) {
-								console.log('Dropping', items[i]);
-                                console.log(`qgame.objects[items[i]].loc: ${qgame.objects[items[i]].loc}`);
-                                console.log(`qgame.players[bombloc].loc: ${qgame.players[bombloc].loc}`);
+								// console.log('Dropping', items[i]);
+                                // console.log(`qgame.objects[items[i]].loc: ${qgame.objects[items[i]].loc}`);
+                                // console.log(`qgame.players[bombloc].loc: ${qgame.players[bombloc].loc}`);
 								qgame.objects[items[i]].loc = qgame.players[bombloc].loc;
 							}
 							// delete qgame.players[qgame.players[bombloc].name];
@@ -67,7 +67,7 @@ module.exports = {
                         qgame.objects.bomb.loc = 'Arena';
                         qgame.objects.bomb.armed = false;
                         qgame.objects.bomb.bombcount = 10;
-						console.log('Bomb exploded!');
+						// console.log('Bomb exploded!');
                         clearInterval(global.bombTimer);
                         await q.saveGame();
                     } else {

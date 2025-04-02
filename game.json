@@ -386,7 +386,8 @@
                 },
                 "listChildren": true,
                 "listchildrenprefix": "The cupboard is bare except for... ",
-                "loc": "Kitchen"
+                "loc": "Kitchen",
+                "isOpen": true
             },
             "bottle opener": {
                 "name": "bottle opener",
@@ -467,7 +468,7 @@
                 "objectPronoun": "it",
                 "weight": 4,
                 "take": true,
-                "loc": "cupboard",
+                "loc": "Kitchen",
                 "alt": [
                     "sugar",
                     "sugar packet",
@@ -529,6 +530,10 @@
                     "south": {
                         "to": "Kitchen"
                     }
+                },
+                "beforeLeaving": {
+                    "type": "script",
+                    "attr": "replyString = 'You exit the Arena.'; if (qgame.objects.bomb.loc === pov.name) { replyString = 'You can\\'t leave this area while carrying the bomb!'; canLeave = false;}"
                 }
             },
             "Smithereens": {
@@ -559,12 +564,12 @@
                 "objectPronoun": "him",
                 "dateJoined": 1743129287007,
                 "commandHistory": [],
-                "loc": "Lounge",
+                "loc": "Kitchen",
                 "attack": "You attack KV. (He deserves it.)",
                 "speakto": "“Hello,” says KV.",
                 "look": "KV is looking right back at YOU!",
                 "lastObject": {
-                    "it": "TV",
+                    "it": "packet of sugar",
                     "him": "bomb"
                 }
             },
