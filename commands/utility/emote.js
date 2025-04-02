@@ -13,7 +13,8 @@ module.exports = {
 	async execute(interaction) {
 		global.interaction = interaction;
 		const s = interaction.options.getString('text');
-		await q.msg(q.GetDisplayName(pov) + ' ' + s, false, false);
-		await q.msg('You pretend to ' + s, true, true);
+		const txt = q.GetDisplayName(pov) + ' ' + s;
+		await q.msg(txt, false, false);
+		await interaction.followUp({ content: 'Your fake command says: ' + q.GetDisplayName(pov) + ' ' + s, flags: 64});
 	},
 };
