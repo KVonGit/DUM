@@ -27,7 +27,7 @@
                 },
                 "read": "There's no time for reading the paper.",
                 "look": "It's yesterday's edition, but there's an article about Quest Viva in it.",
-                "loc": "table",
+                "loc": "ajbruner77",
                 "alt": [
                     "paper"
                 ]
@@ -156,7 +156,7 @@
                     "container",
                     "closedcontainer"
                 ],
-                "isOpen": false,
+                "isOpen": true,
                 "open": true,
                 "close": false,
                 "listChildren": true
@@ -165,7 +165,7 @@
                 "name": "defibrillator",
                 "prefix": "a",
                 "objectPronoun": "it",
-                "loc": "box",
+                "loc": "ajbruner77",
                 "look": "An ordinary defibrillator.",
                 "take": true,
                 "alt": [
@@ -192,7 +192,7 @@
                 "name": "banana",
                 "prefix": "a",
                 "objectPronoun": "it",
-                "loc": "table",
+                "loc": "nowhere",
                 "look": "It's a banana.",
                 "take": true,
                 "inherit": [
@@ -400,7 +400,7 @@
                 "name": "apple",
                 "prefix": "an",
                 "objectPronoun": "it",
-                "loc": "table",
+                "loc": "nowhere",
                 "look": "It's a red apple.",
                 "take": true,
                 "inherit": [
@@ -490,6 +490,14 @@
                     "attr": "if (obj.armed) { replyString = `The bomb is ticking, and a red count-down display reads '${obj.bombcount}'.`; } else { replyString = (obj.loc === pov.name) ? 'You can arm this bomb by typing /arm bomb.' : 'Why not pick it up and take a closer look?'; }"
                 },
                 "take": true
+            },
+            "fish": {
+                "name": "fish",
+                "prefix": "a",
+                "objectPronoun": "it",
+                "loc": "ajbruner77",
+                "look": "It's a fish.",
+                "take": true
             }
         },
         "locations": {
@@ -523,6 +531,10 @@
                     }
                 }
             },
+            "Smithereens": {
+                "name": "Smithereens",
+                "description": "You are in smithereens. You should probably go somewhere else."
+            },
             "nowhere": {
                 "name": "nowhere",
                 "description": "You are nowhere. You should probably go somewhere."
@@ -551,7 +563,10 @@
                 "attack": "You attack KV. (He deserves it.)",
                 "speakto": "“Hello,” says KV.",
                 "look": "KV is looking right back at YOU!",
-                "lastObject": {}
+                "lastObject": {
+                    "it": "TV",
+                    "him": "bomb"
+                }
             },
             "ajbruner77": {
                 "name": "ajbruner77",
@@ -560,8 +575,13 @@
                 "dateJoined": 1743332310672,
                 "commandHistory": [],
                 "objectPronoun": "him",
-                "lastObject": {},
-                "loc": "Lounge"
+                "lastObject": {
+                    "it": "apple"
+                },
+                "loc": "Lounge",
+                "give": {
+                    "bomb": "replyString = 'AJBruner77 is wearing a bomb-deflecting vest. You have failed to give him the bomb.';"
+                }
             }
         },
         "timers": {

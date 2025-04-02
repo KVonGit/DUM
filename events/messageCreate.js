@@ -100,10 +100,10 @@ module.exports.messageHandler = async (message, client) => {
   
 	// Replace the multiple greeting/farewell checks with this more structured approach
 	if (message.content.match(/\bDUM\b/i)) {
-	  // Miss Mod was directly addressed
+	  // DUM was directly addressed
 	  
 	  // Check for greetings
-	  if (message.content.match(/\b(h(e|a)llo|hi|hey|howdy|greetings|good morning|good day)[\s,.!?]?/i)) {
+	  if (message.content.match(/\b(h(e|a)llo|hi|hey|howdy|greetings|good morning|good day)\b[\s,.!?]?/i)) {
 		const randomGreetings = [
 		  "Hello.",
 		  "Greetings."
@@ -137,12 +137,12 @@ module.exports.messageHandler = async (message, client) => {
 	  
 	  
 	  
-	  // If Miss Mod is addressed but not with a greeting/farewell/joke
+	  // If DUM is addressed but not with a greeting/farewell/joke
 	  else {
 		message.react('👀');
 	  }
 	} else {
-	  // Miss Mod wasn't directly addressed, but we can still react to general greetings
+	  // DUM wasn't directly addressed, but we can still react to general greetings
 	  if (message.content.match(/\b(hello|hi|hey)[\s,.!?]?/i) && 
 		  !message.content.includes('@') &&  // Avoid reacting to greetings for others
 		  Math.random() < 0.3) {  // Only react 30% of the time to avoid being annoying
