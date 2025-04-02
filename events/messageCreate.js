@@ -3,12 +3,12 @@ const { ChannelType } = require('discord.js');
 
 module.exports.messageHandler = async (message, client) => {
 	// console.log('Raw message received:', message.content);
-	// console.log('Message event received:', {
+	/* console.log('Message event received:', {
 	  author: message.author.tag,
 	  content: message.content,
 	  isDM: !message.guild,
 	  channel: message.channel.type
-	});
+	});*/
 	
 	if (message.author.bot || message.author === 'DUM Parser#8815') return;
 	
