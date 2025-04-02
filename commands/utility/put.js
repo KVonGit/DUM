@@ -10,6 +10,14 @@ module.exports = {
 				.setDescription('The object you wish to put on/in something')
 				.setRequired(true))
 		.addStringOption(option =>
+			option.setName('placement')
+				.setDescription('How to place the object')
+				.setRequired(true)
+				.addChoices(
+					{ name: 'In', value: 'in' },
+					{ name: 'On', value: 'on' }
+				))
+		.addStringOption(option =>
 			option.setName('object2')
 				.setDescription('The object you wish to put something on/in')
 				.setRequired(true)),
@@ -24,11 +32,14 @@ module.exports = {
 		if (!obj1) {
 			await q.msg(`No such object ("${object1Name}")!`);
 			return;
-		}
+			}
+		
+		const placement = interaction.options.getString('placement');
 		pov.lastObject[obj1.objectPronoun] = obj1.name;
+		
 		const object2Name = interaction.options.getString('object2');
 		if (!object2Name) {
-			await q.msg('\'' + object + '\' not defined.');
+			await q.msg('\'' + object2Name + '\' not defined.');
 			return;
 		}
 
@@ -51,11 +62,11 @@ module.exports = {
 		let wasDropped = false;
 		if (!obj1.drop || !obj1.drop.type) {
 			wasDropped = false;
-			if (obj2.inherit.indexOf('surface') >= 0) {
+			if (placement === 'on' && obj2.inherit.indexOf('surface') >= 0) {
 				obj1.loc = obj2.name;
 				wasDropped = true;
 			}
-			else if (obj2.inherit.indexOf('container') >= 0) {
+			else if (placement === 'in' && obj2.inherit.indexOf('container') >= 0) {
 				if (obj2.isOpen) {
 					obj1.loc = obj2.name;
 					wasDropped = true;
