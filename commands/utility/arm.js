@@ -49,7 +49,7 @@ module.exports = {
                         if (Object.keys(qgame.players).includes(bombloc)) {
                             await gameChannel.send(`${q.GetDisplayName(qgame.players[bombloc])} is blown to smithereens!`);
 							await q.addToTranscriptChannel(`${q.GetDisplayName(qgame.players[bombloc])} is blown to smithereens!`);
-                            const items = q.getInventory(qgame, qgame.players[bombloc]);
+                            const items = q.getInventory(qgame, qgame.players[bombloc]) || [];
 							for (const i in items) {
 								console.log('Dropping', items[i]);
                                 console.log(`qgame.objects[items[i]].loc: ${qgame.objects[items[i]].loc}`);
@@ -60,7 +60,7 @@ module.exports = {
                         }
                         else {
                             // Don't print the game channel if no on is in the location to "see" it
-                            // await gameChannel.send(`The bomb explodes in ${qgame.objects.bomb.loc}!`);
+                            await gameChannel.send(`The bomb explodes in ${qgame.objects.bomb.loc}!`);
 						    await q.addToTranscriptChannel(`The bomb explodes in ${qgame.objects.bomb.loc}!`);
                         }
                         qgame.objects.bomb.loc = 'Arena';
@@ -72,8 +72,8 @@ module.exports = {
                     } else {
                         qgame.objects.bomb.bombcount--;
                         if (qgame.objects.bomb.bombcount <= 5) {
-                            await gameChannel.send(`The bomb (in ${qgame.objects.bomb.loc}) ticks... ${qgame.objects.bomb.bombcount}`);
-							await q.addToTranscriptChannel(`The bomb (in ${qgame.objects.bomb.loc}) ticks... ${qgame.objects.bomb.bombcount}`);
+                            await gameChannel.send(`The bomb (${typeof qgame.players[qgame.object.bomb.loc] != 'undefined' ? 'held by ' + q.GetDisplayName(q.GetObject(qgame.object.bomb.loc)) : 'in ' + qgame.objects.bomb.loc}) ticks... ${qgame.objects.bomb.bombcount}`);
+							await q.addToTranscriptChannel(`The bomb (${typeof qgame.players[qgame.object.bomb.loc] != 'undefined' ? 'held by ' + q.GetDisplayName(q.GetObject(qgame.object.bomb.loc)) : 'in ' + qgame.objects.bomb.loc}) ticks... ${qgame.objects.bomb.bombcount}`);
                         }
                         
                     }
