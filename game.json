@@ -542,7 +542,7 @@
             },
             "nowhere": {
                 "name": "nowhere",
-                "description": "You are nowhere. You shouldn't be here. You will have to quitgame to get out of here. Please report this bug using the /bug command."
+                "description": "You are nowhere, and you shouldn't be here. You will have to quitgame to get out of here. Please report this bug using the /bug command."
             }
         },
         "players": {
