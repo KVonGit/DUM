@@ -293,6 +293,7 @@ module.exports.SendDM = async (s) => {
 };
 
 module.exports.doGo = async (qgame, pov, loc, exitName, interaction) => {
+	console.log('doGo called with exitName:', exitName);
 	if (!loc.exits) {
 		await this.msg('There are no exits!');
 		return;

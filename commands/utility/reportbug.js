@@ -11,6 +11,29 @@ module.exports = {
         const alias = pov.alias;
         
         if (Object.keys(qgame.players).indexOf(pov.name) > -1) {
+            // Check if this is a text command or slash command
+            if (interaction.isTextCommand) {
+                // Handle text command (from patterns.js matching)
+                const description = interaction.options.getString('description');
+                if (description) {
+                    // Send to bug report channel
+                    const bugReportChannel = interaction.client.channels.cache.find(channel => channel.name === 'bug-reports');
+                    if (bugReportChannel) {
+                        await bugReportChannel.send(`**Bug Report**\nFrom: ${alias} (${pov.name})\nDescription: \n>>> ${description}`);
+                        // Send a confirmation to transcript
+                        await q.msg('>>> ' + description);
+                        await interaction.reply('Bug report submitted successfully!');
+                    } else {
+                        await q.msg('Bug report channel not found. Please contact an admin.');
+                        await interaction.reply('Bug report failed - channel not found.');
+                    }
+                } else {
+                    await interaction.reply('You need to provide a description of the bug!');
+                }
+                return;
+            }
+            
+            // This is a slash command - show modal
             // Create a modal for the bug report input
             const modal = new ModalBuilder()
                 .setCustomId('bugReportModal')

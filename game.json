@@ -393,7 +393,7 @@
                 "name": "bottle opener",
                 "prefix": "a",
                 "take": true,
-                "loc": "cupboard",
+                "loc": "ajbruner77",
                 "objectPronoun": "it",
                 "look": "It's a bottle opener. You can't use it on the **can** of beer, though. :rofl:"
             },
@@ -438,7 +438,7 @@
                 "objectPronoun": "it",
                 "weight": 500,
                 "take": true,
-                "loc": "cupboard",
+                "loc": "kv_online",
                 "alt": [
                     "flour",
                     "bag of flour",
@@ -468,7 +468,7 @@
                 "objectPronoun": "it",
                 "weight": 4,
                 "take": true,
-                "loc": "Kitchen",
+                "loc": "kv_online",
                 "alt": [
                     "sugar",
                     "sugar packet",
@@ -564,13 +564,13 @@
                 "objectPronoun": "him",
                 "dateJoined": 1743129287007,
                 "commandHistory": [],
-                "loc": "Smithereens",
+                "loc": "Lounge",
                 "attack": "You attack KV. (He deserves it.)",
                 "speakto": "“Hello,” says KV.",
                 "look": "KV is looking right back at YOU!",
                 "lastObject": {
-                    "it": "bomb",
-                    "him": "bomb"
+                    "it": "sack of flour",
+                    "him": "ajbruner77"
                 }
             },
             "ajbruner77": {
