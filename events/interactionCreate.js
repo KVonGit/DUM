@@ -118,7 +118,7 @@ module.exports.interactionHandler = async (interaction) => {
 		global.qgame = qgame;
 		global.pov = pov;
 		await command.execute(interaction);
-		if (interaction.commandName != 'revive') await q.addThisCommandToTranscriptAsEmbed(interaction);
+		if (interaction.commandName != 'revive' && interaction.commandName != 'emote') await q.addThisCommandToTranscriptAsEmbed(interaction);
 		// await q.addThisCommandToTranscriptAsEmbed(interaction);
 		if (interaction.commandName != 'quitgame' && typeof qgame != 'undefined' && typeof pov != 'undefined' && qgame.suppressTurnScripts !== false) await require('./engine/q').runTurnScripts();
 	}

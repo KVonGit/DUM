@@ -14,7 +14,23 @@ module.exports = {
 		global.interaction = interaction;
 		const s = interaction.options.getString('text');
 		const txt = q.GetDisplayName(pov) + ' ' + s;
-		await q.msg(txt, false, false);
+		await interaction.reply(txt);
+		
+		// Create a new object with only the properties you need
+		const feignedInteraction = {
+			user: interaction.user,
+			commandName: '???',
+			channel: interaction.channel,
+			options: {
+				getString: () => txt,
+				data: []
+			}
+		};
+		
+		global.gameResponseForTranscript = [txt];
+		
+		await q.addThisCommandToTranscriptAsEmbed(feignedInteraction);
 		await interaction.followUp({ content: 'Your fake command says: ' + q.GetDisplayName(pov) + ' ' + s, flags: 64});
+		return;
 	},
 };

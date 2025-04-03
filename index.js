@@ -52,7 +52,7 @@ Object.defineProperty(String.prototype, 'capFirst', {
 
 client.once(Events.ClientReady, readyClient => {
 	global.dumEmoji = client.emojis.cache.get('1355249879101870282');
-	console.log(`Ready! Logged in as ${readyClient.user.tag}`);
+	console.log(`DUM INTERACTION_HANDLER client logged in as ${readyClient.user.tag}`);
 });
 
 client.on(Events.InteractionCreate, async interaction => {
@@ -63,7 +63,7 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 client.on('ready', (c) => {
-	console.log(`DUM MESSAGE HANDLER client logged in as ${c.user.tag}!`);
+	console.log(`DUM MESSAGE_HANDLER client logged in as ${c.user.tag}!`);
   });
   
 client.on('messageCreate', async (message) => {
@@ -107,7 +107,7 @@ const clientSetterUpper = new Client({
 });
 
 clientSetterUpper.once('ready', () => {
-	console.log(`SetterUpper logged in as ${clientSetterUpper.user.tag}!`);
+	console.log(`DUM SETUP_HANDLER client logged in as ${clientSetterUpper.user.tag}!`);
 });
 
 clientSetterUpper.on('messageReactionAdd', async (reaction, user) => {

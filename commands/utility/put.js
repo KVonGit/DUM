@@ -102,7 +102,7 @@ module.exports = {
 		}
 
 		if (wasDropped) {
-			await q.msg(`${q.GetDisplayName(pov)} dropped ${q.GetDisplayName(obj1, true, false, true)} in: **${pov.loc}**.`, false, false);
+			await q.msg(`${q.GetDisplayName(pov)} put ${q.GetDisplayName(obj1, true, false, true)} in: **${q.GetDisplayName(obj2, true, false, true)}**.`, false, false);
 			await q.msg('Done.');
 			try {
 				await q.saveGame('./game.json', qgame);
