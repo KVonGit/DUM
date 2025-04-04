@@ -113,6 +113,8 @@ module.exports.interactionHandler = async (interaction) => {
 			await command.execute(interaction);
 			return;
 		}
+		// This is where it loads the game data from disk
+		// TODO: Changing this to loade the game once when the bot starts up
 		const { qgame, pov } = await q.getGamePov();
 		if (!pov) return;
 		global.qgame = qgame;

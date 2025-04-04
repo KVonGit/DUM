@@ -16,6 +16,7 @@ module.exports.patterns = {
 	"look": /^(look|l)$/i,
 	"note": /(^note (?<text>.*)$)|(^\W)/i,
 	"oops": /^oops (?<object>.*)$/i,
+	"open": /^open (?<object>.*)$/i,
 	"players": /^players|who$/i,
 	"put": /^put (?<object1>.*) (?<placement>.*) (?<object2>.*)$/i,
 	"quitgame": /^(quit|exit|leave) game$/i,

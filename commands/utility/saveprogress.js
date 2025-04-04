@@ -7,6 +7,7 @@ module.exports = {
 		.setDescription('Save your progress.'),
 	async execute(interaction) {
 		global.interaction = interaction;
+		// This is a joke command. It doesn't actually save anything.
 		const s = q.template.noSave;
 		await q.msg(s);
 	},

@@ -54,6 +54,11 @@ module.exports = {
 			return;
 		}
 
+		if (!q.inScope(obj2)) {
+			await q.msg(q.template.cantSee(q.GetDisplayName(obj2, false, false, true)));
+			return;
+		}
+
 		if (obj2.name === pov.name || obj1.name === pov.name || obj2.name === obj1.name) {
 			await q.msg('You can\'t do that.');
 			return;
