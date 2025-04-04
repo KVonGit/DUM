@@ -156,7 +156,7 @@
                     "container",
                     "closedcontainer"
                 ],
-                "isOpen": true,
+                "isOpen": false,
                 "open": true,
                 "close": false,
                 "listChildren": true
@@ -438,7 +438,7 @@
                 "objectPronoun": "it",
                 "weight": 500,
                 "take": true,
-                "loc": "kv_online",
+                "loc": "Kitchen",
                 "alt": [
                     "flour",
                     "bag of flour",
@@ -468,7 +468,7 @@
                 "objectPronoun": "it",
                 "weight": 4,
                 "take": true,
-                "loc": "kv_online",
+                "loc": "Kitchen",
                 "alt": [
                     "sugar",
                     "sugar packet",
@@ -564,7 +564,7 @@
                 "objectPronoun": "him",
                 "dateJoined": 1743129287007,
                 "commandHistory": [],
-                "loc": "Lounge",
+                "loc": "Kitchen",
                 "attack": "You attack KV. (He deserves it.)",
                 "speakto": "“Hello,” says KV.",
                 "look": "KV is looking right back at YOU!",

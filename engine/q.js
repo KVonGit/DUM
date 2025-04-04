@@ -55,8 +55,31 @@ module.exports.loadGame = async (filePath = './game.json') => {
 	});
 };
 
+module.exports.loadGameOnce = async (filePath = './game.json') => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, 'utf8', function(err, data) {
+      if (err) {
+        console.error('Error loading game data:', err);
+        return reject(err);
+      }
+      if (typeof data === 'undefined' || data.trim() === '') {
+        return reject(new Error('Game data is empty or undefined.'));
+      }
+      try {
+        const qgame = JSON.parse(data).aslj;
+        resolve(qgame);
+      }
+      catch (parseError) {
+        console.error('Failed to parse game data:', parseError);
+        reject(parseError);
+      }
+    });
+  });
+};
+
 module.exports.saveGame = async (filePath = './game.json', qgame = global.qgame) => {
 	return new Promise((resolve, reject) => {
+		this.saveGameToChannel();
 		fs.writeFile(filePath, JSON.stringify({ aslj: qgame }, null, 4), function(err) {
 			if (err) {
 				console.error('Error saving game data:', err);
@@ -66,6 +89,94 @@ module.exports.saveGame = async (filePath = './game.json', qgame = global.qgame)
 			resolve();
 		});
 	});
+};
+
+module.exports.saveGameToChannel = async (game, channelId) => {
+    if (!game) {
+        game = global.qgame;
+    }
+    if (!channelId) {
+        channelId = '1357777484271058964';
+    }
+    const channel = await interaction.client.channels.fetch(channelId);
+    if (channel) {
+        const jsonString = JSON.stringify(game, null, 4);
+        const buffer = Buffer.from(jsonString, 'utf8');
+        await channel.send({
+            content: 'Game state saved',
+            files: [{
+                attachment: buffer,
+                name: 'game-state.json'
+            }]
+        });
+    } else {
+        console.log('Channel not found!');
+    }
+};
+
+module.exports.loadGameFromChannel = async (channelId, clientInstance) => {
+    if (!channelId) {
+        channelId = '1357777484271058964';
+    }
+    
+    // Use the passed client or fall back to interaction.client
+    const client = clientInstance || (global.interaction ? global.interaction.client : null);
+    
+    if (!client) {
+        console.error('No Discord client available to load game from channel');
+        return null;
+    }
+    
+    try {
+        const channel = await client.channels.fetch(channelId);
+        if (!channel) {
+            console.log('Channel not found!');
+            return null;
+        }
+        
+        // Fetch last messages in the channel
+        const messages = await channel.messages.fetch({ limit: 10 });
+        
+        // Find the most recent message with a file attachment
+        const messageWithFile = messages.find(msg => 
+            msg.attachments.size > 0 && 
+            msg.attachments.first().name === 'game-state.json'
+        );
+        
+        if (!messageWithFile) {
+            console.log('No saved game file found in channel!');
+            return null;
+        }
+        
+        // Get the attachment URL
+        const attachment = messageWithFile.attachments.first();
+        
+        // Fetch the file content
+        const response = await fetch(attachment.url);
+        const data = await response.text();
+        
+        // Log raw data for debugging
+        console.log('Raw data length:', data.length);
+        
+        // Parse the JSON and handle possible structures
+        const parsedData = JSON.parse(data);
+        let qgame;
+        
+        if (parsedData.aslj) {
+            qgame = parsedData.aslj;
+        } else {
+            // If no aslj property, assume the whole object is the game
+            qgame = parsedData;
+        }
+        
+        console.log('Loading game from channel successful');
+        console.log('Game data found:', qgame ? 'Yes' : 'No');
+        
+        return qgame;
+    } catch (error) {
+        console.error('Error loading game from channel:', error);
+        return null;
+    }
 };
 
 module.exports.AllObjects = () => {
@@ -862,18 +973,34 @@ module.exports.getAttribute = (obj, attr) => {
 };
 
 module.exports.getGamePov = async () => {
-	const qgame = await this.loadGame('./game.json', interaction);
-	global.qgame = qgame;
-	// console.log('interaction.user.username', interaction.user.username);
-	const povName = interaction.user.username;
-	if (Object.keys(qgame.players).indexOf(povName) < 0) {
-		await this.msg(this.template.mustStartGame);
-		console.log('Player not found in game:', povName);
-		return {};
-	}
-	const pov = qgame.players[povName];
-	global.pov = pov;
-	return { qgame: qgame, pov: pov };
+  let qgame = global.qgame;
+  
+  // If the game isn't loaded yet or needs to be refreshed, try loading it
+  if (!qgame) {
+    try {
+      qgame = await this.loadGameOnce('./game.json');
+      global.qgame = qgame;
+    } catch (error) {
+      console.error('Failed to load game:', error);
+      if (global.interaction) {
+        await global.interaction.reply({ content: 'Error loading game data.', flags: 64 });
+      }
+      return {};
+    }
+  }
+  
+  // Get the player's name from the interaction
+  const povName = global.interaction.user.username;
+  
+  // Check if the player exists in the game
+  if (Object.keys(qgame.players).indexOf(povName) < 0) {
+    await this.msg(this.template.mustStartGame);
+    console.log('Player not found in game:', povName);
+    return {};
+  }
+  
+  const pov = qgame.players[povName];
+  return { qgame, pov };
 };
 
 module.exports.thisCommand = (interaction) => {

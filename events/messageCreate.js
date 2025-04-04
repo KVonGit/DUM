@@ -3,21 +3,20 @@ const { ChannelType } = require('discord.js');
 const { patterns } = require('./patterns.js');
 
 module.exports.messageHandler = async (message, client) => {
-	console.log('Raw message received:', message.content);
-	console.log('Message event received:', {
+	// console.log('Raw message received:', message.content);
+	/* console.log('Message event received:', {
 	  author: message.author.tag,
 	  content: message.content,
 	  isDM: !message.guild,
 	  channel: message.channel.type
-	});
+	});*/
 	
 	if (message.author.bot) return;
-	
+
 	// Check explicitly for DM channel type
 	if (message.channel.type === ChannelType.DM) {
 	  // console.log('DM received:', message.content);
 	  // console.log(`Received DM from ${message.author.tag}: ${message.content}`);
-	  
 	  if (message.content.toLowerCase() === 'help') {
 		message.reply("Here are commands you can use in DMs:\n• help - Shows this message\n• ping - Check if I'm online\n• about - Learn more about me");
 	  } else if (message.content.toLowerCase() === 'ping') {
@@ -31,7 +30,7 @@ module.exports.messageHandler = async (message, client) => {
 	  return; // Exit the function to avoid processing server-specific commands
 	}
 	
-	console.log('Message channel type:', message.channel.type);
+	// console.log('Message channel type:', message.channel.type);
 	// Existing server message handling code continues below
 	if (message.content.match(/^\//) && message.channelId === '1352673869013586023') {
 	  // Check for all possible line break characters
@@ -43,7 +42,7 @@ module.exports.messageHandler = async (message, client) => {
 		const commandName = message.content.slice(1).trim().split(/ +/)[0];
 		const command = client.commands.get(commandName);
 		if (command) {
-			console.log(`Command found: ${commandName}`);
+			// console.log(`Command found: ${commandName}`);
 		  // Execute the command
 		  try {
 			global.interaction = createInteractionLikeObject(message);
@@ -53,9 +52,10 @@ module.exports.messageHandler = async (message, client) => {
 			global.qgame = qgame;
 			global.pov = pov;
 			await command.execute(global.interaction);
-			// I think the command scripts need an `interaction` object to pull data from, Claude.
 			if (message.content !== 'revive') await q.addThisCommandToTranscriptAsEmbed(global.interaction);
 			if (message.content !== 'quitgame' && typeof qgame !== 'undefined' && typeof pov !== 'undefined' && qgame.suppressTurnScripts !== false) await require('./engine/q').runTurnScripts();
+			message.react('👍');
+			message.react('👇');
 		  } catch (error) {
 			// Get user and command details for better error logging
 			const username = message.author.username;
@@ -64,6 +64,7 @@ module.exports.messageHandler = async (message, client) => {
 			console.error(`Error [${new Date().toLocaleString()}] for user "${username}": /${commandName} ${options}`);
 			console.error(error);
 			const errorMessage = 'There was an error while executing this command!';
+			message.react('🫣');
 			if (message.replied || message.deferred) {
 			  message.followUp({ content: errorMessage, flags: 64 });
 			} else {
@@ -73,10 +74,9 @@ module.exports.messageHandler = async (message, client) => {
 		} else {
 		  // Command not found
 		  message.reply('Command not found. Please check the command name and try again.');
+		  message.react('🫣');
 		}
-
 	  }
-	  message.react('🫣');
 	}
    
 	if (message.content.match(/^dm me, DUM$/i)){
@@ -152,9 +152,10 @@ module.exports.messageHandler = async (message, client) => {
 		message.react('👋');
 	  }
 	}
-
-	console.log('Checking pattern...');
-	handlePatternMatches(message, client);
+	if (message.channelId === '1357772725254619327') {
+		// console.log('Checking pattern...');
+		handlePatternMatches(message, client);
+	}
 };
 
 /**
@@ -186,7 +187,7 @@ function createInteractionLikeObject(message, groups = {}, actualCommandName = "
  * Function to handle pattern matches in messages.
  */
 async function handlePatternMatches(message, client) {
-	console.log('Handling pattern matches...');
+	// console.log('Handling pattern matches...');
 	// Skip if message is from a bot or is a slash command
 	if (message.author.bot || message.content.startsWith('/')) return;
 	
@@ -199,7 +200,7 @@ async function handlePatternMatches(message, client) {
 	  const match = messageContent.match(pattern);
 	  if (match) {
 		// Found a match, get the command
-		console.log('Match found for command:', commandName);
+		// console.log('Match found for command:', commandName);
 		const command = client.commands.get(commandName);
 		if (!command) continue;
 		
@@ -221,7 +222,7 @@ async function handlePatternMatches(message, client) {
 		  global.pov = pov;
 		  
 		  // Add console.log to see if execution reaches this point
-		  console.log('About to execute command:', commandName);
+		  // console.log('About to execute command:', commandName);
 		  
 		  // Execute the command - add await here
 		  await command.execute(fakeInteraction);

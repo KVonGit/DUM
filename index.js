@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits, IntentsBitField } = require('discord.js');
 const { token } = require('./config.json');
+const q = require('./engine/q'); // Add this line to require the q module
 
 const client = new Client({
   intents: [
@@ -50,9 +51,41 @@ Object.defineProperty(String.prototype, 'capFirst', {
 	enumerable: false,
 });
 
-client.once(Events.ClientReady, readyClient => {
+// Add this function to load the game once at startup
+async function loadGameOnStartup() {
+  try {
+    // First try to load from the channel
+    console.log('Attempting to load game data from Discord channel...');
+    global.qgame = await q.loadGameFromChannel(undefined, client);
+    
+    if (global.qgame) {
+      console.log('Game loaded successfully from Discord channel');
+    } else {
+      // If loadGameFromChannel returns null, fall back to disk
+      console.log('No game found in Discord channel, loading from disk...');
+      global.qgame = await q.loadGameOnce('./game.json');
+      console.log('Game loaded successfully from disk');
+    }
+  } catch (error) {
+    console.error('Failed to load game on startup:', error);
+    
+    // Try the fallback if the first method threw an error
+    try {
+      console.log('Attempting fallback to disk...');
+      global.qgame = await q.loadGameOnce('./game.json');
+      console.log('Game loaded successfully from disk (fallback)');
+    } catch (fallbackError) {
+      console.error('All loading methods failed:', fallbackError);
+    }
+  }
+}
+
+client.once(Events.ClientReady, async readyClient => {
 	global.dumEmoji = client.emojis.cache.get('1355249879101870282');
 	console.log(`DUM INTERACTION_HANDLER client logged in as ${readyClient.user.tag}`);
+	
+	// Load game at startup
+	await loadGameOnStartup();
 });
 
 client.on(Events.InteractionCreate, async interaction => {
