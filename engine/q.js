@@ -79,7 +79,7 @@ module.exports.loadGameOnce = async (filePath = './game.json') => {
 
 module.exports.saveGame = async (filePath = './game.json', qgame = global.qgame) => {
 	return new Promise((resolve, reject) => {
-		this.saveGameToChannel();
+		module.exports.saveGameToChannel();
 		fs.writeFile(filePath, JSON.stringify({ aslj: qgame }, null, 4), function(err) {
 			if (err) {
 				console.error('Error saving game data:', err);
