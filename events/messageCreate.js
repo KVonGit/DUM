@@ -1,6 +1,5 @@
 const q = require('../engine/q');
 const { ChannelType } = require('discord.js');
-const { patterns } = require('./patterns.js');
 
 module.exports.messageHandler = async (message, client) => {
 	// console.log('Raw message received:', message.content);
@@ -12,7 +11,6 @@ module.exports.messageHandler = async (message, client) => {
 	});*/
 	
 	if (message.author.bot) return;
-
 	// Check explicitly for DM channel type
 	if (message.channel.type === ChannelType.DM) {
 	  // console.log('DM received:', message.content);

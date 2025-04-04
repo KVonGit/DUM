@@ -7,7 +7,6 @@ module.exports = {
 		.setDescription('Look at your surroundings.'),
 		aliases: ['l'],
 	async execute(interaction) {
-		console.log('interaction:', interaction);
 		global.interaction = interaction;
 		const s = q.getLocationDescription(qgame, pov);
 		await q.msg(s);

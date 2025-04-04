@@ -393,7 +393,7 @@
                 "name": "bottle opener",
                 "prefix": "a",
                 "take": true,
-                "loc": "ajbruner77",
+                "loc": "cupboard",
                 "objectPronoun": "it",
                 "look": "It's a bottle opener. You can't use it on the **can** of beer, though. :rofl:"
             },
@@ -438,7 +438,7 @@
                 "objectPronoun": "it",
                 "weight": 500,
                 "take": true,
-                "loc": "Kitchen",
+                "loc": "cupboard",
                 "alt": [
                     "flour",
                     "bag of flour",
@@ -542,7 +542,7 @@
             },
             "nowhere": {
                 "name": "nowhere",
-                "description": "You are nowhere, and you shouldn't be here. You will have to quitgame to get out of here. Please report this bug using the /bug command."
+                "description": "You are nowhere. You shouldn't be here. You will have to quitgame to get out of here. Please report this bug using the /bug command."
             }
         },
         "players": {
@@ -569,8 +569,8 @@
                 "speakto": "“Hello,” says KV.",
                 "look": "KV is looking right back at YOU!",
                 "lastObject": {
-                    "it": "sack of flour",
-                    "him": "ajbruner77"
+                    "it": "bomb",
+                    "him": "bomb"
                 }
             },
             "ajbruner77": {
