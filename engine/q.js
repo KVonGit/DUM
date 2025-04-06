@@ -495,7 +495,7 @@ module.exports.GetDisplayName = (obj, definite = false, forRoomDesc = false, omi
 		obj = this.GetObject(obj);
 	}
 	let n = '';
-	if (obj.prefix) {
+	if (typeof obj.prefix != 'undefined' && obj.prefix.length > 0) {
 		let prefix = obj.prefix || '';
 		if (definite) {
 			prefix = obj.prefix || '';
