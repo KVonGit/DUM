@@ -1,4 +1,5 @@
 const fs = require('fs');
+const yaml = require('js-yaml');
 /* eslint-disable no-useless-escape */
 module.exports.log = console.log;
 
@@ -43,7 +44,7 @@ module.exports.loadGame = async (filePath = './game.json') => {
 				return reject(new Error('Game data is empty or undefined.'));
 			}
 			try {
-				const qgame = JSON.parse(data).aslj;
+				const qgame = JSON.parse(data).asly;
 				global.qgame = qgame;
 				resolve(qgame);
 			}
@@ -55,7 +56,7 @@ module.exports.loadGame = async (filePath = './game.json') => {
 	});
 };
 
-module.exports.loadGameOnce = async (filePath = './game.json') => {
+module.exports.loadGameOnce = async (filePath = './game.yaml') => {
   return new Promise((resolve, reject) => {
     fs.readFile(filePath, 'utf8', function(err, data) {
       if (err) {
@@ -66,7 +67,7 @@ module.exports.loadGameOnce = async (filePath = './game.json') => {
         return reject(new Error('Game data is empty or undefined.'));
       }
       try {
-        const qgame = JSON.parse(data).aslj;
+        const qgame = yaml.load(data).asly;
         resolve(qgame);
       }
       catch (parseError) {
@@ -77,18 +78,18 @@ module.exports.loadGameOnce = async (filePath = './game.json') => {
   });
 };
 
-module.exports.saveGame = async (filePath = './game.json', qgame = global.qgame) => {
-	return new Promise((resolve, reject) => {
-		module.exports.saveGameToChannel();
-		fs.writeFile(filePath, JSON.stringify({ aslj: qgame }, null, 4), function(err) {
-			if (err) {
-				console.error('Error saving game data:', err);
-				return reject(err);
-			}
-			console.log('Game data saved!');
-			resolve();
-		});
-	});
+module.exports.saveGame = async (filePath = './game.yaml', qgame = global.qgame) => {
+  return new Promise((resolve, reject) => {
+    module.exports.saveGameToChannel();
+    fs.writeFile(filePath, yaml.dump({ asly: qgame }), function(err) {
+      if (err) {
+        console.error('Error saving game data:', err);
+        return reject(err);
+      }
+      console.log('Game data saved!');
+      resolve();
+    });
+  });
 };
 
 module.exports.saveGameToChannel = async (game, channelId) => {
@@ -100,13 +101,13 @@ module.exports.saveGameToChannel = async (game, channelId) => {
     }
     const channel = await interaction.client.channels.fetch(channelId);
     if (channel) {
-        const jsonString = JSON.stringify(game, null, 4);
-        const buffer = Buffer.from(jsonString, 'utf8');
+        const yamlString = yaml.dump(game);
+        const buffer = Buffer.from(yamlString, 'utf8');
         await channel.send({
             content: 'Game state saved',
             files: [{
                 attachment: buffer,
-                name: 'game-state.json'
+                name: 'game-state.yaml'
             }]
         });
     } else {
@@ -140,7 +141,7 @@ module.exports.loadGameFromChannel = async (channelId, clientInstance) => {
         // Find the most recent message with a file attachment
         const messageWithFile = messages.find(msg => 
             msg.attachments.size > 0 && 
-            msg.attachments.first().name === 'game-state.json'
+            msg.attachments.first().name === 'game-state.yaml'
         );
         
         if (!messageWithFile) {
@@ -158,14 +159,14 @@ module.exports.loadGameFromChannel = async (channelId, clientInstance) => {
         // Log raw data for debugging
         console.log('Raw data length:', data.length);
         
-        // Parse the JSON and handle possible structures
-        const parsedData = JSON.parse(data);
+        // Parse the YAML and handle possible structures
+        const parsedData = yaml.load(data);
         let qgame;
         
-        if (parsedData.aslj) {
-            qgame = parsedData.aslj;
+        if (parsedData.asly) {
+            qgame = parsedData.asly;
         } else {
-            // If no aslj property, assume the whole object is the game
+            // If no asly property, assume the whole object is the game
             qgame = parsedData;
         }
         
@@ -481,7 +482,7 @@ module.exports.doGo = async (qgame, pov, loc, exitName, interaction) => {
 
 	// Save the game state
 	try {
-		await this.saveGame('./game.json', qgame);
+		await this.saveGame('./game.yaml', qgame);
 	}
 	catch (err) {
 		console.error('Error saving game data:', err);
@@ -854,7 +855,7 @@ module.exports.reviveBobProc = async (fromUseOn = false) => {
 				// await interaction.followUp({ content: 'Message sent to another channel!', ephemeral: true });
 			}
 			await handleInteraction(interaction);
-			await this.saveGame('./game.json', qgame);
+			await this.saveGame('./game.yaml', qgame);
 		}
 		else {
 			await this.msg ('You\'ve already revived Bob!');
@@ -885,7 +886,7 @@ module.exports.reviveBobProc = async (fromUseOn = false) => {
 				// await interaction.followUp({ content: 'Message sent to another channel!', ephemeral: true });
 			}
 			await handleInteraction(interaction);
-			await this.saveGame('./game.json', qgame);
+			await this.saveGame('./game.yaml', qgame);
 		}
 	}
 	else {
@@ -977,7 +978,7 @@ module.exports.getGamePov = async () => {
   // If the game isn't loaded yet or needs to be refreshed, try loading it
   if (!qgame) {
     try {
-      qgame = await this.loadGameOnce('./game.json');
+      qgame = await this.loadGameOnce('./game.yaml');
       global.qgame = qgame;
     } catch (error) {
       console.error('Failed to load game:', error);
