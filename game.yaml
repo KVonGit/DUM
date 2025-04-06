@@ -1,0 +1,586 @@
+version: 69105
+game:
+  name: DUM
+  author: KV
+  version: 0.2 alpha
+  year: 2025
+  copyright: © 2025 KV
+  description: A DUM server test game.
+  pov: objects.player
+  startingLocation: Lounge
+objects:
+  newspaper:
+    name: newspaper
+    prefix: a
+    definiteArticle: the
+    indefiniteArticle: a
+    objectPronoun: it
+    inherit:
+      - container
+    take:
+      type: script
+      attr: >-
+        replyString  = 'You fold the newspaper and place it neatly under your
+        arm.'; obj.loc = pov.name;
+    read: There's no time for reading the paper.
+    look: It's yesterday's edition, but there's an article about Quest Viva in it.
+    loc: ajbruner77
+    alt:
+      - paper
+  table:
+    name: table
+    loc: Lounge
+    prefix: a
+    objectPronoun: it
+    look:
+      type: script
+      attr: >-
+        replyString = "A wooden table, probably made of oak."; replyString +=
+        q.GetObject("newspaper").loc === "table" ? " There is a newspaper on
+        it." : "";
+    take:
+      type: string
+      attr: It's too heavy to take.
+    inherit:
+      - surface
+      - container
+    surfacePrefix: 'on'
+    listChildren: true
+    listchildrenprefix: On it, you see
+  cat:
+    name: cat
+    loc: sofa
+    prefix: a
+    objectPronoun: her
+    look: It's an orange tabby cat, sitting on the table, looking right back at you.
+    attack:
+      type: string
+      attr: You can't attack the cat. It's too cute.
+    take: She won't let you do that.
+    speakto:
+      type: string
+      attr: She meows at you.
+    inherit:
+      - animal
+    pet:
+      type: string
+      attr: You pet the cat. She purrs.
+    alt:
+      - tabby
+      - cat
+      - kitty
+      - kitten
+    feed:
+      type: string
+      attr: You can't feed the cat. There are no mice in this game.
+  lamp:
+    name: lamp
+    prefix: a
+    objectPronoun: it
+    alt:
+      - antique lamp
+      - old lamp
+      - light
+    loc: Lounge
+    look: It's an old, antique lamp.
+    take:
+      type: string
+      attr: It appears to be fixed in place.
+    inherit:
+      - lightsource
+      - switchable
+    switchedondesc: It is currently switched on.
+    switchedoffdesc: It is currently switched off.
+    scenery: false
+    switchedOn: true
+  carpet:
+    name: carpet
+    scenery: true
+    look: The dark brown shag carpet is the bee's knees.
+    alt:
+      - shag
+      - rug
+      - floor
+      - flooring
+      - ground
+    objectPronoun: it
+    loc: Lounge
+    take:
+      type: string
+      attr: Yeah, right. You can't take the carpet.
+  wallpaper:
+    name: wallpaper
+    loc: Lounge
+    scenery: true
+    look: >-
+      The wallpaper is very eye-pleasing. You could look at it repeatedly,
+      although it would accomplish very little.
+    alt:
+      - wall
+    take:
+      type: string
+      attr: You can't take the wallpaper. It's glued to the wall.
+    objectPronoun: it
+  box:
+    name: box
+    loc: table
+    prefix: a
+    objectPronoun: it
+    look:
+      type: script
+      attr: >-
+        replyString = `It's a small box, currently ${obj.isOpen ? 'open' :
+        'closed'}.`;
+    take: You pick it up, decide it's too awkward to carry, and put it back down.
+    inherit:
+      - container
+      - closedcontainer
+    isOpen: false
+    open: true
+    close: false
+    listChildren: true
+  defibrillator:
+    name: defibrillator
+    prefix: a
+    objectPronoun: it
+    loc: ajbruner77
+    look: An ordinary defibrillator.
+    take: true
+    alt:
+      - defib
+  hammer:
+    name: hammer
+    objectPronoun: it
+    prefix: a
+    inherit:
+      - weapon
+    alt:
+      - war hammer
+      - mini war hammer
+      - mini hammer
+    loc: pertex1
+    look: It's a mini war hammer.
+    take: true
+  banana:
+    name: banana
+    prefix: a
+    objectPronoun: it
+    loc: nowhere
+    look: It's a banana.
+    take: true
+    inherit:
+      - edible
+    eat:
+      type: script
+      attr: >-
+        replyString = `You eat the banana. Mmm. Tasty!`;
+        qgame.objects['banana'].loc = 'nowhere';
+  Bob:
+    name: Bob
+    loc: Lounge
+    take: Bob isn't the kind of guy you can carry around.
+    objectPronoun: him
+    look:
+      type: script
+      attr: >-
+        replyString = `Bob is ${obj.alive !== true ? 'lying on the floor, a lot
+        more still than usual' : 'sitting up, appearing to feel somewhat under
+        the weather'}.`;
+    attack:
+      type: script
+      attr: >-
+        responded = true; if (obj.alive === true) { q.msg("Bob looks at you,
+        confused, shocked, and a little bit angry. He raises his fists... then
+        keels over, right back in the position he was in before being revived!
+        :face_with_peeking_eye:", true, true); obj.alive = false;
+        q.msg(q.GetDisplayName(pov) + " has killed Bob!", false, true); } else {
+        q.msg("You try slapping him to revive him, to no avail. :laughing:",
+        true, true); }
+    speakto:
+      type: script
+      attr: >-
+        replyString = `${obj.alive === false ? 'He\'s dead, Jim! :rofl:' :
+        '“Well, one moment I was sitting there, feeling pretty happy with myself
+        after eating my afternoon snack - a cheeseburger, pizza and ice cream
+        pie, smothered in bacon, which I’d washed down with a bucket of coffee
+        and six cans of Red Bull - when all of a sudden, I was in terrible pain,
+        and then everything was peaceful. Then you came along.”'}`;
+    inherit:
+      - male
+    useDefaultPrefix: false
+    alive: false
+    use:
+      defibrillator:
+        type: script
+        attr: 'q.reviveBobProc(true); responded = true; '
+  TV:
+    name: TV
+    prefix: the
+    inherit:
+      - switchable
+    alt:
+      - television
+      - telly
+      - tube
+    objectPronoun: it
+    loc: Lounge
+    look: The TV is an old model, possibly 20 years old.
+    switchedondesc: It is currently showing an old western.
+    switchedoffdesc: It is currently switched off.
+    switchedOn: true
+    canSwitchOn: true
+    canSwitchOff: true
+    watch:
+      type: script
+      attr: >-
+        qOutput = ("You watch for a few minutes");      if (obj.isSwitchedOn) {
+        qOutput += ". You’ve always loved watching westerns!";    } else {
+        qOutput += ", thinking that the latest episode of what they call ‘Star
+        Trek’ these days is even more boring than usual. You then realise that
+        the TV is in fact switched off."; }
+    take:
+      type: string
+      attr: You can't take the TV. It's too heavy.
+  sofa:
+    name: sofa
+    look: The sofa looks old, worn, and thoroughly inviting!
+    sit: There’s no time for lounging about now.
+    alt:
+      - couch
+    objectPronoun: it
+    inherit:
+      - surface
+      - container
+    loc: Lounge
+    take:
+      type: string
+      attr: You can't take the sofa. It's too heavy.
+    prefix: a
+    listChildren: true
+    listchildrenprefix: On it, you see
+  window:
+    name: window
+    prefix: the
+    loc: Kitchen
+    objectPronoun: it
+    look:
+      type: script
+      attr: >-
+        if (qgame.objects["window"].isOpen) { replyString = "The window is
+        open."; } else { replyString = "The window is closed."; }
+    open:
+      type: script
+      attr: q.openWindowProc();
+    isOpen: false
+    close: true
+    inherit:
+      - openable
+    take:
+      type: string
+      attr: That seems to be fixed in place.
+  bee:
+    name: bee
+    prefix: the
+    loc: nowhere
+    look: It's buzzing around the room.
+    take: You can't catch it!
+    objectPronoun: it
+    attack:
+      type: string
+      attr: You can't attack the bee. It's too fast.
+    inherit:
+      - animal
+  bin:
+    name: bin
+    scenery: true
+    look: There's no time for examining trash.
+    take: Eww... No.
+    prefix: the
+    inherit:
+      - container
+    objectPronoun: it
+    listChildren: true
+    listchildrenprefix: 'In the bin you find '
+    isOpen: false
+    close: false
+    alt:
+      - trash can
+      - garbage bin
+      - trash bin
+      - garbage bin
+    loc: Kitchen
+  fridge:
+    name: fridge
+    prefix: the
+    objectPronoun: it
+    inherit:
+      - closedcontainer
+      - container
+    take:
+      type: string
+      attr: You can't take the fridge. It's too heavy.
+    listChildren: true
+    listchildrenprefix: 'In the fridge you find '
+    isOpen: false
+    close: true
+    open: true
+    loc: Kitchen
+    alt:
+      - refrigerator
+      - icebox
+    look:
+      type: script
+      attr: >-
+        if (obj.isOpen) { replyString = "The fridge is open, casting its light
+        out into the gloomy kitchen.";  }  else {  replyString = "A big old
+        refrigerator sits in the corner, humming quietly."; }
+  cupboard:
+    name: cupboard
+    prefix: the
+    inherit:
+      - closedcontainer
+      - container
+    take: That's fixed in place.
+    'isOpen:': false
+    open: true
+    close: true
+    objectPronoun: it
+    look:
+      type: script
+      attr: >-
+        replyString = `The cupboard is currently
+        ${qgame.objects['cupboard'].isOpen === true ? 'open' : 'closed'}.`;
+    listChildren: true
+    listchildrenprefix: 'The cupboard is bare except for... '
+    loc: Kitchen
+    isOpen: true
+  bottle opener:
+    name: bottle opener
+    prefix: a
+    take: true
+    loc: ajbruner77
+    objectPronoun: it
+    look: >-
+      It's a bottle opener. You can't use it on the **can** of beer, though.
+      :rofl:
+  apple:
+    name: apple
+    prefix: an
+    objectPronoun: it
+    loc: nowhere
+    look: It's a red apple.
+    take: true
+    inherit:
+      - edible
+    eat:
+      type: script
+      attr: >-
+        replyString = `You eat the apple. Mmm. Tasty!`;
+        qgame.objects['apple'].loc = 'nowhere';
+  beer:
+    name: beer
+    usedefaultprefix: false
+    objectPronoun: it
+    look: A can of Squiffy beer, with “XanMag” written all over it.
+    prefix: XanMag's
+    take: XanMag probably wouldn't like that.
+    loc: fridge
+    open: That belongs to XanMag!
+    alt:
+      - can of beer
+      - can
+      - beer can
+      - XanMag's beer
+      - XM's beer
+    drink: You can't drink that. It's XanMag's.
+  sack of flour:
+    name: sack of flour
+    prefix: a
+    definiteArticle: the
+    indefiniteArticle: the
+    objectPronoun: it
+    weight: 500
+    take: true
+    loc: Kitchen
+    alt:
+      - flour
+      - bag of flour
+      - sack of flour
+      - sack
+      - bag
+  salt:
+    name: salt
+    prefix: the
+    objectPronoun: it
+    weight: 50
+    take: true
+    loc: pertex1
+    alt:
+      - salt shaker
+      - shaker
+  carton of eggs:
+    name: carton of eggs
+    prefix: a
+    objectPronoun: it
+    weight: 250
+    take: true
+    loc: fridge
+    alt:
+      - egg
+      - eggs
+      - egg carton
+      - carton of eggs
+      - carton
+  packet of sugar:
+    name: packet of sugar
+    prefix: a
+    objectPronoun: it
+    weight: 4
+    take: true
+    loc: Kitchen
+    alt:
+      - sugar
+      - sugar packet
+      - packet of sugar
+  bomb:
+    name: bomb
+    prefix: a
+    objectPronoun: it
+    loc: kv_online
+    alt:
+      - explosive
+      - time bomb
+    armed: false
+    bombcount: 10
+    look:
+      type: script
+      attr: >-
+        if (obj.armed) { replyString = `The bomb is ticking, and a red
+        count-down display reads '${obj.bombcount}'.`; } else { replyString =
+        (obj.loc === pov.name) ? 'You can arm this bomb by typing /arm bomb.' :
+        'Why not pick it up and take a closer look?'; }
+    take: true
+  fish:
+    name: fish
+    prefix: a
+    objectPronoun: it
+    loc: ajbruner77
+    look: It's a fish.
+    take: true
+locations:
+  Lounge:
+    name: Lounge
+    description: >-
+      This is a nice, cozy lounge with an fancy beige carpet and pristine
+      wallpaper.
+    exits:
+      east:
+        to: Kitchen
+  Kitchen:
+    name: Kitchen
+    description: The kitchen looks clean enough to eat off of the floor.
+    exits:
+      west:
+        to: Lounge
+      north:
+        to: Arena
+  Arena:
+    name: The Arena
+    description: Welcome to the arena.
+    exits:
+      south:
+        to: Kitchen
+    beforeLeaving:
+      type: script
+      attr: >-
+        replyString = 'You exit the Arena.'; if (qgame.objects.bomb.loc ===
+        pov.name) { replyString = 'You can\'t leave this area while carrying the
+        bomb!'; canLeave = false;}
+  Smithereens:
+    name: Smithereens
+    description: >-
+      You have been blown to Smithereens. You should probably find a command
+      that will get you out of here.
+    exits:
+      east:
+        to: Koww's Chasm
+  Koww's Chasm:
+    name: Koww's Chasm
+    description: Under construction
+    exits:
+      west:
+        to: Smithereens
+  nowhere:
+    name: nowhere
+    description: >-
+      You are nowhere, and you shouldn't be here. You will have to quitgame to
+      get out of here. Please report this bug using the /bug command.
+players:
+  pertex1:
+    name: pertex1
+    alias: Pertex
+    userName: pertex1
+    objectPronoun: him
+    dateJoined: 1743029210827
+    commandHistory: []
+    loc: Lounge
+    lastObject: {}
+    attack: >-
+      Fueled by frustration with the endless `/` commands, you lunge at Pertex
+      in a blind rage. He sidesteps your attack effortlessly, bursts into
+      laughter and shouts, “Nein, danke!” in what you assume is German, but it
+      could just be the name of some Quest function or something. You are left
+      questioning your life choices.
+  kv_online:
+    name: kv_online
+    alias: KV
+    userName: kv_online
+    objectPronoun: him
+    dateJoined: 1743129287007
+    commandHistory: []
+    loc: Arena
+    attack: You attack KV. (He deserves it.)
+    speakto: “Hello,” says KV.
+    look: KV is looking right back at YOU!
+    lastObject:
+      it: bomb
+      him: ajbruner77
+  ajbruner77:
+    name: ajbruner77
+    alias: AJBruner77
+    userName: ajbruner77
+    dateJoined: 1743332310672
+    commandHistory: []
+    objectPronoun: him
+    lastObject:
+      it: apple
+    loc: Lounge
+    give:
+      bomb: >-
+        replyString = 'AJBruner77 is wearing a bomb-deflecting vest. You have
+        failed to give him the bomb.';
+timers:
+  bombtimer:
+    interval: 5
+    enabled: false
+    type: script
+    attr: >-
+      if (qgame.objects.bomb.bombcount <= 0) { q.msg('BOOM! The bomb explodes!',
+      true, true); const bombloc = qgame.objects.bomb.loc; if
+      (Object.keys(qgame.players).includes(bombloc)) {
+      q.msg(`${q.GetDisplayName(qgame.players[bombloc])} is blown to
+      smithereens!`, false, true); qgame.players[bombloc].loc = 'nowhere'; }
+      else { q.msg(`The bomb explodes in ${bombloc}!`, false, true); }
+      qgame.objects.bomb.loc = 'nowhere'; qgame.timers.bombtimer.enabled =
+      false; } else { qgame.objects.bomb.bombcount--; if
+      (qgame.objects.bomb.bombcount <= 3) { q.msg(`The bomb ticks...
+      ${qgame.objects.bomb.bombcount}`, true, true); } }
+turnScripts:
+  busyBee:
+    type: script
+    enabled: true
+    attr: >-
+      if (qgame.players[interaction.user.username].loc ==
+      qgame.objects["bee"].loc) { q.msg("The bee buzzes past you. Pesky bee.",
+      true, true); }
+suppressTurnScripts: false
