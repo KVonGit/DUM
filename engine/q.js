@@ -67,7 +67,16 @@ module.exports.loadGameOnce = async (filePath = './game.yaml') => {
         return reject(new Error('Game data is empty or undefined.'));
       }
       try {
-        const qgame = yaml.load(data).asly;
+        const parsedData = yaml.load(data);
+        let qgame;
+        
+        if (parsedData.asly) {
+            qgame = parsedData.asly;
+        } else {
+            // If no asly property, assume the whole object is the game
+            qgame = parsedData;
+        }
+        
         resolve(qgame);
       }
       catch (parseError) {

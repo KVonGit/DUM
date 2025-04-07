@@ -15,7 +15,7 @@ module.exports = {
     }
     
     try {
-      global.qgame = await q.loadGameOnce('./game.json');
+      global.qgame = await q.loadGameOnce('./game.yaml');
       await interaction.reply({ content: 'Game data reloaded successfully!', flags: 64 });
     } catch (error) {
       console.error('Failed to reload game:', error);
