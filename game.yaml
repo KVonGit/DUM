@@ -341,7 +341,7 @@ objects:
       - closedcontainer
       - container
     take: That's fixed in place.
-    'isOpen:': false
+   isOpen: false
     open: true
     close: true
     objectPronoun: it
@@ -353,7 +353,6 @@ objects:
     listChildren: true
     listchildrenprefix: 'The cupboard is bare except for... '
     loc: Kitchen
-    isOpen: true
   bottle opener:
     name: bottle opener
     prefix: a
@@ -471,7 +470,8 @@ objects:
     name: signInChasm
     alias: sign
     loc: Koww's Chasm
-    look: It reads “Got milk?  Come to Farmer Zeke's mag-NIFicent silo!”
+    look: >-
+      It reads: “*Got milk? Come to Farmer Zeke's mag-NIFicent silo!*”
 locations:
   Lounge:
     name: Lounge
