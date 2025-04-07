@@ -446,7 +446,7 @@ objects:
     name: bomb
     prefix: a
     objectPronoun: it
-    loc: kv_online
+    loc: Arena
     alt:
       - explosive
       - time bomb
@@ -467,6 +467,11 @@ objects:
     loc: ajbruner77
     look: It's a fish.
     take: true
+  signInChasm:
+    name: signInChasm
+    alias: sign
+    loc: Koww's Chasm
+    look: It reads “Got milk?  Come to Farmer Zeke's mag-NIFicent silo!”
 locations:
   Lounge:
     name: Lounge
@@ -510,6 +515,12 @@ locations:
     exits:
       west:
         to: Smithereens
+  Zeke's Farm:
+    name: Zeke's Farm
+    description: Under construction
+    exits:
+      east:
+        to: Koww's Chasm
   nowhere:
     name: nowhere
     description: >-
@@ -538,13 +549,14 @@ players:
     objectPronoun: him
     dateJoined: 1743129287007
     commandHistory: []
-    loc: Arena
+    loc: Koww's Chasm
     attack: You attack KV. (He deserves it.)
     speakto: “Hello,” says KV.
     look: KV is looking right back at YOU!
     lastObject:
       it: bomb
       him: ajbruner77
+      them: kv.textmisadventures
   ajbruner77:
     name: ajbruner77
     alias: AJBruner77
@@ -559,6 +571,20 @@ players:
       bomb: >-
         replyString = 'AJBruner77 is wearing a bomb-deflecting vest. You have
         failed to give him the bomb.';
+  kv.textmisadventures:
+    name: kv.textmisadventures
+    alias: K.V.
+    id: '1306429811333529632'
+    avatar: >-
+      https://cdn.discordapp.com/avatars/1306429811333529632/294d5c218df56654729b689c1a60a83e.webp
+    userName: kv.textmisadventures
+    dateJoined: 1743963034566
+    commandHistory: []
+    objectPronoun: them
+    lastObject:
+      it: bomb
+      him: kv_online
+    loc: Smithereens
 timers:
   bombtimer:
     interval: 5

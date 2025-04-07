@@ -101,7 +101,7 @@ module.exports.saveGameToChannel = async (game, channelId) => {
     }
     const channel = await interaction.client.channels.fetch(channelId);
     if (channel) {
-        const yamlString = yaml.dump(game);
+        const yamlString = yaml.dump({ asly: game }); // Add the asly wrapper here
         const buffer = Buffer.from(yamlString, 'utf8');
         await channel.send({
             content: 'Game state saved',

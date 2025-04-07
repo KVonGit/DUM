@@ -34,6 +34,13 @@ module.exports = {
         let pov = {};
         let s = '';
 
+        // Check if the alias is already in use
+        const existingPlayer = Object.values(qgame.players).find(player => player.alias === alias);
+        if (existingPlayer) {
+            await interaction.reply({ content: `The alias "${alias}" is already in use. Please change your server nickname to continue.`, flags: 64 });
+            return;
+        }
+
         if (Object.keys(qgame.players).indexOf(povName) < 0) {
             qgame.players[povName] = {
                 'name': povName,
