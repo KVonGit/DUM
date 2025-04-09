@@ -42,6 +42,7 @@ module.exports = {
 		if (type === 'boolean') {
 			if (attr) {
 				obj.loc = pov.loc;
+				await q.msg(q.template.dropped);
 			}
 			else {
 				await q.msg(q.template.cantDrop(q.GetDisplayName(obj, true, false, true)));

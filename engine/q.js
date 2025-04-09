@@ -206,6 +206,7 @@ module.exports.All = () => {
 };
 
 module.exports.GetObject = (objName) => {
+	// console.log('GetObject:', objName);
 	if (objName === 'me' || objName === 'myself') {
 		objName = qgame.pov.name;
 	}
@@ -215,38 +216,74 @@ module.exports.GetObject = (objName) => {
 			objName = pov.lastObject[objName] || objName;
 		}
 	}
+	let found = false;
+	let item;
+	objName = objName.toLowerCase().trim();
+	// console.log('GetObject searching objects...');
 	for (const key of Object.keys(qgame.objects)) {
 		// console.log('key:', key);
 		const obj = qgame.objects[key];
 		// console.log('obj:', obj);
-		objName = objName.toLowerCase().trim();
+		
 		if (obj.name.toLowerCase() === objName || (typeof obj.alias != 'undefined' && obj.alias.toLowerCase() === objName)) {
+			found = true;
+			item = obj;
 			return obj;
 		}
 		if (typeof obj.alt != 'undefined') {
 			for (const alt of obj.alt) {
 				if (alt.toLowerCase() === objName) {
+					found = true;
+					item = obj;
 					return obj;
 				}
 			}
 		}
 	}
+	if (found) return item;
 	// Search for players by name or alias
 
+	// console.log('GetObject searching players...');
 	for (const playerName of Object.keys(qgame.players)) {
 		const player = qgame.players[playerName];
 		if (player.name.toLowerCase() === objName || player.alias.toLowerCase() === objName) {
+			found = true;
+			item = player;
 			return player;
 		}
 		if (player.alt) {
 			for (const alt of player.alt) {
 				if (alt.toLowerCase() === objName) {
+					found = true;
+					item = player;
 					return player;
 				}
 			}
 		}
 	}
+	if (found) return item;
 
+	// console.log('GetObject searching locations...');
+	for (const locName of Object.keys(qgame.locations)) {
+		const loc = qgame.locations[locName];
+		// console.log('GetObject comparing ' + loc.name + ' to ' + objName);
+		if (loc.name.toLowerCase() === objName || loc.alias?.toLowerCase() === objName) {
+			item = loc;
+			found = true;
+			// console.log('GetObject found location:', loc.name);
+			return loc;
+		}
+		if (loc.alt) {
+			for (const alt of loc.alt) {
+				if (alt.toLowerCase() === objName) {
+					found = true;
+					item = loc;
+					return loc;
+				}
+			}
+		}
+	}
+	if (found) return item;
 	// If not found, return undefined
 	return undefined;
 };
@@ -503,6 +540,15 @@ module.exports.GetDisplayName = (obj, definite = false, forRoomDesc = false, omi
 	if (typeof obj === 'string') {
 		obj = this.GetObject(obj);
 	}
+	if (typeof obj === 'undefined') {
+		obj = qgame.locations[obj];
+		if (typeof obj === 'undefined') {
+			this.msg('GetDisplayName: Object not found!');
+			console.log('GetDisplayName: Object not found!', obj);
+			return;
+		}
+	}
+
 	let n = '';
 	if (typeof obj.prefix != 'undefined' && obj.prefix.length > 0) {
 		let prefix = obj.prefix || '';

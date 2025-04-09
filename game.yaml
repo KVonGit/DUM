@@ -475,25 +475,37 @@ asly:
       alias: sign
       loc: Koww's Chasm
       look: 'It reads: “*Got milk? Come to Farmer Zeke''s mag-NIFicent silo!*”'
-      take: You yank the sign out of the ground and try to fit it in your Koww-pack.  But it just doesn't fit.  Frustrated, you put it back.
+      take: >-
+        You yank the sign out of the ground and try to fit it in your
+        Koww-pack.  But it just doesn't fit.  Frustrated, you put it back.
     chasm:
       name: chasm
       loc: Koww's Chasm
       prefix: the
-      look: That's the chasm you simply MUST cross!  Surely the only way to cross it is to FLY!
-      take: Don't worry, the men in the white coats will soon be here to deal with you.
+      look: >-
+        That's the chasm you simply MUST cross!  Surely the only way to cross it
+        is to FLY!
+      take: >-
+        Don't worry, the men in the white coats will soon be here to deal with
+        you.
     haystack:
       name: haystack
       prefix: the
       loc: Zeke's Farm
-      look: About what you'd expect from a haystack.  It's made of... HAY!  You munch on it for a while.
+      look: >-
+        About what you'd expect from a haystack.  It's made of... HAY!  You
+        munch on it for a while.
       take: You take a bite of the haystack.  Yummy... tastes just like chicken!
     pond:
       name: pond
       prefix: the
       loc: Zeke's Farm
-      look: A nice, placid pond full of little tiny duckies.  Ooo, how cute!  If you were carnivorous, they'd make you hungry.
-      take: You sip the water from the pond.  Just what you need to wash down a bit of grazing.
+      look: >-
+        A nice, placid pond full of little tiny duckies.  Ooo, how cute!  If you
+        were carnivorous, they'd make you hungry.
+      take: >-
+        You sip the water from the pond.  Just what you need to wash down a bit
+        of grazing.
   locations:
     Lounge:
       name: Lounge
@@ -512,7 +524,7 @@ asly:
         north:
           to: Arena
     Arena:
-      name: The Arena
+      name: Arena
       description: Welcome to the arena.
       exits:
         south:
@@ -534,13 +546,18 @@ asly:
     Koww's Chasm:
       name: Koww's Chasm
       description: >-
-        You are outside in a pasture of pure, pure green.  Green as far as the eye can see.  But you, Koww the Magician, are not satisfied.  The grass may be even greener on the other side of the **chasm**... you must know!  Also in the area is a very undramatic **sign**.
+        You are outside in a pasture of pure, pure green.  Green as far as the
+        eye can see.  But you, Koww the Magician, are not satisfied.  The grass
+        may be even greener on the other side of the **chasm**... you must
+        know!  Also in the area is a very undramatic **sign**.
       exits:
         west:
           to: Smithereens
     Zeke's Farm:
       name: Zeke's Farm
-      description: You stand outside of a small **farmhouse** with a **silo** beside it.  There are a **haystack** and a **pond* here. [UNDER CONSTRUCTION]
+      description: >-
+        You stand outside of a small **farmhouse** with a **silo** beside it. 
+        There are a **haystack** and a **pond* here. [UNDER CONSTRUCTION]
       exits:
         east:
           to: Koww's Chasm
@@ -586,7 +603,7 @@ asly:
       objectPronoun: him
       dateJoined: 1743129287007
       commandHistory: []
-      loc: Koww's Chasm
+      loc: Arena
       attack: You attack KV. (He deserves it.)
       speakto: “Hello,” says KV.
       look: KV is looking right back at YOU!

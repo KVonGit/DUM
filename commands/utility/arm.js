@@ -71,7 +71,7 @@ module.exports = {
                             qgame.players[bombloc].loc = 'Smithereens';
                         }
                         else {
-                            victim = q.GetDisplayName(qgame.objects[bombloc]);
+
                             await gameChannel.send(`# 💥 BOOM! THE BOMB EXPLODES IN  ${qgame.objects.bomb.loc}!💥`);
                             // Create a custom embed for the transcript
                             const embed = new EmbedBuilder()
@@ -104,6 +104,7 @@ module.exports = {
                             else {
                               s = 'in';
                             }
+                            // console.log('qgame.objects.bomb.loc', qgame.objects.bomb.loc);
                             s += q.GetDisplayName(q.GetObject(qgame.objects.bomb.loc));
                             const myDesc = 'The bomb (' + s  + ') ticks... ' + qgame.objects.bomb.bombcount.toString();
                             // Create a custom embed for the transcript
