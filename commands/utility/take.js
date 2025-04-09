@@ -24,6 +24,7 @@ module.exports = {
 			return;
 		}
 
+		pov.lastObject[obj.objectPronoun] = obj.name;
 		if (obj.loc === pov.name) {
 			await q.msg(q.template.alreadyHave(q.GetDisplayName(obj, true, false, true)));
 			return;
@@ -34,7 +35,7 @@ module.exports = {
 			await q.msg(q.template.cantSee(q.GetDisplayName(obj, false, false, true)));
 			return;
 		}
-		pov.lastObject[obj.objectPronoun] = obj.name;
+		
 		let wasTaken = false;
 
 		const { type, attr } = q.getAttribute(obj, 'take');
@@ -67,7 +68,6 @@ module.exports = {
 				await q.msg(q.GetDisplayName(pov) + ' took ' + q.GetDisplayName(obj, true, false, true) + '.', false, false);
 			}
 			await q.msg(replyString || q.template.cantTake(q.GetDisplayName(obj, true, false, true)), true, true);
-			await q.saveGame('./game.json', qgame);
 			return;
 		}
 		else {
@@ -82,7 +82,6 @@ module.exports = {
 			const successMessage = obj.takemsg || q.template.taken;
 			await q.msg(successMessage);
 			try {
-				await q.saveGame('./game.json', qgame);
 			}
 			catch (err) {
 				console.error('Error saving game data:', err);

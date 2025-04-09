@@ -181,7 +181,7 @@ module.exports.loadGameFromChannel = async (channelId, clientInstance) => {
         
         console.log('Loading game from channel successful');
         console.log('Game data found:', qgame ? 'Yes' : 'No');
-        
+        global.qgame = qgame;
         return qgame;
     } catch (error) {
         console.error('Error loading game from channel:', error);
@@ -304,7 +304,7 @@ module.exports.addToTranscriptChannel = async (s, channelId) => {
 			console.error('Error sending message to another channel:', error);
 		}
 
-		// await interaction.followUp({ content: 'Message sent to another channel!', ephemeral: true });
+		// await interaction.followUp({ content: 'Message sent to another channel!', flags: 64 });
 	}
 	await handleInteraction(interaction);
 };
@@ -861,7 +861,7 @@ module.exports.reviveBobProc = async (fromUseOn = false) => {
 					console.error('Error sending message to another channel:', error);
 				}
 
-				// await interaction.followUp({ content: 'Message sent to another channel!', ephemeral: true });
+				// await interaction.followUp({ content: 'Message sent to another channel!', flags: 64 });
 			}
 			await handleInteraction(interaction);
 			await this.saveGame('./game.yaml', qgame);
@@ -892,7 +892,7 @@ module.exports.reviveBobProc = async (fromUseOn = false) => {
 					console.error('Error sending message to another channel:', error);
 				}
 
-				// await interaction.followUp({ content: 'Message sent to another channel!', ephemeral: true });
+				// await interaction.followUp({ content: 'Message sent to another channel!', flags: 64 });
 			}
 			await handleInteraction(interaction);
 			await this.saveGame('./game.yaml', qgame);

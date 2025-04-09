@@ -21,11 +21,12 @@ module.exports = {
 			await q.msg(`No such object ("${objectName}")!`);
 			return;
 		}
+		pov.lastObject[obj.objectPronoun] = obj.name;
 		if (!q.inScope(obj)) {
 			await q.msg(q.template.cantSee(q.GetDisplayName(obj, false, false, true)));
 			return;
 		}
-		pov.lastObject[obj.objectPronoun] = obj.name;
+		
 		if (typeof obj.weight !== 'number') {
 			await q.msg(q.GetDisplayName(obj, true, false, true).capFirst() + ' is not something you can weigh.');
 			return;

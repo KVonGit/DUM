@@ -74,6 +74,5 @@ module.exports = {
 			const s = q.template.defaultSpeakTo(q.GetDisplayName(obj, true, false, true));
 			await q.msg(s);
 		}
-		await q.saveGame('./game.json', qgame);
 	},
 };

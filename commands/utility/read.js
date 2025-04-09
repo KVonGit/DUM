@@ -51,6 +51,5 @@ module.exports = {
 			const s = 'You can\'t do that.';
 			await q.msg(s);
 		}
-		await q.saveGame('./game.json', qgame);
 	},
 };

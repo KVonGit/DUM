@@ -13,7 +13,7 @@ module.exports = {
 	async execute(interaction) {
 		const object = interaction.options.getString('object');
 		if (typeof object === 'undefined') {
-			await q.msg('\'' + object + '\' not defined.');
+			await q.msg('\'object\' not defined.');
 			return;
 		}
 		const obj = q.GetObject(object);
@@ -21,11 +21,12 @@ module.exports = {
 			await q.msg('No such object ("' + object + '")!');
 			return;
 		}
+		pov.lastObject[obj.objectPronoun] = obj.name;
 		if (!q.inScope(obj)) {
 			await q.msg(q.template.cantSee(q.GetDisplayName(obj, false, false, true)));
 			return;
 		}
-		pov.lastObject[obj.objectPronoun] = obj.name;
+		
 		if (obj.switchedOn === true) {
 			await q.msg(q.template.alreadyOn(q.GetDisplayName(obj, true, false, true)));
 			return;
@@ -76,7 +77,6 @@ module.exports = {
 				}
 			}
 			try {
-				await q.saveGame('./game.json', qgame);
 			}
 			catch (err) {
 				console.error('Error saving game data:', err);

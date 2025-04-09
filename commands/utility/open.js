@@ -31,6 +31,7 @@ module.exports = {
 		// Check if the object is already open
 		if (obj.isOpen === true) {
 			await q.msg(q.template.alreadyOpen(q.GetDisplayName(obj, true, false, true)));
+			await q.saveGame('./game.json', qgame);
 			return;
 		}
 
@@ -78,7 +79,6 @@ module.exports = {
 
 			// Save the game state
 			try {
-				await q.saveGame('./game.json', qgame);
 			}
 			catch (err) {
 				console.error('Error saving game data:', err);
@@ -97,13 +97,6 @@ module.exports = {
 			}
 			else {
 				await q.msg(q.template.defaultOpen(q.GetDisplayName(obj, true, false, true)));
-			}
-			try {
-				await q.saveGame('./game.json', qgame);
-			}
-			catch (err) {
-				console.error('Error saving game data:', err);
-				await q.msg('Failed to save game data.');
 			}
 			return;
 		}

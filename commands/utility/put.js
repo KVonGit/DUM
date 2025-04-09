@@ -51,16 +51,19 @@ module.exports = {
 
 		if (obj1.loc !== pov.name) {
 			await q.msg(q.template.dontHave(q.GetDisplayName(obj1, false, false, true)));
+			await q.saveGame('./game.json', qgame);
 			return;
 		}
 
 		if (!q.inScope(obj2)) {
 			await q.msg(q.template.cantSee(q.GetDisplayName(obj2, false, false, true)));
+			await q.saveGame('./game.json', qgame);
 			return;
 		}
 
 		if (obj2.name === pov.name || obj1.name === pov.name || obj2.name === obj1.name) {
 			await q.msg('You can\'t do that.');
+			await q.saveGame('./game.json', qgame);
 			return;
 		}
 
@@ -109,13 +112,6 @@ module.exports = {
 		if (wasDropped) {
 			await q.msg(`${q.GetDisplayName(pov)} put ${q.GetDisplayName(obj1, true, false, true)} in: **${q.GetDisplayName(obj2, true, false, true)}**.`, false, false);
 			await q.msg('Done.');
-			try {
-				await q.saveGame('./game.json', qgame);
-			}
-			catch (err) {
-				console.error('Error saving game data:', err);
-				await q.msg('Failed to save game data.');
-			}
 		}
 	},
 };

@@ -11,7 +11,6 @@ module.exports = {
 		if (pov.loc === 'nowhere' || pov.loc === 'Smithereens') {
 			pov.loc = 'Lounge';
 			await q.msg(q.getLocationDescription(qgame, pov));
-			await q.saveGame('./game.json', qgame, interaction);
 			return;
 		}
 		const s = q.template.xyzzy;

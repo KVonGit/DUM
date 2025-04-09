@@ -71,7 +71,6 @@ module.exports = {
                     await q.msg(`The bomb's timer has been reset to ${obj1.bombcount}.`);
                 }
                 
-                await q.saveGame();
                 return;
             }
         }
@@ -90,7 +89,6 @@ module.exports = {
                     await q.msg(`The bomb's timer has been reset to ${obj1.bombcount}.`);
                 }
                 
-                await q.saveGame();
                 return;
             }
         }
@@ -105,8 +103,6 @@ module.exports = {
                 obj1.bombcount = 10;
                 await q.msg(`The bomb's timer has been reset to ${obj1.bombcount}.`);
             }
-            
-            await q.saveGame();
             return;
         }
         await q.msg(q.GetDisplayName(obj2).capFirst() + ' doesn\'t seem interested.');

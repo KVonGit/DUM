@@ -73,21 +73,9 @@ module.exports = {
 						await q.msg('Error in afterClosing script.');
 					}
 				}
-				await q.saveGame('./game.json', qgame);
-				await finishUp();
 				return;
 			}
 		}
 		await q.msg(q.template.cantOpenOrClose(q.GetDisplayName(obj, true, false, true)));
-
-		async function finishUp() {
-			try {
-				await q.saveGame('./game.json', qgame);
-			}
-			catch (err) {
-				console.error('Error saving game data:', err);
-				await q.msg('Failed to save game data.');
-			}
-		}
 	},
 };

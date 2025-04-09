@@ -7,7 +7,7 @@ module.exports = {
 		.setDescription('Load game progress from channel.'),
 	async execute(interaction) {
       if (interaction.user.id === '1279879910109872189') {
-        interaction.reply('Loading game...');
+        interaction.reply({ content: 'Loading game...', flags: 64 });
         await q.loadGameFromChannel();
         return 0;
       }

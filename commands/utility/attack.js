@@ -29,18 +29,15 @@ module.exports = {
 		pov.lastObject[obj.objectPronoun] = obj.name;
 		if (typeof obj.attack == 'undefined') {
 			await q.msg(q.template.defaultAttack(q.GetDisplayName(obj, true, false, true)));
-			await q.saveGame('./game.json', qgame);
 			return;
 		}
 		const { type, attr } = q.getAttribute(obj, 'attack');
 		if (!type) {
 			await q.msg(q.template.defaultAttack(q.GetDisplayName(obj, true, false, true)));
-			await q.saveGame('./game.json', qgame);
 			return;
 		}
 		if (attr === false) {
 			await q.msg(q.template.defaultAttack(q.GetDisplayName(obj, true, false, true)));
-			await q.saveGame('./game.json', qgame);
 			return;
 		}
 		await q.msg(`${q.GetDisplayName(pov)} has attacked ${q.GetDisplayName(obj, true, false, true)}!`, false, false);
@@ -59,6 +56,5 @@ module.exports = {
 			const s = q.template.defaultAttack(q.GetDisplayName(obj, true, false, true));
 			await q.msg(s);
 		}
-		await q.saveGame('./game.json', qgame);
 	},
 };

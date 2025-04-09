@@ -47,6 +47,5 @@ module.exports = {
 			const s = 'You can\'t eat ' + q.GetDisplayName(obj, true, false, true) + '.';
 			await q.msg(s);
 		}
-		await q.saveGame('./game.json', qgame);
 	},
 };

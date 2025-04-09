@@ -38,6 +38,6 @@ module.exports = {
             );
             
         await channel.send({ embeds: [embed], components: [row] });
-        await interaction.reply({ content: 'Terms and conditions message created!', ephemeral: true });
+        await interaction.reply({ content: 'Terms and conditions message created!', flags: 64 });
     }
 };

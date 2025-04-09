@@ -21,11 +21,12 @@ module.exports = {
 			return;
 		}
 
+		pov.lastObject[obj.objectPronoun] = obj.name;
 		if (!q.inScope(obj)) {
 			await q.msg(q.template.cantSee(q.GetDisplayName(obj, false, false, true)));
 			return;
 		}
-		pov.lastObject[obj.objectPronoun] = obj.name;
+		
 		if (typeof obj.watch == 'undefined') {
 			const s = `You can't watch ${q.GetDisplayName(obj, true, false, true)}.`;
 			await q.msg(s);

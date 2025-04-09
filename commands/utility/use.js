@@ -54,6 +54,5 @@ module.exports = {
 			const s = 'You can\'t use ' + q.GetDisplayName(obj, true, false, true) + ' that way.';
 			await q.msg(s);
 		}
-		await q.saveGame('./game.json', qgame);
 	},
 };

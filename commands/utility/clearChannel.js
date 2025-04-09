@@ -15,7 +15,7 @@ module.exports = {
         let amount = interaction.options.getInteger('amount') || 100;
 
         // Defer reply with ephemeral flag
-        await interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply({ flags: 64 });
 
         // Check permissions (use return to exit early)
         if (interaction.user.id !== channel.guild.ownerId) {

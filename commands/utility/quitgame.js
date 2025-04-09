@@ -19,13 +19,6 @@ module.exports = {
 			delete qgame.players[pov.name];
 			await q.msg(`${alias} has left the game!`);
 			await q.msg('...and so ends the adventure. :grin:');
-			try {
-				await q.saveGame('./game.json', qgame);
-			}
-			catch (err) {
-				console.error('Error saving game data:', err);
-				await q.msg('Failed to save game data.');
-			}
 		}
 		else {
 			await q.msg(template.notPlaying);

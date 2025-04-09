@@ -25,11 +25,12 @@ module.exports = {
 			await q.msg('No such object ("' + object1 + '")!');
 			return;
 		}
+		pov.lastObject[obj.objectPronoun] = obj.name;
 		if (obj.loc != pov.name || (typeof obj.visible != 'undefined' && obj.visible == false)) {
 			await q.msg(q.template.dontHave(q.GetDisplayName(obj, false, false, true)));
 			return;
 		}
-		pov.lastObject[obj.objectPronoun] = obj.name;
+		
 		const object2 = interaction.options.getString('object2');
 		if (typeof object2 == 'undefined' || object2 === null) {
 			await q.msg('No such object ("' + object2 + '")!');
@@ -57,13 +58,11 @@ module.exports = {
 			if (obj2Type == 'boolean') {
 				if (!obj2Attr) {
 					await q.msg('You can\'t use ' + q.GetDisplayName(obj, true, false, true) + ' on ' + q.GetDisplayName(obj2, true, false, true) + '.');
-					await q.saveGame('./game.json', qgame);
 					return;
 				}
 			}
 			else if (obj2Type == 'string') {
 				await q.msg(obj2Attr);
-				await q.saveGame('./game.json', qgame);
 				return;
 			}
 			else if (obj2Type == 'script') {
@@ -78,13 +77,11 @@ module.exports = {
 				else {
 					await q.msg(replyString || 'ERROR: replyString is empty!');
 				}
-				await q.saveGame('./game.json', qgame);
 				return;
 			}
 			else {
 				const s = 'There is an error in the second object\'s use script for the first object.';
 				await q.msg(s);
-				await q.saveGame('./game.json', qgame);
 				return;
 			}
 		}
@@ -117,6 +114,5 @@ module.exports = {
 			const s = 'You can\'t use ' + q.GetDisplayName(obj, true, false, true) + ' on ' + q.GetDisplayName(obj2, true, false, true) + '.';
 			await q.msg(s);
 		}
-		await q.saveGame('./game.json', qgame);
 	},
 };
