@@ -114,7 +114,7 @@ module.exports.interactionHandler = async (interaction) => {
 			return;
 		}
 		// This is where it loads the game data from disk
-		// TODO: Changing this to loade the game once when the bot starts up
+		// TODO: Changing this to load the game once when the bot starts up
 		const { qgame, pov } = await q.getGamePov();
 		if (!pov) return;
 		global.qgame = qgame;
@@ -123,7 +123,7 @@ module.exports.interactionHandler = async (interaction) => {
 		if (interaction.commandName != 'revive' && interaction.commandName != 'emote') await q.addThisCommandToTranscriptAsEmbed(interaction);
 		// await q.addThisCommandToTranscriptAsEmbed(interaction);
 		if (interaction.commandName != 'quitgame' && typeof qgame != 'undefined' && typeof pov != 'undefined' && qgame.suppressTurnScripts !== false) await require('./engine/q').runTurnScripts();
-		await q.saveGame('./game.json', qgame);
+		if (interaction.commandName != 'loadfromchannel_adminonly') await q.saveGame('./game.json', qgame);
 	}
 	catch (error) {
 		// Get user and command details for better error logging
