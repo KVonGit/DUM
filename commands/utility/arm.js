@@ -46,8 +46,9 @@ module.exports = {
                     const gameChannel = await global.bombTimerClient.channels.fetch(global.bombTimerChannelId);
                     if (qgame.objects.bomb.bombcount <= 0) {
 						const bombloc = qgame.objects.bomb.loc;
-                        const victim = q.GetDisplayName(qgame.players[bombloc]);
+                        let victim;
                         if (Object.keys(qgame.players).includes(bombloc)) {
+                            victim = q.GetDisplayName(qgame.players[bombloc]);
                             await gameChannel.send(`**💥 BOOM! THE BOMB EXPLODES IN ${qgame.players[bombloc].loc}!💥**\n\n${q.GetDisplayName(qgame.players[bombloc])} is blown to Smithereens!`);
                             // Create a custom embed for the transcript
                             const embed = new EmbedBuilder()
@@ -70,6 +71,7 @@ module.exports = {
                             qgame.players[bombloc].loc = 'Smithereens';
                         }
                         else {
+                            victim = q.GetDisplayName(qgame.objects[bombloc]);
                             await gameChannel.send(`# 💥 BOOM! THE BOMB EXPLODES IN  ${qgame.objects.bomb.loc}!💥`);
                             // Create a custom embed for the transcript
                             const embed = new EmbedBuilder()

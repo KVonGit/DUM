@@ -22,7 +22,7 @@ module.exports = {
 			await q.msg('No such object ("' + object + '")!');
 			return;
 		}
-		pov.lastObject[obj.objectPronoun] = obj.name;
+		pov.lastObject[(obj.objectPronoun || 'it')] = obj.name;
 		if (!q.inScope(obj)) {
 			// console.log('q.inScope("' + obj.name + '")', q.inScope(obj));
 			await q.msg(q.template.cantSee(q.GetDisplayName(obj, false, false, true)));
