@@ -18,11 +18,12 @@ module.exports = {
 			return;
 		}
 		const obj = q.GetObject(object);;
-		if (obj == 'undefined') {
+		if (typeof obj == 'undefined') {
 			await q.msg('No such object ("' + object + '")!');
 			return;
 		}
-		pov.lastObject[(obj.objectPronoun || 'it')] = obj.name;
+		const pro = obj.objectPronoun || 'it';
+		pov.lastObject[pro] = obj.name;
 		if (!q.inScope(obj)) {
 			// console.log('q.inScope("' + obj.name + '")', q.inScope(obj));
 			await q.msg(q.template.cantSee(q.GetDisplayName(obj, false, false, true)));
