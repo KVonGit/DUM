@@ -95,7 +95,7 @@ module.exports.interactionHandler = async (interaction) => {
 	// console.log('interaction', interaction);
 	if (!interaction.isChatInputCommand()) return;
 	// console.log(interaction);
-	if (interaction.channelId != '1352673869013586023') {
+	if (interaction.channelId != '1352673869013586023' && interaction.commandName != 'clearchannel-adminonly' && interaction.commandName != 'loadfromchannel_adminonly') {
 		await interaction.reply({ content: 'Please use this command in the [#game](https://discord.com/channels/1352673867948101743/1352673869013586023) channel.', flags: 64 });
 		return;
 	}
