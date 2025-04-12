@@ -237,7 +237,7 @@ asly:
       watch:
         type: script
         attr: >-
-          qOutput = ("You watch for a few minutes");      if (obj.isSwitchedOn)
+          qOutput = ("You watch for a few minutes");      if (obj.switchedOn)
           { qOutput += ". You’ve always loved watching westerns!";    } else {
           qOutput += ", thinking that the latest episode of what they call ‘Star
           Trek’ these days is even more boring than usual. You then realise that
@@ -553,6 +553,8 @@ asly:
       exits:
         west:
           to: Smithereens
+        east:
+          to: Zeke's Farm
     Zeke's Farm:
       name: Zeke's Farm
       description: >-
@@ -603,12 +605,12 @@ asly:
       objectPronoun: him
       dateJoined: 1743129287007
       commandHistory: []
-      loc: Arena
+      loc: Kitchen
       attack: You attack KV. (He deserves it.)
       speakto: “Hello,” says KV.
       look: KV is looking right back at YOU!
       lastObject:
-        it: bomb
+        it: TV
         him: ajbruner77
         them: kv.textmisadventures
         undefined: signInChasm
