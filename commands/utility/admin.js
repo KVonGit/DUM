@@ -97,15 +97,14 @@ module.exports = {
         obj.loc = destination;
         
         await interaction.reply({ 
-          content: `✨ Teleported ${q.GetDisplayName(obj)} from ${oldLoc} to ${destination}`, 
-          flags: 64 
+          content: `✨ Teleported ${q.GetDisplayName(obj)} from ${oldLoc} to ${destination}`
         });
         
         // If it's a player, send them a message
         if (obj.userName) {
-          await q.msg(`You feel a strange tingling sensation, and suddenly find yourself in ${q.GetDisplayName(loc)}!`, true);
+          // await q.msg(`You feel a strange tingling sensation, and suddenly find yourself in ${q.GetDisplayName(loc)}!`, true);
           // Also broadcast the arrival to other players
-          await q.msg(`${q.GetDisplayName(obj)} appears in a puff of smoke!`, false, true);
+          // await q.msg(`${q.GetDisplayName(obj)} appears in a puff of smoke!`, false, true);
         }
         
         await q.saveGame();
@@ -184,7 +183,7 @@ module.exports = {
         // Also post in game channel
         await q.msg(`**ADMIN ANNOUNCEMENT**: ${message}`, false, true);
         
-        await interaction.reply({ 
+        await interaction.followUp({ 
           content: `📢 Broadcast sent to ${sentCount} player(s) and posted in-game.`, 
           flags: 64 
         });
