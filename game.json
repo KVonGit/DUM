@@ -237,8 +237,8 @@ asly:
       watch:
         type: script
         attr: >-
-          qOutput = ("You watch for a few minutes");      if (obj.isSwitchedOn)
-          { qOutput += ". You’ve always loved watching westerns!";    } else {
+          qOutput = ("You watch for a few minutes");      if (obj.switchedOn) {
+          qOutput += ". You’ve always loved watching westerns!";    } else {
           qOutput += ", thinking that the latest episode of what they call ‘Star
           Trek’ these days is even more boring than usual. You then realise that
           the TV is in fact switched off."; }
@@ -553,6 +553,8 @@ asly:
       exits:
         west:
           to: Smithereens
+        east:
+          to: Zeke's Farm
     Zeke's Farm:
       name: Zeke's Farm
       description: >-
@@ -588,7 +590,7 @@ asly:
       objectPronoun: him
       dateJoined: 1743029210827
       commandHistory: []
-      loc: Lounge
+      loc: Arena
       lastObject: {}
       attack: >-
         Fueled by frustration with the endless `/` commands, you lunge at Pertex
@@ -596,22 +598,6 @@ asly:
         laughter and shouts, “Nein, danke!” in what you assume is German, but it
         could just be the name of some Quest function or something. You are left
         questioning your life choices.
-    kv_online:
-      name: kv_online
-      alias: KV
-      userName: kv_online
-      objectPronoun: him
-      dateJoined: 1743129287007
-      commandHistory: []
-      loc: Arena
-      attack: You attack KV. (He deserves it.)
-      speakto: “Hello,” says KV.
-      look: KV is looking right back at YOU!
-      lastObject:
-        it: bomb
-        him: ajbruner77
-        them: kv.textmisadventures
-        undefined: signInChasm
     ajbruner77:
       name: ajbruner77
       alias: AJBruner77
@@ -640,6 +626,18 @@ asly:
         it: bomb
         him: kv_online
       loc: Smithereens
+    kv_online:
+      name: kv_online
+      alias: KV
+      id: '1279879910109872189'
+      avatar: >-
+        https://cdn.discordapp.com/avatars/1279879910109872189/b84560ec282e1f44d77cae1fca45dc63.webp
+      userName: kv_online
+      dateJoined: 1744564230007
+      commandHistory: []
+      objectPronoun: them
+      lastObject: {}
+      loc: Arena
   timers:
     bombtimer:
       interval: 5
